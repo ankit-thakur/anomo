@@ -1,0 +1,1548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Allergy App — UI Mockups</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream: #F2EDE2;
+    --cream-dark: #E8E0D0;
+    --green: #4A7C4E;
+    --green-dark: #3A6340;
+    --green-light: #EAF2EB;
+    --orange: #E07B39;
+    --orange-light: #FDF0E8;
+    --red: #C94A3A;
+    --red-light: #FDECEA;
+    --yellow: #D4A017;
+    --yellow-light: #FDF6E3;
+    --text: #1C1C1A;
+    --text-muted: #7A7570;
+    --text-light: #ADA89F;
+    --white: #FFFFFF;
+    --card-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    --font-display: 'Fraunces', serif;
+    --font-body: 'DM Sans', sans-serif;
+  }
+
+  body {
+    background: #2C2C28;
+    font-family: var(--font-body);
+    padding: 40px 20px;
+    min-height: 100vh;
+  }
+
+  h1.page-title {
+    font-family: var(--font-display);
+    font-size: 28px;
+    color: var(--cream);
+    text-align: center;
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+  .page-subtitle {
+    text-align: center;
+    color: #8A8880;
+    font-size: 14px;
+    margin-bottom: 48px;
+    font-family: var(--font-body);
+  }
+
+  .screens-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 340px));
+    gap: 40px;
+    justify-content: center;
+    align-items: start;
+  }
+
+  .screen-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .screen-label {
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #6A6860;
+  }
+
+  /* Phone shell */
+  .phone {
+    width: 320px;
+    min-height: 600px;
+    background: var(--cream);
+    border-radius: 36px;
+    overflow: hidden;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06);
+    position: relative;
+    padding-bottom: 24px;
+  }
+
+  /* Status bar */
+  .status-bar {
+    background: var(--cream);
+    padding: 12px 24px 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .status-bar .time { font-weight: 700; }
+  .status-icons { display: flex; gap: 5px; align-items: center; }
+  .status-icons svg { width: 14px; height: 14px; }
+
+  /* ─────────── SCREEN 1: Restaurant List Enhanced ─────────── */
+  .s1-header {
+    padding: 8px 16px 12px;
+    background: var(--cream);
+  }
+  .s1-top-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .filter-btn {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: var(--green);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .filter-btn svg { width: 18px; height: 18px; color: white; }
+  .allergen-chips {
+    display: flex; gap: 6px; flex-wrap: wrap; flex: 1;
+  }
+  .chip {
+    background: var(--green);
+    color: white;
+    border-radius: 20px;
+    padding: 5px 12px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .chip.add {
+    background: transparent;
+    border: 1.5px dashed var(--text-light);
+    color: var(--text-muted);
+  }
+  .search-bar {
+    background: white;
+    border-radius: 24px;
+    padding: 10px 16px;
+    font-size: 14px;
+    color: var(--text-muted);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    margin-bottom: 4px;
+  }
+
+  /* Tab bar under header */
+  .tab-row {
+    display: flex;
+    padding: 0 16px;
+    gap: 0;
+    margin-bottom: 14px;
+  }
+  .tab {
+    flex: 1;
+    text-align: center;
+    padding: 9px 0;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    border-bottom: 2px solid var(--cream-dark);
+    cursor: pointer;
+  }
+  .tab.active {
+    color: var(--green);
+    border-bottom: 2px solid var(--green);
+  }
+  .tab.active-orange {
+    color: var(--orange);
+    border-bottom: 2px solid var(--orange);
+  }
+
+  /* Restaurant card - enhanced */
+  .rest-card {
+    margin: 0 14px 12px;
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+  }
+  .rest-card-img {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    background: var(--cream-dark);
+    position: relative;
+    overflow: hidden;
+  }
+  .rest-img-placeholder {
+    width: 100%;
+    height: 140px;
+    background: linear-gradient(135deg, #C8D8C8 0%, #A8C0A8 100%);
+    display: flex;
+    align-items: flex-end;
+    padding: 12px;
+    position: relative;
+  }
+  .rest-img-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.55));
+  }
+  .rest-img-name {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 700;
+    color: white;
+    position: relative;
+    z-index: 2;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  }
+  .safety-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 3;
+    background: white;
+    border-radius: 20px;
+    padding: 5px 10px 5px 7px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+  }
+  .safety-badge.safe { color: var(--green); }
+  .safety-badge.caution { color: var(--yellow); }
+  .safety-badge.unsafe { color: var(--red); }
+  .safety-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .safety-dot.safe { background: var(--green); }
+  .safety-dot.caution { background: var(--yellow); }
+  .safety-dot.unsafe { background: var(--red); }
+
+  .rest-card-body {
+    padding: 12px 14px;
+  }
+  .rest-meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+  }
+  .rest-address {
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.4;
+  }
+  .rest-dist {
+    font-size: 11px;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+  .safe-count-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .safe-count {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--green);
+  }
+  .safe-count-label {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .divider { height: 1px; background: var(--cream-dark); margin: 8px 0; }
+  .review-snippet {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-style: italic;
+    line-height: 1.5;
+  }
+  .review-source {
+    font-size: 10px;
+    color: var(--text-light);
+    margin-top: 3px;
+    font-style: normal;
+  }
+
+  /* FABs */
+  .fab-group {
+    position: absolute;
+    bottom: 28px;
+    right: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+  }
+  .fab {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    background: var(--orange);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 14px rgba(224,123,57,0.4);
+    cursor: pointer;
+  }
+  .fab svg { width: 22px; height: 22px; color: white; }
+  .fab.small { width: 40px; height: 40px; }
+  .fab.small svg { width: 18px; height: 18px; }
+
+  /* ─────────── SCREEN 2: Map View ─────────── */
+  .map-bg {
+    width: 100%;
+    height: 380px;
+    background: #D4E3C8;
+    position: relative;
+    overflow: hidden;
+  }
+  /* Fake map grid lines */
+  .map-grid-h {
+    position: absolute;
+    width: 100%;
+    height: 1px;
+    background: rgba(255,255,255,0.5);
+  }
+  .map-grid-v {
+    position: absolute;
+    height: 100%;
+    width: 1px;
+    background: rgba(255,255,255,0.5);
+  }
+  /* Fake road blocks */
+  .map-road-h {
+    position: absolute;
+    width: 100%;
+    height: 6px;
+    background: rgba(255,255,255,0.8);
+  }
+  .map-road-v {
+    position: absolute;
+    height: 100%;
+    width: 6px;
+    background: rgba(255,255,255,0.8);
+  }
+  .map-block {
+    position: absolute;
+    background: #C8D9BE;
+    border-radius: 4px;
+  }
+  /* Map pins */
+  .map-pin {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transform: translate(-50%, -100%);
+  }
+  .pin-bubble {
+    border-radius: 20px;
+    padding: 5px 10px;
+    font-size: 11px;
+    font-weight: 700;
+    color: white;
+    white-space: nowrap;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.25);
+    position: relative;
+  }
+  .pin-bubble::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0; height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+  }
+  .pin-bubble.safe { background: var(--green); }
+  .pin-bubble.safe::after { border-top: 6px solid var(--green); }
+  .pin-bubble.caution { background: var(--yellow); }
+  .pin-bubble.caution::after { border-top: 6px solid var(--yellow); }
+  .pin-bubble.unsafe { background: var(--red); }
+  .pin-bubble.unsafe::after { border-top: 6px solid var(--red); }
+
+  /* My location dot */
+  .my-location {
+    position: absolute;
+    width: 16px; height: 16px;
+    background: #3B82F6;
+    border: 3px solid white;
+    border-radius: 50%;
+    box-shadow: 0 0 0 6px rgba(59,130,246,0.2);
+    transform: translate(-50%, -50%);
+  }
+
+  .map-overlay-top {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    padding: 12px 14px;
+    background: linear-gradient(to bottom, rgba(242,237,226,0.97) 70%, transparent);
+  }
+  .map-search {
+    background: white;
+    border-radius: 24px;
+    padding: 10px 16px;
+    font-size: 13px;
+    color: var(--text-muted);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .map-search svg { width: 16px; height: 16px; color: var(--text-muted); flex-shrink: 0; }
+
+  /* Legend pills */
+  .map-legend {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 6px;
+  }
+  .legend-pill {
+    background: white;
+    border-radius: 20px;
+    padding: 5px 10px;
+    font-size: 10px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    white-space: nowrap;
+  }
+  .legend-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+  }
+
+  /* Peek card at bottom of map screen */
+  .map-peek-card {
+    margin: -20px 14px 0;
+    position: relative;
+    z-index: 2;
+    background: white;
+    border-radius: 20px;
+    padding: 14px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.14);
+  }
+  .peek-name {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 3px;
+  }
+  .peek-address { font-size: 11px; color: var(--text-muted); margin-bottom: 10px; }
+  .peek-stats {
+    display: flex;
+    gap: 10px;
+  }
+  .peek-stat {
+    flex: 1;
+    background: var(--cream);
+    border-radius: 12px;
+    padding: 8px 10px;
+    text-align: center;
+  }
+  .peek-stat-val {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1;
+    margin-bottom: 2px;
+  }
+  .peek-stat-val.green { color: var(--green); }
+  .peek-stat-label { font-size: 10px; color: var(--text-muted); }
+
+  /* View menu CTA */
+  .peek-cta {
+    margin-top: 10px;
+    background: var(--green);
+    color: white;
+    border-radius: 24px;
+    padding: 11px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  /* ─────────── SCREEN 3: QR Scanner ─────────── */
+  .qr-scanner-area {
+    margin: 0;
+    width: 100%;
+    height: 340px;
+    background: #1A1A16;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  /* Camera feed simulation */
+  .cam-blur {
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(255,255,255,0.01) 0px,
+      rgba(255,255,255,0.01) 1px,
+      transparent 1px,
+      transparent 3px
+    ), #1C1F18;
+  }
+  /* Scan frame */
+  .scan-frame {
+    width: 200px;
+    height: 200px;
+    position: relative;
+  }
+  .scan-corner {
+    position: absolute;
+    width: 28px; height: 28px;
+    border-color: var(--orange);
+    border-style: solid;
+  }
+  .scan-corner.tl { top: 0; left: 0; border-width: 3px 0 0 3px; border-radius: 4px 0 0 0; }
+  .scan-corner.tr { top: 0; right: 0; border-width: 3px 3px 0 0; border-radius: 0 4px 0 0; }
+  .scan-corner.bl { bottom: 0; left: 0; border-width: 0 0 3px 3px; border-radius: 0 0 0 4px; }
+  .scan-corner.br { bottom: 0; right: 0; border-width: 0 3px 3px 0; border-radius: 0 0 4px 0; }
+  .scan-line {
+    position: absolute;
+    width: 180px;
+    height: 2px;
+    background: var(--orange);
+    opacity: 0.7;
+    left: 10px;
+    top: 50%;
+    border-radius: 2px;
+    box-shadow: 0 0 8px var(--orange);
+  }
+  .qr-hint {
+    position: absolute;
+    bottom: 20px;
+    left: 0; right: 0;
+    text-align: center;
+    color: rgba(255,255,255,0.55);
+    font-size: 12px;
+  }
+  .qr-top-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    padding: 14px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .qr-top-bar .back-btn {
+    width: 36px; height: 36px;
+    background: rgba(255,255,255,0.12);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .qr-top-bar .back-btn svg { width: 18px; height: 18px; color: white; }
+  .qr-title {
+    color: white;
+    font-family: var(--font-display);
+    font-size: 16px;
+    font-weight: 600;
+  }
+  .qr-flash-btn {
+    width: 36px; height: 36px;
+    background: rgba(255,255,255,0.12);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .qr-flash-btn svg { width: 18px; height: 18px; color: white; }
+
+  /* QR result panel */
+  .qr-result-panel {
+    padding: 16px 16px 8px;
+  }
+  .qr-result-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .processing-badge {
+    background: var(--orange-light);
+    border: 1.5px solid var(--orange);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--orange);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .processing-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--orange);
+    animation: pulse 1.2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+  .done-badge {
+    background: var(--green-light);
+    border: 1.5px solid var(--green);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--green);
+  }
+  .qr-restaurant-name {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 10px;
+  }
+  /* Eval steps */
+  .eval-steps { display: flex; flex-direction: column; gap: 6px; }
+  .eval-step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .step-icon {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-size: 10px;
+  }
+  .step-icon.done { background: var(--green-light); color: var(--green); font-weight: 700; }
+  .step-icon.active { background: var(--orange-light); }
+  .step-icon.pending { background: var(--cream-dark); color: var(--text-light); }
+  .step-icon.active .processing-dot { width: 8px; height: 8px; }
+
+  /* Top dishes quick result */
+  .quick-results {
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .quick-dish {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--cream);
+    border-radius: 12px;
+    padding: 9px 12px;
+    font-size: 12px;
+  }
+  .quick-dish-name { font-weight: 600; color: var(--text); }
+  .quick-dish-safe {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 9px;
+    border-radius: 20px;
+  }
+  .quick-dish-safe.safe { background: var(--green-light); color: var(--green); }
+  .quick-dish-safe.unsafe { background: var(--red-light); color: var(--red); }
+  .quick-dish-safe.caution { background: var(--yellow-light); color: var(--yellow); }
+
+  /* ─────────── SCREEN 4: Restaurant Detail + Reviews ─────────── */
+  .detail-hero {
+    width: 100%;
+    height: 180px;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #7A9E7E 0%, #4A7C4E 100%);
+  }
+  .detail-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.6) 100%);
+  }
+  .detail-hero-back {
+    position: absolute;
+    top: 14px; left: 14px;
+    width: 36px; height: 36px;
+    background: rgba(255,255,255,0.2);
+    backdrop-filter: blur(4px);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .detail-hero-back svg { width: 18px; height: 18px; color: white; }
+  .detail-hero-bottom {
+    position: absolute;
+    bottom: 14px; left: 16px; right: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  .detail-rest-name {
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 700;
+    color: white;
+    line-height: 1.1;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  }
+  .detail-address {
+    font-size: 11px;
+    color: rgba(255,255,255,0.75);
+    margin-top: 2px;
+  }
+  .detail-safety-badge {
+    background: white;
+    border-radius: 20px;
+    padding: 7px 12px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--green);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    white-space: nowrap;
+  }
+
+  /* Safety score bar */
+  .detail-score-section {
+    margin: 14px 14px 0;
+    background: white;
+    border-radius: 16px;
+    padding: 12px 14px;
+    box-shadow: var(--card-shadow);
+  }
+  .score-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .score-label { font-size: 12px; font-weight: 600; color: var(--text-muted); }
+  .score-num { font-size: 13px; font-weight: 700; color: var(--green); }
+  .score-bar {
+    width: 100%;
+    height: 6px;
+    background: var(--cream-dark);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 10px;
+  }
+  .score-bar-fill {
+    height: 100%;
+    background: var(--green);
+    border-radius: 3px;
+  }
+  .score-chips {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .score-chip {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 9px;
+    border-radius: 20px;
+  }
+  .score-chip.safe { background: var(--green-light); color: var(--green); }
+  .score-chip.caution { background: var(--yellow-light); color: var(--yellow); }
+  .score-chip.unsafe { background: var(--red-light); color: var(--red); }
+
+  /* Reviews section */
+  .detail-section-title {
+    padding: 14px 16px 6px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .detail-section-title span { font-size: 11px; font-weight: 500; color: var(--text-muted); }
+  .review-card {
+    margin: 0 14px 8px;
+    background: white;
+    border-radius: 14px;
+    padding: 11px 12px;
+    box-shadow: var(--card-shadow);
+  }
+  .review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+  }
+  .review-author {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .review-platform {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-light);
+    background: var(--cream);
+    padding: 2px 8px;
+    border-radius: 10px;
+  }
+  .allergen-highlight {
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.55;
+  }
+  .allergen-highlight mark {
+    background: var(--green-light);
+    color: var(--green);
+    padding: 0 2px;
+    border-radius: 3px;
+    font-weight: 600;
+  }
+  .review-relevance {
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 10px;
+    color: var(--green);
+    font-weight: 600;
+  }
+  .relevance-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--green); }
+
+  /* ─────────── SCREEN 5: Allergen Profile ─────────── */
+  .profile-header {
+    padding: 14px 16px 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .profile-back {
+    width: 36px; height: 36px;
+    background: var(--cream-dark);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .profile-back svg { width: 18px; height: 18px; color: var(--text); }
+  .profile-title {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  /* Avatar */
+  .profile-avatar-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px 16px 16px;
+  }
+  .profile-avatar {
+    width: 64px; height: 64px;
+    background: var(--green);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px;
+    margin-bottom: 8px;
+  }
+  .profile-name {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 2px;
+  }
+  .profile-subtitle { font-size: 12px; color: var(--text-muted); }
+
+  /* Section */
+  .profile-section {
+    margin: 4px 14px 10px;
+    background: white;
+    border-radius: 16px;
+    padding: 12px 14px;
+    box-shadow: var(--card-shadow);
+  }
+  .profile-section-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+
+  /* Allergen toggle rows */
+  .allergen-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--cream);
+  }
+  .allergen-row:last-child { border-bottom: none; }
+  .allergen-row-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--text);
+    font-weight: 500;
+  }
+  .allergen-emoji { font-size: 16px; }
+  .severity-select {
+    display: flex;
+    gap: 4px;
+  }
+  .sev-btn {
+    padding: 3px 8px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 600;
+    border: 1.5px solid transparent;
+    cursor: pointer;
+  }
+  .sev-btn.avoid { background: var(--red-light); color: var(--red); border-color: var(--red); }
+  .sev-btn.caution { background: var(--yellow-light); color: var(--yellow); border-color: var(--yellow); }
+  .sev-btn.inactive { background: var(--cream); color: var(--text-light); border-color: transparent; }
+
+  /* Preference toggles */
+  .pref-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--cream);
+    font-size: 13px;
+    color: var(--text);
+    font-weight: 500;
+  }
+  .pref-row:last-child { border-bottom: none; }
+  .toggle {
+    width: 38px; height: 22px;
+    border-radius: 11px;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .toggle.on { background: var(--green); }
+  .toggle.off { background: var(--text-light); }
+  .toggle-knob {
+    position: absolute;
+    width: 17px; height: 17px;
+    background: white;
+    border-radius: 50%;
+    top: 2.5px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+  .toggle.on .toggle-knob { right: 2.5px; }
+  .toggle.off .toggle-knob { left: 2.5px; }
+
+  /* Save button */
+  .save-btn {
+    margin: 8px 14px 0;
+    background: var(--green);
+    color: white;
+    border-radius: 28px;
+    padding: 14px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 700;
+    box-shadow: 0 4px 14px rgba(74,124,78,0.35);
+  }
+
+  /* Bottom nav */
+  .bottom-nav {
+    display: flex;
+    background: white;
+    border-top: 1px solid var(--cream-dark);
+    padding: 10px 0 6px;
+    margin-top: 12px;
+  }
+  .nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    font-size: 10px;
+    color: var(--text-light);
+    font-weight: 500;
+  }
+  .nav-item.active { color: var(--green); }
+  .nav-item svg { width: 22px; height: 22px; }
+
+  /* section header */
+  .section-hdr {
+    padding: 4px 16px 8px;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    font-family: var(--font-display);
+  }
+</style>
+</head>
+<body>
+
+<h1 class="page-title">Allergy App — UI Mockups</h1>
+<p class="page-subtitle">Five new screens matching your existing visual language</p>
+
+<div class="screens-grid">
+
+  <!-- ═══════════════════════════════════════════
+       SCREEN 1: Enhanced Restaurant List
+  ═══════════════════════════════════════════ -->
+  <div class="screen-wrap">
+    <div class="screen-label">1 — Restaurant list (enhanced)</div>
+    <div class="phone">
+      <!-- Status bar -->
+      <div class="status-bar">
+        <span class="time">9:41</span>
+        <div class="status-icons">
+          <svg viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="5" width="3" height="8" rx="0.5"/><rect x="5.5" y="3" width="3" height="10" rx="0.5"/><rect x="10" y="1" width="3" height="12" rx="0.5"/></svg>
+          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 2a6 6 0 100 12A6 6 0 008 2zm0 1.5a4.5 4.5 0 110 9 4.5 4.5 0 010-9z"/></svg>
+          <svg viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="5" width="11" height="7" rx="1.5" stroke="currentColor" stroke-width="1" fill="none"/><rect x="2.5" y="6.5" width="7" height="4" rx="0.5" fill="currentColor"/><path d="M13 7.5v2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+      </div>
+
+      <!-- Header -->
+      <div class="s1-header">
+        <div class="s1-top-row">
+          <div class="filter-btn">
+            <svg viewBox="0 0 20 20" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="17" y2="6"/><line x1="6" y1="10" x2="14" y2="10"/><line x1="9" y1="14" x2="11" y2="14"/></svg>
+          </div>
+          <div class="allergen-chips">
+            <div class="chip">Milk</div>
+            <div class="chip">Tree Nuts</div>
+            <div class="chip add">+ Add</div>
+          </div>
+        </div>
+        <div class="search-bar">🔍 &nbsp;Search restaurants…</div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tab-row">
+        <div class="tab active">Recommended</div>
+        <div class="tab">Nearby</div>
+        <div class="tab">Saved</div>
+      </div>
+
+      <div class="section-hdr">We think you'll love:</div>
+
+      <!-- Restaurant card 1 — safe -->
+      <div class="rest-card">
+        <div class="rest-img-placeholder">
+          <div class="rest-img-overlay"></div>
+          <span class="rest-img-name">Roey's</span>
+          <div class="safety-badge safe">
+            <div class="safety-dot safe"></div>
+            92% safe
+          </div>
+        </div>
+        <div class="rest-card-body">
+          <div class="rest-meta-row">
+            <div class="rest-address">1 Perry St, New York, NY</div>
+            <div class="rest-dist">0.4 mi</div>
+          </div>
+          <div class="safe-count-row">
+            <span class="safe-count">18 dishes</span>
+            <span class="safe-count-label">safe for you · 3 with caution</span>
+          </div>
+          <div class="divider"></div>
+          <div class="review-snippet">"Staff was incredibly knowledgeable about dairy allergies — they checked with the kitchen twice."</div>
+          <div class="review-source">★ Google review · allergen relevant</div>
+        </div>
+      </div>
+
+      <!-- Restaurant card 2 — caution -->
+      <div class="rest-card">
+        <div class="rest-img-placeholder" style="background: linear-gradient(135deg, #C0B090 0%, #907060 100%);">
+          <div class="rest-img-overlay"></div>
+          <span class="rest-img-name">Dutch Fred's</span>
+          <div class="safety-badge caution">
+            <div class="safety-dot caution"></div>
+            61% safe
+          </div>
+        </div>
+        <div class="rest-card-body">
+          <div class="rest-meta-row">
+            <div class="rest-address">307 W 47th St #1, New York, NY</div>
+            <div class="rest-dist">1.1 mi</div>
+          </div>
+          <div class="safe-count-row">
+            <span class="safe-count" style="color:var(--yellow)">9 dishes</span>
+            <span class="safe-count-label">safe · 7 with caution · 4 unsafe</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- FABs -->
+      <div class="fab-group">
+        <div class="fab small" title="Scan QR">
+          <svg viewBox="0 0 22 22" fill="none" stroke="white" stroke-width="2" stroke-linecap="round">
+            <rect x="3" y="3" width="6" height="6" rx="1"/><rect x="13" y="3" width="6" height="6" rx="1"/><rect x="3" y="13" width="6" height="6" rx="1"/>
+            <rect x="13" y="13" width="2" height="2"/><rect x="17" y="13" width="2" height="2"/><rect x="13" y="17" width="2" height="2"/><rect x="17" y="17" width="2" height="2"/>
+          </svg>
+        </div>
+        <div class="fab small" title="Help">
+          <svg viewBox="0 0 22 22" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="M9 8.5a2 2 0 013.5 1.3c0 1.4-2 1.8-2 3.2"/><circle cx="11" cy="16" r="0.5" fill="white"/></svg>
+        </div>
+      </div>
+
+      <!-- Bottom nav -->
+      <div class="bottom-nav" style="margin-top:auto">
+        <div class="nav-item active">
+          <svg viewBox="0 0 22 22" fill="currentColor"><path d="M11 2L3 9v10h5v-5h6v5h5V9L11 2z"/></svg>
+          Home
+        </div>
+        <div class="nav-item">
+          <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M11 7v4l3 3"/></svg>
+          Map
+        </div>
+        <div class="nav-item">
+          <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="6" height="6" rx="1"/><rect x="13" y="3" width="6" height="6" rx="1"/><rect x="3" y="13" width="6" height="6" rx="1"/><rect x="13" y="13" width="6" height="6" rx="1"/></svg>
+          Scan
+        </div>
+        <div class="nav-item">
+          <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="8" r="3"/><path d="M5 19c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg>
+          Profile
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SCREEN 2: Map View
+  ═══════════════════════════════════════════ -->
+  <div class="screen-wrap">
+    <div class="screen-label">2 — Map view</div>
+    <div class="phone">
+      <div class="status-bar">
+        <span class="time">9:41</span>
+        <div class="status-icons">
+          <svg viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="5" width="3" height="8" rx="0.5"/><rect x="5.5" y="3" width="3" height="10" rx="0.5"/><rect x="10" y="1" width="3" height="12" rx="0.5"/></svg>
+          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 2a6 6 0 100 12A6 6 0 008 2zm0 1.5a4.5 4.5 0 110 9 4.5 4.5 0 010-9z"/></svg>
+          <svg viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="5" width="11" height="7" rx="1.5" stroke="currentColor" stroke-width="1" fill="none"/><rect x="2.5" y="6.5" width="7" height="4" rx="0.5" fill="currentColor"/><path d="M13 7.5v2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+      </div>
+
+      <!-- Map area -->
+      <div class="map-bg">
+        <!-- Grid -->
+        <div class="map-grid-h" style="top:25%"></div>
+        <div class="map-grid-h" style="top:50%"></div>
+        <div class="map-grid-h" style="top:75%"></div>
+        <div class="map-grid-v" style="left:25%"></div>
+        <div class="map-grid-v" style="left:50%"></div>
+        <div class="map-grid-v" style="left:75%"></div>
+        <!-- Roads -->
+        <div class="map-road-h" style="top:33%"></div>
+        <div class="map-road-h" style="top:66%"></div>
+        <div class="map-road-v" style="left:40%"></div>
+        <div class="map-road-v" style="left:65%"></div>
+        <!-- Blocks -->
+        <div class="map-block" style="top:10%;left:5%;width:28%;height:20%;"></div>
+        <div class="map-block" style="top:10%;left:45%;width:18%;height:20%;"></div>
+        <div class="map-block" style="top:10%;left:70%;width:25%;height:20%;"></div>
+        <div class="map-block" style="top:40%;left:5%;width:28%;height:22%;"></div>
+        <div class="map-block" style="top:40%;left:70%;width:25%;height:22%;"></div>
+        <div class="map-block" style="top:72%;left:5%;width:28%;height:22%;"></div>
+        <div class="map-block" style="top:72%;left:45%;width:18%;height:22%;"></div>
+        <div class="map-block" style="top:72%;left:70%;width:25%;height:22%;"></div>
+
+        <!-- Map search overlay -->
+        <div class="map-overlay-top">
+          <div class="map-search">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="9" r="5"/><path d="M16 16l-3.5-3.5"/></svg>
+            Search this area…
+          </div>
+        </div>
+
+        <!-- Pins -->
+        <div class="map-pin" style="top:44%;left:55%">
+          <div class="pin-bubble safe">Roey's · 92%</div>
+        </div>
+        <div class="map-pin" style="top:30%;left:30%">
+          <div class="pin-bubble safe">Lilia · 88%</div>
+        </div>
+        <div class="map-pin" style="top:58%;left:72%">
+          <div class="pin-bubble caution">Dutch Fred's · 61%</div>
+        </div>
+        <div class="map-pin" style="top:22%;left:75%">
+          <div class="pin-bubble unsafe">Il Mulino · 32%</div>
+        </div>
+        <div class="map-pin" style="top:70%;left:22%">
+          <div class="pin-bubble safe">Via Carota · 94%</div>
+        </div>
+
+        <!-- My location -->
+        <div class="my-location" style="top:50%;left:52%"></div>
+
+        <!-- Legend -->
+        <div class="map-legend">
+          <div class="legend-pill"><div class="legend-dot" style="background:var(--green)"></div>Safe</div>
+          <div class="legend-pill"><div class="legend-dot" style="background:var(--yellow)"></div>Caution</div>
+          <div class="legend-pill"><div class="legend-dot" style="background:var(--red)"></div>Unsafe</div>
+        </div>
+      </div>
+
+      <!-- Peek card (selected restaurant) -->
+      <div class="map-peek-card">
+        <div class="peek-name">Roey's</div>
+        <div class="peek-address">1 Perry St, New York, NY · 0.4 mi away</div>
+        <div class="peek-stats">
+          <div class="peek-stat">
+            <div class="peek-stat-val green">92%</div>
+            <div class="peek-stat-label">safety score</div>
+          </div>
+          <div class="peek-stat">
+            <div class="peek-stat-val">18</div>
+            <div class="peek-stat-label">safe dishes</div>
+          </div>
+          <div class="peek-stat">
+            <div class="peek-stat-val">4.6★</div>
+            <div class="peek-stat-label">Google rating</div>
+          </div>
+        </div>
+        <div class="peek-cta">View menu & safe dishes →</div>
+      </div>
+
+      <!-- Bottom nav -->
+      <div class="bottom-nav">
+        <div class="nav-item">
+          <svg viewBox="0 0 22 22" fill="currentColor"><path d="M11 2L3 9v10h5v-5h6v5h5V9L11 2z" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+          Home
+        </div>
+        <div class="nav-item active">
+          <svg viewBox="0 0 22 22" fill="currentColor"><path d="M11 2a5 5 0 00-5 5c0 4 5 10 5 10s5-6 5-10a5 5 0 00-5-5zm0 7a2 2 0 110-4 2 2 0 010 4z"/></svg>
+          Map
+        </div>
+        <div class="nav-item">
+          <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="6" height="6" rx="1"/><rect x="13" y="3" width="6" height="6" rx="1"/><rect x="3" y="13" width="6" height="6" rx="1"/><rect x="13" y="13" width="6" height="6" rx="1"/></svg>
+          Scan
+        </div>
+        <div class="nav-item">
+          <svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="8" r="3"/><path d="M5 19c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg>
+          Profile
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SCREEN 3: QR Scanner
+  ═══════════════════════════════════════════ -->
+  <div class="screen-wrap">
+    <div class="screen-label">3 — QR code scanner</div>
+    <div class="phone">
+      <div class="status-bar" style="background:#1A1A16;color:white">
+        <span class="time">9:41</span>
+        <div class="status-icons" style="color:white">
+          <svg viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="5" width="3" height="8" rx="0.5"/><rect x="5.5" y="3" width="3" height="10" rx="0.5"/><rect x="10" y="1" width="3" height="12" rx="0.5"/></svg>
+          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 2a6 6 0 100 12A6 6 0 008 2zm0 1.5a4.5 4.5 0 110 9 4.5 4.5 0 010-9z"/></svg>
+        </div>
+      </div>
+
+      <!-- Camera / scanner area -->
+      <div class="qr-scanner-area">
+        <div class="cam-blur"></div>
+        <div class="qr-top-bar">
+          <div class="back-btn">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M13 5l-6 5 6 5"/></svg>
+          </div>
+          <span class="qr-title">Scan menu QR</span>
+          <div class="qr-flash-btn">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 2L5 12h6l-2 7 8-11h-6l2-6z"/></svg>
+          </div>
+        </div>
+        <div class="scan-frame">
+          <div class="scan-corner tl"></div>
+          <div class="scan-corner tr"></div>
+          <div class="scan-corner bl"></div>
+          <div class="scan-corner br"></div>
+          <div class="scan-line"></div>
+        </div>
+        <div class="qr-hint">Point at the restaurant's menu QR code</div>
+      </div>
+
+      <!-- Result panel — "just scanned" state -->
+      <div style="background:var(--cream); flex:1; padding-bottom:16px;">
+        <div class="qr-result-panel">
+          <div class="qr-result-header">
+            <div class="done-badge">✓ Scanned</div>
+            <div class="processing-badge">
+              <div class="processing-dot"></div>
+              Analyzing menu…
+            </div>
+          </div>
+          <div class="qr-restaurant-name">The Maharaja Boston</div>
+
+          <!-- Agent steps -->
+          <div class="eval-steps">
+            <div class="eval-step">
+              <div class="step-icon done">✓</div>
+              Menu fetched & parsed (47 dishes)
+            </div>
+            <div class="eval-step">
+              <div class="step-icon done">✓</div>
+              Allergen detection complete
+            </div>
+            <div class="eval-step">
+              <div class="step-icon active"><div class="processing-dot"></div></div>
+              Verification agent running…
+            </div>
+            <div class="eval-step">
+              <div class="step-icon pending">4</div>
+              Safety score & review pull
+            </div>
+          </div>
+
+          <!-- Top safe dishes preview -->
+          <div style="font-size:11px;font-weight:700;color:var(--text-muted);margin:12px 0 6px;letter-spacing:0.05em;text-transform:uppercase;">Top safe picks</div>
+          <div class="quick-results">
+            <div class="quick-dish">
+              <span class="quick-dish-name">Saag Paneer</span>
+              <span class="quick-dish-safe caution">check dairy</span>
+            </div>
+            <div class="quick-dish">
+              <span class="quick-dish-name">Dal Tadka</span>
+              <span class="quick-dish-safe safe">Safe</span>
+            </div>
+            <div class="quick-dish">
+              <span class="quick-dish-name">Chicken Tikka</span>
+              <span class="quick-dish-safe safe">Safe</span>
+            </div>
+            <div class="quick-dish">
+              <span class="quick-dish-name">Butter Chicken</span>
+              <span class="quick-dish-safe unsafe">Contains milk</span>
+            </div>
+          </div>
+
+          <div style="margin-top:12px;background:var(--green);color:white;border-radius:24px;padding:11px;text-align:center;font-size:13px;font-weight:600;">
+            See full menu results →
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SCREEN 4: Restaurant Detail + Reviews
+  ═══════════════════════════════════════════ -->
+  <div class="screen-wrap">
+    <div class="screen-label">4 — Restaurant detail & reviews</div>
+    <div class="phone">
+      <div class="status-bar">
+        <span class="time">9:41</span>
+        <div class="status-icons">
+          <svg viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="5" width="3" height="8" rx="0.5"/><rect x="5.5" y="3" width="3" height="10" rx="0.5"/><rect x="10" y="1" width="3" height="12" rx="0.5"/></svg>
+          <svg viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="5" width="11" height="7" rx="1.5" stroke="currentColor" stroke-width="1" fill="none"/><rect x="2.5" y="6.5" width="7" height="4" rx="0.5" fill="currentColor"/><path d="M13 7.5v2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+      </div>
+
+      <!-- Hero image -->
+      <div class="detail-hero">
+        <div class="detail-hero-overlay"></div>
+        <div class="detail-hero-back">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M13 5l-6 5 6 5"/></svg>
+        </div>
+        <div class="detail-hero-bottom">
+          <div>
+            <div class="detail-rest-name">Roey's</div>
+            <div class="detail-address">1 Perry St, New York · 0.4 mi</div>
+          </div>
+          <div class="detail-safety-badge">
+            <div class="safety-dot safe"></div>
+            92% safe
+          </div>
+        </div>
+      </div>
+
+      <!-- Safety score breakdown -->
+      <div class="detail-score-section">
+        <div class="score-row">
+          <div class="score-label">Safety score for your profile</div>
+          <div class="score-num">92 / 100</div>
+        </div>
+        <div class="score-bar"><div class="score-bar-fill" style="width:92%"></div></div>
+        <div class="score-chips">
+          <div class="score-chip safe">18 safe dishes</div>
+          <div class="score-chip caution">3 with caution</div>
+          <div class="score-chip unsafe">2 unsafe</div>
+        </div>
+      </div>
+
+      <!-- Tab row for menu / reviews -->
+      <div class="tab-row" style="margin-top:12px;margin-bottom:0">
+        <div class="tab active">Menu</div>
+        <div class="tab active-orange" style="color:var(--orange);border-bottom-color:var(--orange)">Reviews</div>
+        <div class="tab">Info</div>
+      </div>
+
+      <!-- Review section header -->
+      <div class="detail-section-title">
+        Allergen-relevant reviews
+        <span>Sourced from Google & Yelp</span>
+      </div>
+
+      <!-- Review cards -->
+      <div class="review-card">
+        <div class="review-header">
+          <div class="review-author">
+            Sarah M.
+            <div class="review-platform">Google</div>
+          </div>
+          <div style="font-size:11px;color:var(--yellow)">★★★★★</div>
+        </div>
+        <div class="allergen-highlight">
+          "Staff was incredibly attentive — I mentioned my <mark>dairy allergy</mark> and they confirmed which dishes were safe. The kitchen took it seriously and the food was delicious."
+        </div>
+        <div class="review-relevance"><div class="relevance-dot"></div>Relevant to: Milk / Dairy</div>
+      </div>
+
+      <div class="review-card">
+        <div class="review-header">
+          <div class="review-author">
+            James T.
+            <div class="review-platform">Yelp</div>
+          </div>
+          <div style="font-size:11px;color:var(--yellow)">★★★★☆</div>
+        </div>
+        <div class="allergen-highlight">
+          "Great spot for <mark>nut-free</mark> dining. Asked about <mark>cross-contamination</mark> and they were transparent about their prep kitchen setup."
+        </div>
+        <div class="review-relevance"><div class="relevance-dot"></div>Relevant to: Tree Nuts</div>
+      </div>
+
+      <div style="padding:0 14px 14px">
+        <div style="background:var(--green);color:white;border-radius:24px;padding:11px;text-align:center;font-size:13px;font-weight:600;margin-top:4px;">
+          View safe dishes →
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SCREEN 5: Allergen Profile
+  ═══════════════════════════════════════════ -->
+  <div class="screen-wrap">
+    <div class="screen-label">5 — Allergen profile</div>
+    <div class="phone">
+      <div class="status-bar">
+        <span class="time">9:41</span>
+        <div class="status-icons">
+          <svg viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="5" width="3" height="8" rx="0.5"/><rect x="5.5" y="3" width="3" height="10" rx="0.5"/><rect x="10" y="1" width="3" height="12" rx="0.5"/></svg>
+          <svg viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="5" width="11" height="7" rx="1.5" stroke="currentColor" stroke-width="1" fill="none"/><rect x="2.5" y="6.5" width="7" height="4" rx="0.5" fill="currentColor"/><path d="M13 7.5v2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+      </div>
+
+      <!-- Header -->
+      <div class="profile-header">
+        <div class="profile-back">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M13 5l-6 5 6 5"/></svg>
+        </div>
+        <div class="profile-title">My Profile</div>
+      </div>
+
+      <!-- Avatar -->
+      <div class="profile-avatar-section">
+        <div class="profile-avatar">🙂</div>
+        <div class="profile-name">Alex Chen</div>
+        <div class="profile-subtitle">2 active allergens · profile complete</div>
+      </div>
+
+      <!-- Allergens section -->
+      <div class="profile-section">
+        <div class="profile-section-title">My allergens</div>
+
+        <div class="allergen-row">
+          <div class="allergen-row-left">
+            <span class="allergen-emoji">🥛</span> Milk / Dairy
+          </div>
+          <div class="severity-select">
+            <div class="sev-btn avoid">Avoid</div>
+            <div class="sev-btn caution inactive">Caution</div>
+          </div>
+        </div>
+
+        <div class="allergen-row">
+          <div class="allergen-row-left">
+            <span class="allergen-emoji">🥜</span> Tree Nuts
+          </div>
+          <div class="severity-select">
+            <div class="sev-btn avoid">Avoid</div>
+            <div class="sev-btn caution inactive">Caution</div>
+          </div>
+        </div>
+
+        <div class="allergen-row">
+          <div class="allergen-row-left">
+            <span class="allergen-emoji">🌾</span> Gluten
+          </div>
+          <div class="severity-select">
+            <div class="sev-btn avoid inactive">Avoid</div>
+            <div class="sev-btn caution">Caution</div>
+          </div>
+        </div>
+
+        <div class="allergen-row" style="border-bottom:none">
+          <div class="allergen-row-left" style="color:var(--green);font-weight:600">
+            + Add allergen
+          </div>
+        </div>
+      </div>
+
+      <!-- Preferences section -->
+      <div class="profile-section">
+        <div class="profile-section-title">Detection preferences</div>
+
+        <div class="pref-row">
+          Show "may contain" warnings
+          <div class="toggle on"><div class="toggle-knob"></div></div>
+        </div>
+        <div class="pref-row">
+          Flag cross-contamination risk
+          <div class="toggle on"><div class="toggle-knob"></div></div>
+        </div>
+        <div class="pref-row">
+          Notify on new safe dishes
+          <div class="toggle off"><div class="toggle-knob"></div></div>
+        </div>
+      </div>
+
+      <div class="save-btn">Save profile</div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
