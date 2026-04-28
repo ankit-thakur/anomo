@@ -1,0 +1,472 @@
+[
+  {
+    "allergen": "dairy",
+    "display_name": "Milk / Dairy",
+    "fda_category": "milk",
+    "direct_sources": [
+      "milk", "cream", "butter", "cheese", "yogurt", "ice cream", "whey",
+      "casein", "lactose", "ghee", "half-and-half", "sour cream", "ricotta",
+      "mozzarella", "parmesan", "cheddar", "brie", "gouda", "feta",
+      "mascarpone", "creme fraiche", "custard", "pudding", "milk chocolate"
+    ],
+    "hidden_names": [
+      "casein", "caseinate", "sodium caseinate", "lactalbumin", "lactoglobulin",
+      "lactulose", "lactose", "whey", "whey protein", "milk solids", "milk powder",
+      "dry milk", "curds", "rennet casein", "hydrolyzed milk protein"
+    ],
+    "common_dishes_containing": [
+      "alfredo sauce", "bechamel sauce", "cream sauce", "cheese sauce", "ranch dressing",
+      "caesar dressing", "blue cheese dressing", "creamy soups", "chowder",
+      "au gratin", "gratin", "quiche", "tiramisu", "creme brulee", "panna cotta",
+      "crepes", "pancakes", "waffles", "most baked goods", "mashed potatoes",
+      "risotto", "stroganoff", "carbonara"
+    ],
+    "cross_contact_notes": "Found in most baked goods, sauces, and creamy dishes. Butter is often used in cooking even when not listed.",
+    "notes": "Dairy is one of the FDA Big-9 major allergens. Lactose intolerance is different from a milk allergy — allergen concerns relate to milk proteins (casein, whey), not lactose."
+  },
+  {
+    "allergen": "egg",
+    "display_name": "Eggs",
+    "fda_category": "egg",
+    "direct_sources": [
+      "egg", "eggs", "egg yolk", "egg white", "whole egg", "egg powder",
+      "dried egg", "egg solids", "egg wash", "scrambled egg", "fried egg",
+      "poached egg", "hard-boiled egg", "deviled egg"
+    ],
+    "hidden_names": [
+      "albumin", "globulin", "lysozyme", "mayonnaise", "meringue", "ovalbumin",
+      "ovomucin", "ovomucoid", "ovovitellin", "silici albuminate", "livetin",
+      "lecithin (if egg-derived)"
+    ],
+    "common_dishes_containing": [
+      "mayonnaise", "aioli", "hollandaise sauce", "bearnaise sauce", "caesar dressing",
+      "pasta (fresh)", "egg noodles", "quiche", "frittata", "omelette",
+      "meringue", "macarons", "custard", "creme brulee", "tiramisu",
+      "most baked goods", "pancakes", "waffles", "french toast",
+      "fried coatings and batters", "tartar sauce", "remoulade",
+      "meatballs (as binder)", "meatloaf", "crab cakes"
+    ],
+    "cross_contact_notes": "Eggs are used as binders, coatings, and emulsifiers in many dishes. Egg wash is commonly applied to pastries.",
+    "notes": "FDA Big-9 allergen. Eggs are in many sauces, batters, and baked goods even when not prominently listed."
+  },
+  {
+    "allergen": "fish",
+    "display_name": "Fish",
+    "fda_category": "fish",
+    "direct_sources": [
+      "fish", "salmon", "tuna", "cod", "tilapia", "halibut", "mahi mahi",
+      "swordfish", "trout", "bass", "flounder", "sole", "snapper", "catfish",
+      "anchovy", "anchovies", "sardine", "herring", "mackerel", "pollock",
+      "grouper", "perch", "pike", "walleye"
+    ],
+    "hidden_names": [
+      "worcestershire sauce", "fish sauce", "fish stock", "caesar dressing (anchovy)",
+      "imitation crab (may contain)", "surimi", "fish oil", "omega-3 (fish-derived)",
+      "gelatin (fish-derived)", "bouillabaisse", "nam pla"
+    ],
+    "common_dishes_containing": [
+      "worcestershire sauce", "caesar salad dressing", "caesar dressing",
+      "pad thai (fish sauce)", "vietnamese pho (fish sauce)", "thai curries",
+      "bouillabaisse", "cioppino", "nicoise salad", "pasta puttanesca",
+      "tapenade", "bagna cauda", "most asian stir fry sauces",
+      "pizza with anchovy", "greek salad (sometimes)", "korean kimchi (sometimes)"
+    ],
+    "cross_contact_notes": "Fish sauce and anchovies are hidden in many sauces, dressings, and condiments. Caesar dressing almost always contains anchovies.",
+    "notes": "FDA Big-9 allergen. Fish sauce is a common hidden source in Asian cuisine. Worcestershire sauce contains anchovies."
+  },
+  {
+    "allergen": "shellfish",
+    "display_name": "Shellfish",
+    "fda_category": "shellfish",
+    "direct_sources": [
+      "shrimp", "prawn", "crab", "lobster", "crayfish", "crawfish", "langostino",
+      "clam", "oyster", "mussel", "scallop", "squid", "calamari", "octopus",
+      "abalone", "barnacle", "cuttlefish", "sea urchin", "urchin"
+    ],
+    "hidden_names": [
+      "shrimp paste", "shrimp extract", "crab extract", "seafood stock",
+      "seafood broth", "bouillabaisse base", "imitation crab", "surimi",
+      "shellfish extract", "glucosamine (shrimp/lobster-derived)"
+    ],
+    "common_dishes_containing": [
+      "paella", "cioppino", "bouillabaisse", "gumbo", "jambalaya",
+      "seafood pasta", "bisque (lobster, crab, shrimp)", "pad thai",
+      "spring rolls", "sushi", "sashimi", "fried rice", "lo mein",
+      "chowder", "shrimp scampi", "surf and turf"
+    ],
+    "cross_contact_notes": "High cross-contact risk in restaurants that serve seafood broadly. Shrimp paste is used as a base flavoring in many Asian dishes.",
+    "notes": "FDA Big-9 allergen. Shellfish allergy is separate from fish allergy — patients may be allergic to one and not the other."
+  },
+  {
+    "allergen": "tree_nut",
+    "display_name": "Tree Nuts",
+    "fda_category": "tree nuts",
+    "direct_sources": [
+      "almond", "cashew", "walnut", "pecan", "pistachio", "macadamia",
+      "hazelnut", "brazil nut", "pine nut", "chestnut", "coconut",
+      "nut mix", "mixed nuts", "trail mix"
+    ],
+    "hidden_names": [
+      "marzipan", "praline", "gianduja", "nougat", "nut butter",
+      "almond flour", "almond milk", "almond paste", "almond extract",
+      "hazelnut spread", "nutella", "pesto (pine nuts)", "baklava",
+      "frangipane", "nut oil", "walnut oil", "almond oil"
+    ],
+    "common_dishes_containing": [
+      "mole sauce", "pesto", "satay sauce", "romesco sauce", "baklava",
+      "pad thai (peanut but cross-contact with tree nuts)", "trail mix",
+      "granola", "most pastries and desserts", "praline", "nougat",
+      "biscotti", "cookies", "brownies", "salads with candied nuts",
+      "chicken with almonds", "waldorf salad", "wild rice with pecans",
+      "stuffing with chestnuts", "green beans almondine", "trout almondine",
+      "thai green curry (cashews)", "kung pao chicken (peanuts adjacent)",
+      "chinese chicken salad", "cereal bars"
+    ],
+    "cross_contact_notes": "Mole sauce traditionally contains ground almonds or other tree nuts. Pesto contains pine nuts. Many desserts contain almond flour or extracts.",
+    "notes": "FDA Big-9 allergen. Coconut is classified as a tree nut by the FDA, though many nut-allergic individuals tolerate it. Pine nuts are seeds but classified as tree nuts for labeling. Mole is one of the most commonly missed hidden sources."
+  },
+  {
+    "allergen": "peanut",
+    "display_name": "Peanuts",
+    "fda_category": "peanut",
+    "direct_sources": [
+      "peanut", "peanuts", "peanut butter", "peanut oil", "groundnut",
+      "groundnuts", "boiled peanuts", "honey roasted peanuts", "peanut flour",
+      "peanut protein", "mixed nuts (may contain peanuts)"
+    ],
+    "hidden_names": [
+      "arachis oil", "groundnut oil", "monkey nuts", "beer nuts",
+      "mixed nuts", "artificial tree nut flavor (may be peanut-derived)",
+      "marzipan (sometimes peanut-based)", "nougat"
+    ],
+    "common_dishes_containing": [
+      "pad thai", "satay", "peanut sauce", "kung pao chicken",
+      "thai peanut noodles", "peanut soup", "west african peanut stew",
+      "gado gado", "indonesian peanut sauce", "spring rolls (dipping sauce)",
+      "trail mix", "granola bars", "nougat", "most candy bars",
+      "chili (some recipes)", "mole (some recipes)", "cookies", "brownies"
+    ],
+    "cross_contact_notes": "Peanuts and tree nuts are often processed in the same facilities, creating high cross-contact risk. Peanut is one of the most common and severe food allergens.",
+    "notes": "FDA Big-9 allergen. Despite the name, peanuts are legumes, not tree nuts. Cross-contact with tree nuts is very common. Thai and other Asian cuisines make heavy use of peanuts."
+  },
+  {
+    "allergen": "wheat",
+    "display_name": "Wheat / Gluten",
+    "fda_category": "wheat",
+    "direct_sources": [
+      "wheat", "flour", "bread", "pasta", "noodles", "semolina", "spelt",
+      "farro", "durum", "kamut", "einkorn", "emmer", "wheat berries",
+      "wheat bran", "wheat germ", "wheat starch", "bulgur", "couscous",
+      "triticale", "croutons", "breadcrumbs", "panko"
+    ],
+    "hidden_names": [
+      "modified food starch", "hydrolyzed wheat protein", "vital wheat gluten",
+      "seitan", "fu", "wheat-based soy sauce (shoyu)", "most soy sauces",
+      "barley", "rye", "malt", "malt vinegar", "maltodextrin (if wheat-derived)",
+      "dextrin (if wheat-derived)", "beer", "ale", "lager", "stout",
+      "battered foods (beer batter)", "thickeners"
+    ],
+    "common_dishes_containing": [
+      "pasta", "pizza", "bread", "sandwiches", "wraps", "tortillas",
+      "fried foods (battered)", "tempura", "most baked goods",
+      "roux-based sauces", "gravy", "cream soups (thickened)", "ramen",
+      "udon", "soba (unless 100% buckwheat)", "dumplings", "wontons",
+      "pot stickers", "most asian stir fry dishes (soy sauce)", "teriyaki",
+      "soy-marinated dishes", "meatballs", "meatloaf (breadcrumb binder)",
+      "breaded chicken", "breaded fish", "fish and chips", "onion rings"
+    ],
+    "cross_contact_notes": "Soy sauce almost always contains wheat. 'Gluten-free' claims on menus may not be certified — cross-contact risk in shared kitchens is significant.",
+    "notes": "FDA Big-9 allergen. Distinct from celiac disease (autoimmune) but closely related for dietary restriction purposes. Soy sauce is a major hidden wheat source in Asian cuisine."
+  },
+  {
+    "allergen": "soy",
+    "display_name": "Soy",
+    "fda_category": "soy",
+    "direct_sources": [
+      "soy", "soybean", "tofu", "tempeh", "edamame", "miso", "soy milk",
+      "soy sauce", "tamari", "soy flour", "soy protein", "soy lecithin",
+      "natto", "yuba", "soy nuts", "soy yogurt"
+    ],
+    "hidden_names": [
+      "hydrolyzed soy protein", "hydrolyzed vegetable protein (HVP)", "textured vegetable protein (TVP)",
+      "textured soy protein (TSP)", "soy lecithin", "miso", "shoyu",
+      "tamari", "teriyaki sauce", "hoisin sauce", "oyster sauce",
+      "worcestershire sauce (some brands)", "vegetable broth (often soy-based)",
+      "natural flavors (may contain soy)", "mono and diglycerides (may be soy-derived)"
+    ],
+    "common_dishes_containing": [
+      "stir fry", "fried rice", "lo mein", "chow mein", "teriyaki chicken",
+      "sushi (soy sauce for dipping)", "edamame", "miso soup", "ramen broth",
+      "most asian sauces", "veggie burgers", "meat substitutes", "most processed foods",
+      "hoisin sauce dishes", "kung pao", "general tso", "pad thai",
+      "korean bbq marinades", "bulgogi"
+    ],
+    "cross_contact_notes": "Soy is pervasive in Asian cuisine and processed foods. Miso, teriyaki, and most Asian stir-fry sauces contain soy.",
+    "notes": "FDA Big-9 allergen. Highly refined soy oil and soy lecithin are sometimes tolerated by soy-allergic individuals, but this varies."
+  },
+  {
+    "allergen": "sesame",
+    "display_name": "Sesame",
+    "fda_category": "sesame",
+    "direct_sources": [
+      "sesame", "sesame seeds", "sesame oil", "tahini", "sesame paste",
+      "black sesame", "white sesame", "sesame flour", "sesame salt", "gomashio"
+    ],
+    "hidden_names": [
+      "tahini", "tehina", "sesame flour", "sesame oil", "benne", "benne seeds",
+      "gingelly oil", "til", "til oil", "til seeds", "sesame salt",
+      "hummus (contains tahini)", "halvah", "aqua libra", "middle eastern spice blends"
+    ],
+    "common_dishes_containing": [
+      "hummus", "baba ghanoush", "tahini sauce", "falafel (bun often has sesame)",
+      "asian stir fry (sesame oil)", "sushi rice (sesame seeds)", "sushi rolls",
+      "korean bibimbap", "sesame chicken", "sesame noodles",
+      "middle eastern dishes broadly", "hamburger buns (sesame seeds)",
+      "bagels", "breadsticks", "crackers", "halva", "salad dressings"
+    ],
+    "cross_contact_notes": "Sesame became an FDA Big-9 allergen in 2023. It is present in many Middle Eastern and Asian dishes. Tahini (sesame paste) is a core ingredient in hummus.",
+    "notes": "Newest FDA Big-9 allergen (added January 2023). Sesame is particularly prevalent in Middle Eastern, Mediterranean, and Asian cuisines."
+  },
+  {
+    "allergen": "mustard",
+    "display_name": "Mustard",
+    "fda_category": "major allergen in Canada/EU (not FDA Big-9)",
+    "direct_sources": [
+      "mustard", "mustard seeds", "mustard oil", "mustard leaves", "mustard powder",
+      "dijon mustard", "whole grain mustard", "yellow mustard", "honey mustard"
+    ],
+    "hidden_names": [
+      "mustard flour", "mustard extract", "mustard greens", "mustard sauce",
+      "curry powder (usually contains mustard seed)", "worcestershire sauce (some brands)",
+      "salad dressings", "marinades", "pickling spice"
+    ],
+    "common_dishes_containing": [
+      "honey mustard dressing", "caesar dressing", "vinaigrette",
+      "deviled eggs", "potato salad", "coleslaw", "hot dogs", "pretzels",
+      "curry dishes", "pickled vegetables", "beer (some)"
+    ],
+    "cross_contact_notes": "Curry powder almost always contains mustard seed. Important allergen in EU/Canada even if not FDA Big-9.",
+    "notes": "Not an FDA Big-9 allergen but a major allergen in Canada and EU. Common in condiments, dressings, and Indian/curry dishes."
+  },
+  {
+    "allergen": "sulfite",
+    "display_name": "Sulfites / Sulfur Dioxide",
+    "fda_category": "FDA-regulated (>10 ppm must be labeled)",
+    "direct_sources": [
+      "wine", "dried fruit", "sulfur dioxide", "sodium sulfite", "sodium bisulfite",
+      "potassium bisulfite", "sodium metabisulfite", "potassium metabisulfite"
+    ],
+    "hidden_names": [
+      "E220", "E221", "E222", "E223", "E224", "sulfurous acid",
+      "wine-based sauces", "dried apricots", "golden raisins", "maraschino cherries",
+      "concentrated grape juice", "lemon juice (commercial)"
+    ],
+    "common_dishes_containing": [
+      "wine-braised dishes", "risotto with wine", "red wine sauce", "shrimp (preserved)",
+      "dried fruit in salads or desserts", "fruit cake", "wine-based salad dressings",
+      "pickled vegetables"
+    ],
+    "cross_contact_notes": "Shrimp is commonly treated with sulfites for preservation. Wine-based cooking introduces sulfites.",
+    "notes": "Not a protein allergen but causes reactions in sulfite-sensitive individuals, particularly those with asthma."
+  },
+
+  {
+    "diet_restriction": "vegan",
+    "display_name": "Vegan",
+    "description": "Excludes all animal products: meat, poultry, fish, seafood, dairy, eggs, honey, gelatin, and all other animal-derived ingredients.",
+    "violating_ingredients": [
+      "meat", "beef", "pork", "chicken", "turkey", "lamb", "duck", "veal", "bison",
+      "bacon", "ham", "prosciutto", "salami", "pepperoni", "sausage", "chorizo",
+      "fish", "salmon", "tuna", "cod", "anchovy", "anchovies", "sardine", "shrimp",
+      "crab", "lobster", "clam", "oyster", "mussel", "scallop", "calamari", "squid",
+      "milk", "cream", "butter", "cheese", "yogurt", "ghee", "whey", "casein",
+      "egg", "eggs", "egg yolk", "egg white", "mayonnaise", "aioli", "hollandaise",
+      "honey", "gelatin", "lard", "tallow", "suet", "bone broth", "collagen",
+      "chicken stock", "chicken broth", "beef stock", "beef broth", "fish stock",
+      "fish sauce", "worcestershire sauce", "anchovy paste", "shrimp paste",
+      "rennet", "carmine", "cochineal", "isinglass", "albumen", "royal jelly"
+    ],
+    "hidden_violators": [
+      "chicken stock", "beef broth", "fish stock", "bone broth",
+      "fish sauce", "worcestershire sauce", "anchovy paste", "shrimp paste",
+      "gelatin (in desserts, marshmallows, panna cotta, jello)",
+      "rennet (in parmesan, many hard cheeses)",
+      "casein (in some non-dairy creamers)",
+      "carmine / cochineal / E120 (red food dye derived from insects)",
+      "isinglass (used to clarify some wines and beers)",
+      "caesar dressing (contains anchovies and egg)",
+      "lard (in some refried beans, pastry, tamales)",
+      "L-cysteine (dough conditioner sometimes animal-derived)"
+    ],
+    "commonly_violated_dishes": [
+      "most soups and broths (made with chicken or beef stock)",
+      "caesar salad (anchovies + egg in dressing)",
+      "pad thai (fish sauce + egg)",
+      "risotto (butter and parmesan)",
+      "fresh pasta and egg noodles",
+      "french onion soup (beef broth, cheese)",
+      "miso soup (dashi broth often contains fish)",
+      "refried beans (often contain lard)",
+      "most breads and baked goods (butter, eggs, milk)",
+      "chocolate desserts (dairy unless specified vegan)",
+      "most desserts (butter, cream, eggs, gelatin)",
+      "pesto (parmesan)",
+      "hollandaise and bearnaise sauces",
+      "most Indian curries (cream, ghee, paneer)"
+    ],
+    "notes": "Vegan excludes all animal-derived ingredients including less obvious ones like gelatin, rennet, carmine, and isinglass. Stock and broth are the most common hidden violations in restaurant cooking — almost all soups, sauces, and risottos are made with animal stock unless explicitly specified. Caesar dressing is almost never vegan."
+  },
+
+  {
+    "diet_restriction": "vegetarian",
+    "display_name": "Vegetarian",
+    "description": "Excludes meat, poultry, fish, and seafood. Dairy and eggs are permitted.",
+    "violating_ingredients": [
+      "beef", "pork", "chicken", "turkey", "lamb", "duck", "veal", "bison",
+      "bacon", "ham", "prosciutto", "salami", "pepperoni", "sausage", "chorizo",
+      "fish", "salmon", "tuna", "cod", "tilapia", "anchovy", "anchovies", "sardine",
+      "shrimp", "crab", "lobster", "clam", "oyster", "mussel", "scallop",
+      "calamari", "squid", "octopus", "fish sauce", "worcestershire sauce",
+      "anchovy paste", "shrimp paste", "lard", "tallow", "suet",
+      "chicken stock", "chicken broth", "beef stock", "beef broth", "fish stock",
+      "bone broth", "gelatin", "rennet (animal-derived)"
+    ],
+    "hidden_violators": [
+      "chicken stock or broth (in soups, risotto, sauces)",
+      "beef stock or broth (in french onion soup, stews, gravies)",
+      "fish stock or dashi (in miso soup, asian broths)",
+      "fish sauce (in pad thai, vietnamese, thai dishes)",
+      "worcestershire sauce (contains anchovies)",
+      "caesar dressing (contains anchovies)",
+      "gelatin (in panna cotta, jello, some marshmallows, some candies)",
+      "rennet (animal-derived rennet in parmesan, pecorino, and most aged cheeses)",
+      "lard (in some tamales, refried beans, pie crusts, pastries)",
+      "anchovy paste (in some pasta sauces, pizza toppings)",
+      "carmine / cochineal / E120 (red food dye from insects)"
+    ],
+    "commonly_violated_dishes": [
+      "french onion soup (beef broth)",
+      "caesar salad (anchovies in dressing)",
+      "pad thai (fish sauce)",
+      "miso soup (dashi fish broth)",
+      "minestrone (often made with chicken stock)",
+      "risotto (often made with chicken stock)",
+      "most restaurant soups (chicken or beef stock base)",
+      "refried beans (often contain lard)",
+      "pasta puttanesca (anchovies)",
+      "most pasta sauces at restaurants (may use chicken stock)",
+      "some pizza sauces and toppings",
+      "kimchi (sometimes contains fish sauce or shrimp paste)",
+      "many stir fry sauces (oyster sauce)"
+    ],
+    "notes": "Vegetarian allows dairy and eggs but excludes all meat, poultry, and seafood. The most common hidden violations are animal-based stocks (chicken, beef, fish) used as the base for soups, sauces, and grains. Fish sauce and Worcestershire sauce (contains anchovies) are frequent hidden violations in Asian and international dishes. Parmesan and many aged cheeses use animal rennet — strictly vegetarian diners often avoid these."
+  },
+
+  {
+    "diet_restriction": "gluten_free",
+    "display_name": "Gluten-Free",
+    "description": "Excludes wheat, barley, rye, and their derivatives. Suitable for celiac disease and gluten intolerance.",
+    "violating_ingredients": [
+      "wheat", "flour", "all-purpose flour", "wheat flour", "bread flour", "cake flour",
+      "semolina", "spelt", "farro", "durum", "kamut", "einkorn", "emmer",
+      "wheat berries", "wheat bran", "wheat germ", "wheat starch",
+      "bulgur", "couscous", "triticale", "barley", "rye",
+      "bread", "breadcrumbs", "panko", "croutons", "pasta", "noodles",
+      "egg noodles", "ramen noodles", "udon", "soba (unless 100% buckwheat)",
+      "wontons", "dumplings", "potstickers", "spring roll wrappers",
+      "seitan", "vital wheat gluten", "hydrolyzed wheat protein",
+      "malt", "malt vinegar", "beer", "ale", "lager", "stout",
+      "soy sauce", "shoyu", "teriyaki sauce", "hoisin sauce"
+    ],
+    "hidden_violators": [
+      "soy sauce (almost all brands contain wheat — use tamari for gluten-free)",
+      "malt and malt vinegar (barley-derived)",
+      "beer and beer batter (barley-based)",
+      "modified food starch (may be wheat-derived)",
+      "hydrolyzed vegetable protein (may contain wheat)",
+      "roux-based sauces and gravies (flour + butter thickener)",
+      "battered and fried foods (flour or breadcrumb coating)",
+      "seitan (pure gluten — often in vegetarian dishes)",
+      "imitation crab / surimi (often contains wheat starch)",
+      "some oats (cross-contact with wheat during processing)",
+      "most sauces thickened with flour",
+      "dressings and marinades containing soy sauce",
+      "teriyaki, hoisin, oyster sauce (most brands contain wheat)",
+      "licorice and some candies"
+    ],
+    "commonly_violated_dishes": [
+      "pasta and all pasta dishes",
+      "pizza",
+      "bread, sandwiches, wraps, and rolls",
+      "fried foods with batter (tempura, fish and chips, onion rings)",
+      "breaded dishes (chicken parmesan, schnitzel, katsu)",
+      "most Asian stir-fry dishes (soy sauce)",
+      "teriyaki chicken or beef",
+      "sushi (soy sauce for dipping)",
+      "ramen and udon noodles",
+      "dumplings, wontons, potstickers",
+      "gravy and roux-based sauces",
+      "cream soups thickened with flour",
+      "most baked goods (bread, muffins, cakes, cookies, pastries)",
+      "beer-battered fish or vegetables",
+      "pad thai (soy sauce, sometimes flour noodles)",
+      "meatballs and meatloaf (breadcrumb binder)"
+    ],
+    "notes": "Gluten is found in wheat, barley, rye, and cross-contaminated oats. Soy sauce is the most common hidden gluten source in restaurant cooking — nearly all soy sauce brands contain wheat. Roux (butter + flour) is the base for many sauces and gravies. Cross-contact in shared fryers and kitchens is a serious concern for celiac patients. 'Gluten-free' on a menu does not guarantee a certified gluten-free preparation."
+  },
+
+  {
+    "diet_restriction": "dairy_free",
+    "display_name": "Dairy-Free",
+    "description": "Excludes all milk and dairy products including milk, cheese, butter, cream, yogurt, and their derivatives.",
+    "violating_ingredients": [
+      "milk", "whole milk", "skim milk", "2% milk", "cream", "heavy cream",
+      "half and half", "butter", "ghee", "cheese", "cheddar", "mozzarella",
+      "parmesan", "parmigiano", "brie", "gouda", "feta", "ricotta",
+      "mascarpone", "cream cheese", "goat cheese", "blue cheese",
+      "yogurt", "sour cream", "creme fraiche", "whipped cream",
+      "ice cream", "gelato", "custard", "pudding", "milk chocolate",
+      "white chocolate", "casein", "caseinate", "whey", "whey protein",
+      "lactose", "milk solids", "milk powder", "dry milk", "curds"
+    ],
+    "hidden_violators": [
+      "casein and caseinate (milk protein used in some non-dairy products and processed foods)",
+      "whey and whey protein (dairy byproduct in protein bars, breads, sauces)",
+      "ghee (clarified butter — still contains milk proteins)",
+      "cream sauces (bechamel, mornay, alfredo, veloute)",
+      "au gratin dishes (cream + cheese topping)",
+      "most baked goods (butter, milk, or cream)",
+      "milk chocolate and white chocolate",
+      "caramel sauce (most recipes use butter and cream)",
+      "ranch dressing and most creamy dressings",
+      "caesar dressing (parmesan)",
+      "pesto (parmesan)",
+      "mashed potatoes (butter and cream)",
+      "most Indian curries (cream, ghee, paneer, yogurt marinade)",
+      "naan bread (yogurt or butter)",
+      "some margarines (may contain casein or whey)",
+      "non-dairy creamer (many brands contain casein)",
+      "lactose-free milk (still contains milk proteins — not dairy-free)"
+    ],
+    "commonly_violated_dishes": [
+      "alfredo and cream-based pasta",
+      "carbonara (butter, parmesan, cream)",
+      "risotto (butter and parmesan)",
+      "most cream soups and chowders",
+      "gratin and au gratin dishes",
+      "pizza (cheese)",
+      "most baked goods (bread, muffins, cookies, cakes, pastries)",
+      "pancakes and waffles",
+      "french toast",
+      "quiche",
+      "most desserts (ice cream, custard, creme brulee, cheesecake, tiramisu)",
+      "mashed potatoes",
+      "most Indian dishes (butter chicken, paneer dishes, korma, tikka masala)",
+      "creamy dressings (ranch, blue cheese, caesar, creamy italian)",
+      "stroganoff",
+      "butter-basted meats and vegetables",
+      "croissants and most pastries"
+    ],
+    "notes": "Dairy-free is distinct from lactose-free — dairy-free excludes all milk proteins (casein, whey) while lactose-free products still contain milk. Ghee (clarified butter) retains milk proteins and is not dairy-free despite being lactose-reduced. Cream sauces (alfredo, bechamel) and butter are the most common hidden dairy sources in restaurant cooking. Many baked goods contain butter even when not listed prominently. Parmesan appears in many dishes including pesto, caesar dressing, and risotto."
+  }
+]

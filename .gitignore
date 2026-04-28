@@ -1,0 +1,39 @@
+# Dependencies
+node_modules/
+
+# CDK build output
+MenuAnalysisAppCdk/cdk.out/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Python virtual environments
+MenuAnalysisAppServer/lambdas/myenv/
+
+# Lambda layers (compiled dependencies, rebuilt via requirements.txt)
+MenuAnalysisAppServer/lambdas/boto3layer3/
+MenuAnalysisAppServer/lambdas/boto3layer3.zip
+MenuAnalysisAppServer/lambdas/layers/bs4_layer/
+MenuAnalysisAppServer/lambdas/layers/bs4_layer.zip
+MenuAnalysisAppServer/lambdas/layers/dotenv_layer/
+MenuAnalysisAppServer/lambdas/layers/dotenv_layer.zip
+MenuAnalysisAppServer/lambdas/layers/open_search_layer/
+MenuAnalysisAppServer/lambdas/layers/open_search_layer.zip
+MenuAnalysisAppServer/lambdas/layers/requests_layer/
+MenuAnalysisAppServer/lambdas/layers/pdfReader-layer/
+
+# Secrets
+MenuAnalysisAppServer/lambdas/.env
+
+# IDE
+.vscode/
+
+# Claude Code internal
+.claude/
+
+# macOS
+.DS_Store
