@@ -37,10 +37,8 @@ const awsConfig = {
     scope: ['email', 'openid', 'profile'],
     // Amplify expects a single redirect string at runtime. Use the
     // environment helper to pick the correct one from the list.
-    redirectSignIn: "http://localhost:8081/home",
-    redirectSignOut: "http://localhost:8081/signin",
-    // redirectSignIn: getRedirectUri(SIGNIN_URIS, 'signIn'),
-    // redirectSignOut: getRedirectUri(SIGNOUT_URIS, 'signOut'),
+    redirectSignIn: getRedirectUri(SIGNIN_URIS, 'signIn'),
+    redirectSignOut: getRedirectUri(SIGNOUT_URIS, 'signOut'),
     responseType: 'code',
   },
 };
