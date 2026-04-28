@@ -160,9 +160,9 @@ export default function HelpScreen({ onClose }: Props) {
             showsVerticalScrollIndicator={false}
           >
             <Text style={styles.formHint}>
-              {mode === 'issue'
-                ? 'Let us know what went wrong and we'll look into it.'
-                : 'We'd love to hear your thoughts or suggestions.'}
+              {mode === 'issue' 
+                ? 'Let us know what went wrong and we\'ll look into it.'
+                : 'We\'d love to hear your thoughts or suggestions.'}
             </Text>
 
             <Text style={styles.fieldLabel}>
