@@ -10,6 +10,7 @@ import MenuDiscoverySheet, { DiscoveryParams } from './MenuDiscoverySheet';
 import ResultsSection from './ResultsSection';
 import RestaurantTile from './RestaurantTile';
 import MenuDetailScreen, { DetailRestaurant } from './MenuDetailScreen';
+import HelpScreen from './HelpScreen';
 import { getUserPreferences } from './UserPreferences';
 import 'react-native-get-random-values';
 import axios from 'axios';
@@ -72,6 +73,7 @@ function HomeScreenV2({ placeId }: Props) {
   const [selectedAllergens, setSelectedAllergens] = useState<string[]>([]);
   const [selectedDiets, setSelectedDiets] = useState<string[]>([]);
   const [savedRestaurantIds, setSavedRestaurantIds] = useState<string[]>([]);
+  const [showHelp, setShowHelp] = useState(false);
   const [results, setResults] = useState<any[]>([]);
   const [safeResults, setSafeResults] = useState<any[]>([]);
   const [unsafeResults, setUnsafeResults] = useState<any[]>([]);
@@ -325,7 +327,7 @@ function HomeScreenV2({ placeId }: Props) {
 
       {/* FABs */}
       <View style={styles.fabGroup}>
-        <TouchableOpacity style={styles.fab} onPress={() => router.push('/help')}>
+        <TouchableOpacity style={styles.fab} onPress={() => setShowHelp(true)}>
           <Text style={styles.fabIcon}>?</Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -335,6 +337,11 @@ function HomeScreenV2({ placeId }: Props) {
           <Text style={styles.fabIcon}>↪</Text>
         </TouchableOpacity>
       </View>
+
+      {/* Help overlay — rendered in-place so HomeScreenV2 stays mounted */}
+      {showHelp && (
+        <HelpScreen onClose={() => setShowHelp(false)} />
+      )}
     </View>
   );
 }
