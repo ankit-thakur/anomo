@@ -1,0 +1,5 @@
+# Drop FDA/FARE allergen documents here (.txt or .pdf).
+# Then run: python rag/build_kb_embeddings.py
+# Supported formats:
+#   .txt  — paste text from FDA CFSAN pages or FARE guidance
+#   .pdf  — downloaded FDA/FARE PDF documents
