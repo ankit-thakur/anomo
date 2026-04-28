@@ -107,7 +107,7 @@ export default function MenuDetailScreen({ restaurant, userId, selectedAllergens
   const [dishes, setDishes] = useState<ScoredDish[]>([]);
   const [safetyScore, setSafetyScore] = useState<SafetyScore | undefined>(restaurant.safety_score);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<TabKey>('all');
+  const [activeTab, setActiveTab] = useState<TabKey>('safe');
 
   // Local copies of filters — updated when the user saves from the sheet on this screen
   const [localAllergens, setLocalAllergens] = useState<string[]>(selectedAllergens);
@@ -185,20 +185,13 @@ export default function MenuDetailScreen({ restaurant, userId, selectedAllergens
   ];
 
   const sections = (() => {
+    if (activeTab === 'all') {
+      const all = [...dishes].sort(byImage);
+      return [{ title: `${all.length} dishes`, data: all, type: 'all' as const }];
+    }
     const list = activeTab === 'safe' ? safe : activeTab === 'caution' ? caution : unsafe;
     return [{ title: `${list.length} ${activeTab} dishes`, data: list, type: activeTab }];
   })();
-
-    // activeTab === 'all'
-    //   ? [
-    //       ...(safe.length    > 0 ? [{ title: '✓  Safe for you',                    data: safe,    type: 'safe' as const    }] : []),
-    //       ...(caution.length > 0 ? [{ title: '⚠  Caution — verify before ordering', data: caution, type: 'caution' as const }] : []),
-    //       ...(unsafe.length  > 0 ? [{ title: '✕  Not safe for you',                data: unsafe,  type: 'unsafe' as const  }] : []),
-    //     ]
-    //   : (() => {
-    //       const list = activeTab === 'safe' ? safe : activeTab === 'caution' ? caution : unsafe;
-    //       return [{ title: `${list.length} ${activeTab} dishes`, data: list, type: activeTab }];
-    //     })();
 
   return (
     <View style={styles.screen}>
