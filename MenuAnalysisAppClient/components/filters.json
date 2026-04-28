@@ -1,0 +1,73 @@
+{
+    "allergens":
+    [
+        {
+            "id": 1,
+            "label": "Milk",
+            "checked": false,
+            "subCategories": ["milk", "cheese", "dairy"]
+        },
+        {
+            "id": 2,
+            "label": "Eggs",
+            "checked": false,
+            "subCategories": ["eggs"]
+        },
+        {
+            "id": 3,
+            "label": "Peanuts",
+            "checked": false,
+            "subCategories": ["peanuts"]
+        },
+        {
+            "id": 4,
+            "label": "Tree Nuts",
+            "checked": false,
+            "subCategories": ["almonds", "Brazil nuts", "cashews", "hazelnuts", "macadamia nuts", "pecans", "pine nuts", "pistachios", "walnuts"]
+        },
+        {
+            "id": 5,
+            "label": "Soy",
+            "checked": false,
+            "subCategories": ["soy", "soy beans"]
+        },
+        {
+            "id": 6,
+            "label": "Sesame",
+            "checked": false,
+            "subCategories": ["sesame"]
+        },
+        {
+            "id": 7,
+            "label": "Wheat",
+            "checked": false,
+            "subCategories": ["wheat", "gluten"]
+        },
+        {
+            "id": 8,
+            "label": "Fish",
+            "checked": false,
+            "subCategories": ["salmon", "tuna", "mahi mahi", "mackeral", "cod"]
+        },
+        {
+            "id": 9,
+            "label": "Shellfish",
+            "checked": false,
+            "subCategories": ["lobster", "shrimp", "prawns", "crabs"]
+        }
+    ],
+    "diets": [
+        {
+            "id": 1,
+            "label": "Vegetarian",
+            "checked": false,
+            "subCategories": []
+        },
+        {
+            "id": 1,
+            "label": "Vegan",
+            "checked": false,
+            "subCategories": []
+        }
+    ]
+}
