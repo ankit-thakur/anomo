@@ -5,6 +5,7 @@ const dynamodb = require('aws-cdk-lib/aws-dynamodb');
 const iam = require('aws-cdk-lib/aws-iam');
 const path = require('path');
 const cdk = require('aws-cdk-lib');
+const secrets = require('./secrets.json');
 
 
 class CdkStack extends Stack {
@@ -266,7 +267,8 @@ class CdkStack extends Stack {
       timeout: Duration.minutes(15),
       layers: [ importedBoto3Layer, importedRequestsLayer, importedPdfReaderLayer, importedBs4Layer, importedDotenvLayer ],
       environment: {
-        "openai_api_key": "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",
+        "openai_api_key": secrets.openai_api_key,
+        "FIRECRAWL_API_KEY": secrets.firecrawl_api_key,
       }
     });
 

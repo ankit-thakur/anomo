@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import {
   Animated, View, Text, TextInput, StyleSheet,
   Modal, Pressable, TouchableOpacity, Easing,
-  Platform, ScrollView, ActivityIndicator,
+  Platform, ScrollView, ActivityIndicator, KeyboardAvoidingView,
 } from 'react-native';
 import axios from 'axios';
 import { API } from '../config/apiConfig';
@@ -114,9 +114,13 @@ const MenuDiscoverySheet: React.FC<Props> = ({ params, onClose, onSubmitted }) =
         address:  params.address,
         website:  params.website ?? '',
       });
-      const foundUrl: string | null = res.data?.is_menu ? res.data.link : null;
-      if (foundUrl) {
-        setLinks([{ type: inferMenuType(foundUrl), url: foundUrl, confidence: 1 }]);
+      const data = res.data;
+      if (data?.is_menu) {
+        const raw: { url: string; confidence: number }[] =
+          Array.isArray(data.links) && data.links.length > 0
+            ? data.links
+            : [{ url: data.link, confidence: 1 }];
+        setLinks(raw.map(l => ({ type: inferMenuType(l.url), url: l.url, confidence: l.confidence ?? 1 })));
         setSelectedIdx(0);
         setState('found');
       } else {
@@ -134,6 +138,8 @@ const MenuDiscoverySheet: React.FC<Props> = ({ params, onClose, onSubmitted }) =
       ? { type: 'menu' as MenuType, url: manualUrl }
       : links[selectedIdx];
     if (!chosen?.url) return;
+
+    console.log('Submitting menu for analysis:', chosen.url);
 
     try {
       await axios.post(ANALYZE_URL, {
@@ -278,33 +284,38 @@ const MenuDiscoverySheet: React.FC<Props> = ({ params, onClose, onSubmitted }) =
 
   return (
     <Modal transparent visible animationType="none">
-      <Pressable style={s.overlay} onPress={dismissSheet} />
-      <Animated.View style={[s.sheet, { transform: [{ translateY }] }]}>
-        <View style={s.handle} />
-        <ScrollView
-          contentContainerStyle={s.content}
-          keyboardShouldPersistTaps="handled"
-          showsVerticalScrollIndicator={false}
-        >
-          <RestaurantRow />
+      <KeyboardAvoidingView
+        style={s.modalRoot}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      >
+        <Pressable style={s.overlay} onPress={dismissSheet} />
+        <Animated.View style={[s.sheet, { transform: [{ translateY }] }]}>
+          <View style={s.handle} />
+          <ScrollView
+            contentContainerStyle={s.content}
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}
+          >
+            <RestaurantRow />
 
-          {state === 'scanning'  && <ScanningView />}
-          {state === 'found'     && <FoundView />}
-          {state === 'not_found' && <NotFoundView />}
-          {state === 'submitted' && <SubmittedView />}
+            {state === 'scanning'  && <ScanningView />}
+            {state === 'found'     && <FoundView />}
+            {state === 'not_found' && <NotFoundView />}
+            {state === 'submitted' && <SubmittedView />}
 
-          {(state === 'found' || state === 'not_found') && (
-            <TouchableOpacity
-              style={[s.cta, !confirmReady && s.ctaDisabled]}
-              onPress={handleConfirm}
-              disabled={!confirmReady}
-              activeOpacity={0.85}
-            >
-              <Text style={s.ctaText}>{ctaLabel()}</Text>
-            </TouchableOpacity>
-          )}
-        </ScrollView>
-      </Animated.View>
+            {(state === 'found' || state === 'not_found') && (
+              <TouchableOpacity
+                style={[s.cta, !confirmReady && s.ctaDisabled]}
+                onPress={handleConfirm}
+                disabled={!confirmReady}
+                activeOpacity={0.85}
+              >
+                <Text style={s.ctaText}>{ctaLabel()}</Text>
+              </TouchableOpacity>
+            )}
+          </ScrollView>
+        </Animated.View>
+      </KeyboardAvoidingView>
     </Modal>
   );
 };
@@ -312,16 +323,18 @@ const MenuDiscoverySheet: React.FC<Props> = ({ params, onClose, onSubmitted }) =
 // ── Styles ────────────────────────────────────────────────────────────────────
 
 const s = StyleSheet.create({
+  modalRoot: {
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
   overlay: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.45)',
   },
   sheet: {
-    position: 'absolute',
-    bottom: 0, left: 0, right: 0,
     backgroundColor: C.cream,
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
+    // borderTopLeftRadius: 24,
+    // borderTopRightRadius: 24,
     maxHeight: '84%',
     shadowColor: '#000',
     shadowOpacity: 0.15,

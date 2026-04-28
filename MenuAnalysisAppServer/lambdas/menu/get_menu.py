@@ -42,8 +42,8 @@ def get_menu(url):
     ##### 1. Extract potential menu links #####
     # Set USE_FIRECRAWL_MAP=true to use Firecrawl /map (JS-aware, sitemap-backed).
     # Leave unset to use the original crawl_for_menu (requests + BeautifulSoup).
-    # USE_FIRECRAWL_MAP = True
-    USE_FIRECRAWL_MAP = False
+    USE_FIRECRAWL_MAP = True
+    # USE_FIRECRAWL_MAP = False
     if USE_FIRECRAWL_MAP:
         print("[get_menu] Using Firecrawl map for URL discovery")
         menu_links = find_menu_urls(url)
@@ -51,43 +51,42 @@ def get_menu(url):
         menu_links = crawl_for_menu(url)
     print("Candidate menu links:", menu_links)
     
-    count = 0
+    HEADERS = {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'Content-Type, Origin, Accept',
+        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS'
+    }
+
+    found = []
+    checked = 0
     for link, score in menu_links:
-        if count == 3:  # Limit to 3 links
-            return None
-        
-        content = ""
-        if link.endswith('.pdf'):
-            content = is_pdf(link)
-        else:
-            content = is_html(link)
-            
+        if checked >= 3:
+            break
+
+        content = is_pdf(link) if link.endswith('.pdf') else is_html(link)
         response = is_menu(content)
-            
-        if response:
-            response['link'] = link
-            return {
-                'statusCode': 200,
-                'headers': {
-                    'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*',
-                    'Access-Control-Allow-Headers': 'Content-Type, Origin, Accept',
-                    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS'
-                },
-                'body': json.dumps(response)
-            }
-        else:
-            count += 1
-    
+        checked += 1
+
+        if response and response.get('is_menu'):
+            found.append({'url': link, 'confidence': round(float(score), 3) if score else 1})
+
+    if found:
+        print(f"Found {len(found)} menu link(s):", [f['url'] for f in found])
+        return {
+            'statusCode': 200,
+            'headers': HEADERS,
+            'body': json.dumps({
+                'is_menu': True,
+                'link': found[0]['url'],   # backward compat
+                'links': found,
+            })
+        }
+
     print("Could not find menu link.")
     return {
         'statusCode': 500,
-        'headers': {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Headers': 'Content-Type, Origin, Accept',
-            'Access-Control-Allow-Methods': 'GET, POST, OPTIONS'
-        },
+        'headers': HEADERS,
         'body': {}
     }
 

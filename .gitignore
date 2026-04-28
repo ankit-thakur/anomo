@@ -28,6 +28,7 @@ MenuAnalysisAppServer/lambdas/layers/pdfReader-layer/
 
 # Secrets
 MenuAnalysisAppServer/lambdas/.env
+MenuAnalysisAppCdk/secrets.json
 
 # IDE
 .vscode/
