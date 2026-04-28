@@ -1,0 +1,54 @@
+[{
+    "toolSpec": {
+        "name": "extract_menu_items",
+        "description": "Extract list of menu items",
+        "inputSchema": {
+            "json": {
+                "type": "object",
+                "properties": {
+                    "menu_items_list": {
+                        "type": "array",
+                        "description": "List of menu items",
+                        "items": {
+                            "type": "object",
+                            "description": "Individual menu item",
+                            "properties": {
+                                "name": {
+                                    "type": "string",
+                                    "description": "The name of the menu item as given by the restaurant."
+                                },
+                                "description": {
+                                    "type": "string",
+                                    "description": "The description of the item on the menu."
+                                },
+                                "price": {
+                                    "type": "string",
+                                    "description": "The price of the menu item."
+                                },
+                                "dish": {
+                                    "type": "string",
+                                    "description": "The identifiable name of the dish such as cheese burger, pizza, tonkatsu ramen, chicken tikka masala, etc."
+                                },
+                                "listed_ingredients": {
+                                    "type": "array",
+                                    "description": "The list of ingredients listed in the description of the item.",
+                                    "items": {"type": "string"}
+                                },
+                                "typical_ingredients": {
+                                    "type": "array",
+                                    "description": "The list of ingredients typically used to make this dish.",
+                                    "items": {"type": "string"}
+                                },
+                                "allergens": {
+                                    "type": "array",
+                                    "description": "Your customer is allergic to and has the following dietary restrictions: " + allergies_str + ". Return the list of ingredients in this dish that contain any of these allergens.",
+                                    "items": { "type": "string" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}]
