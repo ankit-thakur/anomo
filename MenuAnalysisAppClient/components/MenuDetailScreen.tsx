@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import {
   View, Text, Image, StyleSheet, TouchableOpacity,
-  ImageBackground, ActivityIndicator, Platform, SectionList,
+  ActivityIndicator, Platform, SectionList,
 } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import axios from 'axios';
 import FilterDropdownComponent from './FilterDropdownComponent';
@@ -83,6 +84,8 @@ interface Props {
   selectedDiets: string[];
   onClose: () => void;
   onFiltersChange?: (allergens: string[], dietaryRestrictions: string[]) => void;
+  isSaved?: boolean;
+  onToggleSave?: () => void;
 }
 
 const GET_MENU_ITEMS = API.getMenuItems;
@@ -103,7 +106,7 @@ function classifyDish(dish: any, allergens: string[], diets: string[]): Classifi
   return 'safe';
 }
 
-export default function MenuDetailScreen({ restaurant, userId, selectedAllergens, selectedDiets, onClose, onFiltersChange }: Props) {
+export default function MenuDetailScreen({ restaurant, userId, selectedAllergens, selectedDiets, onClose, onFiltersChange, isSaved = false, onToggleSave }: Props) {
   const [dishes, setDishes] = useState<ScoredDish[]>([]);
   const [safetyScore, setSafetyScore] = useState<SafetyScore | undefined>(restaurant.safety_score);
   const [loading, setLoading] = useState(true);
@@ -226,6 +229,16 @@ export default function MenuDetailScreen({ restaurant, userId, selectedAllergens
         <TouchableOpacity style={styles.backBtn} onPress={onClose} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
           <Text style={styles.backBtnIcon}>‹</Text>
         </TouchableOpacity>
+
+        {onToggleSave && (
+          <TouchableOpacity style={styles.bookmarkBtn} onPress={onToggleSave} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+            <MaterialIcons
+              name={isSaved ? 'bookmark' : 'bookmark-border'}
+              size={26}
+              color={COLORS.white}
+            />
+          </TouchableOpacity>
+        )}
 
         <View style={styles.heroContent}>
           <Text style={styles.heroName} numberOfLines={1}>{restaurant.name}</Text>
@@ -497,6 +510,18 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     lineHeight: 32,
     includeFontPadding: false,
+  },
+  bookmarkBtn: {
+    position: 'absolute',
+    top: BACK_BTN_TOP,
+    right: 16,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: 'rgba(255,255,255,0.25)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 10,
   },
   heroContent: {
     position: 'absolute',
