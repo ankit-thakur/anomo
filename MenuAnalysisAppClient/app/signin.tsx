@@ -9,9 +9,10 @@ import { AuthContext } from '../context/AuthContext';
 import { useRouter } from 'expo-router';
 
 const C = {
-  bg:        '#1A1A16',
+  bg:        '#2A1F14',
   bgCard:    '#242420',
   cream:     '#F2EDE2',
+  brownLight: '#9E8E7E',
   creamDim:  '#C8C0B0',
   creamMute: '#7A7570',
   green:     '#4A7C4E',
@@ -45,11 +46,11 @@ export default function SignInScreen() {
 
   return (
     <View style={styles.root}>
-      <LinearGradient
+      {/* <LinearGradient
         colors={['#2A2820', '#1A1A16', '#111110']}
         locations={[0, 0.5, 1]}
         style={StyleSheet.absoluteFill}
-      />
+      /> */}
 
       <SafeAreaView style={styles.safe} edges={['top', 'bottom']}>
 
@@ -59,7 +60,7 @@ export default function SignInScreen() {
             <Image
               source={require('../assets/images/anomo-logo-2.png')}
               style={styles.logoImg}
-              resizeMode="contain"
+              resizeMode="stretch"
             />
           </View>
           <Text style={styles.wordmark}>anomo</Text>
@@ -116,7 +117,7 @@ export default function SignInScreen() {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: C.bg,
+    backgroundColor: C.cream,
   },
   safe: {
     flex: 1,
@@ -148,20 +149,21 @@ const styles = StyleSheet.create({
     elevation: 6,
   },
   logoImg: {
+    borderRadius: 0.5,
     width: 52,
     height: 52,
   },
   wordmark: {
     fontFamily: 'Fraunces_700Bold',
-    fontSize: 38,
-    color: C.cream,
-    letterSpacing: 5,
+    fontSize: 75,
+    color: C.bg,
+    letterSpacing: -0.02,
     marginBottom: 14,
   },
   tagline: {
     fontFamily: 'Inter_400Regular',
     fontSize: 17,
-    color: C.creamDim,
+    color: C.brownLight,
     textAlign: 'center',
     lineHeight: 26,
   },

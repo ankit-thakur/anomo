@@ -11,7 +11,7 @@ import ResultsSection from './ResultsSection';
 import RestaurantTile from './RestaurantTile';
 import MenuDetailScreen, { DetailRestaurant } from './MenuDetailScreen';
 import HelpScreen from './HelpScreen';
-import { getUserPreferences } from './UserPreferences';
+import { getUserPreferences, updateSavedRestaurants } from './UserPreferences';
 import 'react-native-get-random-values';
 import axios from 'axios';
 import { router } from 'expo-router';
@@ -52,11 +52,11 @@ interface Restaurant {
   safety_score?: SafetyScore;
 }
 
-function decodeJwtSub(token: string): string | null {
+function decodeJwtClaim(token: string, claim: string): string | null {
   try {
     const payload = token.split('.')[1];
     const decoded = JSON.parse(atob(payload.replace(/-/g, '+').replace(/_/g, '/')));
-    return decoded.sub ?? null;
+    return decoded[claim] ?? null;
   } catch {
     return null;
   }
@@ -83,7 +83,8 @@ function HomeScreenV2({ placeId }: Props) {
   const [loadingText, setLoadingText] = useState<string>('');
   const [activeTab, setActiveTab] = useState<Tab>('recommended');
   const { signOut, user } = useContext(AuthContext);
-  const userId = user?.idToken ? decodeJwtSub(user.idToken) : null;
+  const userId    = user?.idToken ? decodeJwtClaim(user.idToken, 'sub')   : null;
+  const userEmail = user?.idToken ? decodeJwtClaim(user.idToken, 'email') : null;
 
   const fetchRestaurants = async () => {
     const endpoint = API.getRecommendations;
@@ -114,6 +115,20 @@ function HomeScreenV2({ placeId }: Props) {
   };
 
   useEffect(() => { fetchUserPreferences(); }, []);
+
+  const toggleSaveRestaurant = async (restaurantId: string) => {
+    const isCurrentlySaved = savedRestaurantIds.includes(restaurantId);
+    const updated = isCurrentlySaved
+      ? savedRestaurantIds.filter(id => id !== restaurantId)
+      : [...savedRestaurantIds, restaurantId];
+    setSavedRestaurantIds(updated);
+    try {
+      await updateSavedRestaurants({ savedRestaurants: updated });
+    } catch (e) {
+      setSavedRestaurantIds(savedRestaurantIds);
+      console.error('Failed to update saved restaurants:', e);
+    }
+  };
 
   useEffect(() => {
     if (placeId) queryRestaurants({ place_id: placeId });
@@ -276,6 +291,8 @@ function HomeScreenV2({ placeId }: Props) {
                     safeDishes={item.safety_score?.safe_count}
                     cautionDishes={item.safety_score?.caution_count}
                     unsafeDishes={item.safety_score?.unsafe_count}
+                    isSaved={savedRestaurantIds.includes(item.restaurantId)}
+                    onToggleSave={() => toggleSaveRestaurant(item.restaurantId)}
                   />
                 </TouchableOpacity>
               )}
@@ -322,25 +339,27 @@ function HomeScreenV2({ placeId }: Props) {
             setSelectedAllergens(allergens);
             setSelectedDiets(diets);
           }}
+          isSaved={savedRestaurantIds.includes(selectedRestaurant.restaurantId)}
+          onToggleSave={() => toggleSaveRestaurant(selectedRestaurant.restaurantId)}
         />
       )}
 
-      {/* FABs */}
-      <View style={styles.fabGroup}>
-        <TouchableOpacity style={styles.fab} onPress={() => setShowHelp(true)}>
-          <Text style={styles.fabIcon}>?</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.fab}
-          onPress={() => signOut().then(() => router.replace('/signin'))}
-        >
-          <Text style={styles.fabIcon}>↪</Text>
-        </TouchableOpacity>
-      </View>
+      {/* Help FAB — above all overlays including MenuDetailScreen */}
+      {!showHelp && (
+        <View style={styles.fabGroup}>
+          <TouchableOpacity style={styles.fab} onPress={() => setShowHelp(true)}>
+            <Text style={styles.fabIcon}>?</Text>
+          </TouchableOpacity>
+        </View>
+      )}
 
-      {/* Help overlay — rendered in-place so HomeScreenV2 stays mounted */}
+      {/* Help overlay — rendered last so it sits above MenuDetailScreen */}
       {showHelp && (
-        <HelpScreen onClose={() => setShowHelp(false)} />
+        <HelpScreen
+          onClose={() => setShowHelp(false)}
+          userEmail={userEmail}
+          onSignOut={() => signOut().then(() => router.replace('/signin'))}
+        />
       )}
     </View>
   );
@@ -480,6 +499,8 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     gap: 10,
     alignItems: 'center',
+    zIndex: 200,
+    elevation: 200,
   },
   fab: {
     width: 40,

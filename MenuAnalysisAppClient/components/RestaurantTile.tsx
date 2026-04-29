@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { MaterialIcons } from '@expo/vector-icons';
 
 const COLORS = {
   cream: '#F2EDE2',
@@ -34,6 +35,8 @@ interface RestaurantTileProps {
   unsafeDishes?: number;
   reviewSnippet?: string;
   reviewSource?: string;
+  isSaved?: boolean;
+  onToggleSave?: () => void;
 }
 
 function getScoreStyle(score: number) {
@@ -47,6 +50,7 @@ const RestaurantTile = (props: RestaurantTileProps) => {
     name, address, heroImage,
     score, safeDishes, cautionDishes, unsafeDishes,
     reviewSnippet, reviewSource,
+    isSaved = false, onToggleSave,
   } = props;
 
   const hasScore      = score !== undefined && score !== null;
@@ -94,6 +98,17 @@ const RestaurantTile = (props: RestaurantTileProps) => {
                 {score}% {scoreStyle!.label}
               </Text>
             </View>
+          )}
+
+          {/* Bookmark — bottom right */}
+          {onToggleSave && (
+            <TouchableOpacity style={styles.bookmarkBtn} onPress={onToggleSave} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
+              <MaterialIcons
+                name={isSaved ? 'bookmark' : 'bookmark-border'}
+                size={22}
+                color={COLORS.white}
+              />
+            </TouchableOpacity>
           )}
         </View>
 
@@ -197,6 +212,13 @@ const styles = StyleSheet.create({
   scoreText: {
     fontSize: 12,
     fontWeight: '700',
+  },
+
+  // Bookmark
+  bookmarkBtn: {
+    position: 'absolute',
+    bottom: 10,
+    right: 10,
   },
 
   // Body

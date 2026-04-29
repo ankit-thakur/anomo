@@ -22,6 +22,8 @@ type Mode = 'menu' | 'issue' | 'feedback' | 'disclaimers' | 'success';
 
 interface Props {
   onClose?: () => void;
+  userEmail?: string | null;
+  onSignOut?: () => void;
 }
 
 const DISCLAIMER_TEXT = `The information provided in this app, including but not limited to allergen details, dietary suggestions, and ingredient recommendations, is for informational purposes only and is not intended as medical advice, diagnosis, or treatment.
@@ -40,10 +42,10 @@ By using this app, you acknowledge and agree that:
 
 If you have or suspect you may have a medical condition, seek immediate advice from a licensed healthcare professional. Never delay, disregard, or avoid seeking medical advice because of something you read in this app.`;
 
-export default function HelpScreen({ onClose }: Props) {
+export default function HelpScreen({ onClose, userEmail, onSignOut }: Props) {
   const [mode, setMode] = useState<Mode>('menu');
   const [text, setText] = useState('');
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState(userEmail ?? '');
   const [emailError, setEmailError] = useState(false);
   const [submitError, setSubmitError] = useState(false);
 
@@ -94,6 +96,7 @@ export default function HelpScreen({ onClose }: Props) {
     { key: 'feedback',    icon: 'rate-review',   label: 'Provide Feedback',  accent: COLORS.green  },
     { key: 'contact',     icon: 'email',         label: 'Contact the Team',  accent: COLORS.green  },
     { key: 'disclaimers', icon: 'info-outline',  label: 'Disclaimers',       accent: COLORS.textMuted },
+    { key: 'signout',     icon: 'logout',        label: 'Sign Out',          accent: COLORS.red    },
   ] as const;
 
   const titleMap: Partial<Record<Mode, string>> = {
@@ -128,11 +131,11 @@ export default function HelpScreen({ onClose }: Props) {
               key={item.key}
               style={styles.card}
               activeOpacity={0.75}
-              onPress={() =>
-                item.key === 'contact'
-                  ? openEmail()
-                  : setMode(item.key as Mode)
-              }
+              onPress={() => {
+                if (item.key === 'contact') openEmail();
+                else if (item.key === 'signout') onSignOut?.();
+                else setMode(item.key as Mode);
+              }}
             >
               <View style={[styles.iconBadge, { backgroundColor: item.accent + '1A' }]}>
                 <Icon name={item.icon} size={20} color={item.accent} />
@@ -251,7 +254,7 @@ const styles = StyleSheet.create({
   overlay: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: COLORS.cream,
-    zIndex: 20,
+    zIndex: 200,
     paddingTop: Platform.OS === 'ios' ? 54 : 24,
   },
 
