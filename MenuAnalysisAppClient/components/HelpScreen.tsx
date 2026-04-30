@@ -96,7 +96,7 @@ export default function HelpScreen({ onClose, userEmail, onSignOut }: Props) {
     { key: 'feedback',    icon: 'rate-review',   label: 'Provide Feedback',  accent: COLORS.green  },
     { key: 'contact',     icon: 'email',         label: 'Contact the Team',  accent: COLORS.green  },
     { key: 'disclaimers', icon: 'info-outline',  label: 'Disclaimers',       accent: COLORS.textMuted },
-    { key: 'signout',     icon: 'logout',        label: 'Sign Out',          accent: COLORS.red    },
+    { key: 'signout',     icon: 'logout',        label: 'Sign Out',          accent: COLORS.orange    },
   ] as const;
 
   const titleMap: Partial<Record<Mode, string>> = {

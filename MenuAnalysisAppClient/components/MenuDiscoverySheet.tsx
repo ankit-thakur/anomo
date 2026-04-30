@@ -7,7 +7,7 @@ import {
 import axios from 'axios';
 import { API } from '../config/apiConfig';
 
-// ── Types ────────────────────────────────────────────────────────────────────
+// ── Types ─────────────────────────────────────────────────────────────────────────────
 
 type SheetState = 'scanning' | 'found' | 'not_found' | 'submitted';
 type MenuType   = 'dinner' | 'brunch' | 'lunch' | 'drinks' | 'all-day' | 'menu';
@@ -31,7 +31,7 @@ interface Props {
   onSubmitted?: () => void;
 }
 
-// ── Constants ─────────────────────────────────────────────────────────────────
+// ── Constants ─────────────────────────────────────────────────────────────────────────
 
 const C = {
   cream:     '#F2EDE2',
@@ -49,7 +49,7 @@ const C = {
 const GET_MENU_URL = API.getMenu;
 const ANALYZE_URL  = API.analyzeMenu;
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
+// ── Helpers ───────────────────────────────────────────────────────────────────────────
 
 function inferMenuType(url: string): MenuType {
   const u = url.toLowerCase();
@@ -73,7 +73,7 @@ function truncateUrl(url: string, max = 42): string {
 
 const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
-// ── Component ─────────────────────────────────────────────────────────────────
+// ── Component ───────────────────────────────────────────────────────────────────────────
 
 const MenuDiscoverySheet: React.FC<Props> = ({ params, onClose, onSubmitted }) => {
   const [state,          setState]          = useState<SheetState>('scanning');
@@ -104,7 +104,7 @@ const MenuDiscoverySheet: React.FC<Props> = ({ params, onClose, onSubmitted }) =
     }).start(() => onClose());
   };
 
-  // ── Discovery call ─────────────────────────────────────────────────────────
+  // ── Discovery call ──────────────────────────────────────────────────────────────
 
   const discoverMenu = async () => {
     try {
@@ -131,10 +131,10 @@ const MenuDiscoverySheet: React.FC<Props> = ({ params, onClose, onSubmitted }) =
     }
   };
 
-  // ── Submit ─────────────────────────────────────────────────────────────────
+  // ── Submit ─────────────────────────────────────────────────────────────────────────────
 
   const handleConfirm = async () => {
-    const chosen = manualVisible
+    const chosen = (state === 'not_found' || manualVisible)
       ? { type: 'menu' as MenuType, url: manualUrl }
       : links[selectedIdx];
     if (!chosen?.url) return;
@@ -168,7 +168,7 @@ const MenuDiscoverySheet: React.FC<Props> = ({ params, onClose, onSubmitted }) =
     }
   };
 
-  // ── Derived ────────────────────────────────────────────────────────────────
+  // ── Derived ─────────────────────────────────────────────────────────────────────────────
 
   const translateY   = slideAnim.interpolate({ inputRange: [0, 1], outputRange: [640, 0] });
   // not_found has no radio list — always validate the manual URL field directly
@@ -181,7 +181,7 @@ const MenuDiscoverySheet: React.FC<Props> = ({ params, onClose, onSubmitted }) =
     return `Analyze ${type} menu →`;
   };
 
-  // ── Sub-renders ────────────────────────────────────────────────────────────
+  // ── Sub-renders ───────────────────────────────────────────────────────────────────────────
 
   const RestaurantRow = () => (
     <View style={s.restRow}>
@@ -280,7 +280,7 @@ const MenuDiscoverySheet: React.FC<Props> = ({ params, onClose, onSubmitted }) =
     </View>
   );
 
-  // ── Render ─────────────────────────────────────────────────────────────────
+  // ── Render ─────────────────────────────────────────────────────────────────────────────
 
   return (
     <Modal transparent visible animationType="none">
@@ -320,7 +320,7 @@ const MenuDiscoverySheet: React.FC<Props> = ({ params, onClose, onSubmitted }) =
   );
 };
 
-// ── Styles ────────────────────────────────────────────────────────────────────
+// ── Styles ─────────────────────────────────────────────────────────────────────────────
 
 const s = StyleSheet.create({
   modalRoot: {

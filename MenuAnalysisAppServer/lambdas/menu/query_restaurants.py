@@ -59,7 +59,10 @@ def query_restaurants(event, context):
                 'Access-Control-Allow-Headers': 'Content-Type, Origin, Accept',
                 'Access-Control-Allow-Methods': 'GET, POST, OPTIONS'
             },
-            'body': json.dumps(menu_items, cls=DecimalEncoder)
+            'body': json.dumps({
+                'restaurant': restaurant_item,
+                'menuItems': menu_items
+            }, cls=DecimalEncoder)
         }
     else:
         print("*** Menu NOT processed ***")        

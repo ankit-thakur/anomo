@@ -165,13 +165,14 @@ function HomeScreenV2({ placeId }: Props) {
     const endpoint = API.queryRestaurants;
     try {
       const response = await axios.post(endpoint, { placeId: searchResult.place_id });
-      if (response.data?.length > 0) {
+      if (response.data?.restaurant) {
+        const { restaurant } = response.data;
         setSelectedRestaurant({
           restaurantId: searchResult.place_id,
           name: searchResult.name ?? '',
           address: searchResult.formatted_address ?? '',
-          heroImage: response.data[0].heroImage ?? '',
-          images: [],
+          heroImage: restaurant.heroImage ?? '',
+          images: restaurant.images ?? [],
         });
         return;
       }
