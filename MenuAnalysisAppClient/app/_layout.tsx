@@ -9,20 +9,45 @@ import { useFonts, Inter_400Regular, Inter_500Medium, Inter_700Bold } from '@exp
 import { Fraunces_400Regular, Fraunces_700Bold } from '@expo-google-fonts/fraunces';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AuthProvider, AuthContext } from '../context/AuthContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ONBOARDING_VERSION, ONBOARDING_VERSION_KEY } from '../components/OnboardingScreen';
 
 const { useContext, useEffect } = React;
+
+const AUTH_ROUTES = ['/signin', '/signup'];
 
 function AuthGate({ children }: { children: React.ReactNode }) {
   const { user, isLoading } = useContext(AuthContext);
   const router = useRouter();
   const segments = useSegments();
+
   useEffect(() => {
     if (isLoading) return;
     const current = '/' + (segments[0] || '');
-    if (!user && !['/signin', '/signup'].includes(current)) {
-      router.replace('/signin');
+
+    if (!user) {
+      if (!AUTH_ROUTES.includes(current)) {
+        router.replace('/signin');
+      }
+      return;
     }
+
+    // Authenticated — check whether onboarding has been completed
+    const checkOnboarding = async () => {
+      const stored = await AsyncStorage.getItem(ONBOARDING_VERSION_KEY);
+      const storedVersion = stored ? parseInt(stored, 10) : 0;
+      const needsOnboarding = storedVersion < ONBOARDING_VERSION;
+
+      if (needsOnboarding && current !== '/onboarding') {
+        router.replace('/onboarding');
+      } else if (!needsOnboarding && (current === '/onboarding' || AUTH_ROUTES.includes(current))) {
+        router.replace('/home');
+      }
+    };
+
+    checkOnboarding();
   }, [user, isLoading, router, segments]);
+
   return <>{children}</>;
 }
 
