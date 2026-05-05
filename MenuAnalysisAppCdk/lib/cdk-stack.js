@@ -18,7 +18,7 @@ class CdkStack extends Stack {
   constructor(scope, id, props) {
     super(scope, id, props);
 
-    const myBoto3Layer = lambda.LayerVersion.fromLayerVersionArn(this, 'boto3layer3', 'arn:aws:lambda:us-east-1:022941184721:layer:boto3layer3:1');
+    const myBoto3Layer = lambda.LayerVersion.fromLayerVersionArn(this, 'boto3layer3', `arn:aws:lambda:us-east-1:${process.env.CDK_DEFAULT_ACCOUNT}:layer:boto3layer3:1`);
     // Import the Lambda Layer from another stack using its exported ARN
     const importedBoto3Layer = lambda.LayerVersion.fromLayerVersionArn(
       this,
@@ -114,7 +114,7 @@ class CdkStack extends Stack {
       code: lambda.Code.fromAsset(path.join(__dirname, '../../MenuAnalysisAppServer/lambdas/search')),
       timeout: Duration.minutes(15),
       environment: {
-        GOOGLE_API_KEY: "REDACTED_GOOGLE_API_KEY"
+        GOOGLE_API_KEY: secrets.google_api_key,
       },
       layers: [ importedRequestsLayer, importedDotenvLayer ]
     });
@@ -126,7 +126,7 @@ class CdkStack extends Stack {
       code: lambda.Code.fromAsset(path.join(__dirname, '../../MenuAnalysisAppServer/lambdas/search')),
       timeout: Duration.minutes(15),
       environment: {
-        GOOGLE_API_KEY: "REDACTED_GOOGLE_API_KEY"
+        GOOGLE_API_KEY: secrets.google_api_key,
       },
       layers: [ importedRequestsLayer ]
     });
@@ -178,7 +178,7 @@ class CdkStack extends Stack {
     queryRestaurantsLambda.addToRolePolicy(new iam.PolicyStatement({
       effect: ['Allow'],
       actions: ['execute-api:ManageConnections'],
-      resources: ['arn:aws:execute-api:us-east-1:022941184721:djh0fnzlrc/prod/POST/@connections/{connectionId}'],
+      resources: [`arn:aws:execute-api:us-east-1:${process.env.CDK_DEFAULT_ACCOUNT}:${secrets.websocket_api_id}/prod/POST/@connections/{connectionId}`],
     }));
 
     importedRestaurantTable.grantReadWriteData(queryRestaurantsLambda);
@@ -226,7 +226,7 @@ class CdkStack extends Stack {
     restaurantDataLambda.addToRolePolicy(new iam.PolicyStatement({
       effect: ['Allow'],
       actions: ['execute-api:ManageConnections'],
-      resources: ['arn:aws:execute-api:us-east-1:022941184721:djh0fnzlrc/prod/POST/@connections/{connectionId}'],
+      resources: [`arn:aws:execute-api:us-east-1:${process.env.CDK_DEFAULT_ACCOUNT}:${secrets.websocket_api_id}/prod/POST/@connections/{connectionId}`],
     }));
 
     importedRestaurantTable.grantReadWriteData(restaurantDataLambda);
@@ -280,7 +280,7 @@ class CdkStack extends Stack {
         'arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-3-sonnet-20240229-v1:0',
         'arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-3-5-haiku-20241022-v1:0',
         'arn:aws:bedrock:us-east-1::foundation-model/us.anthropic.claude-3-5-haiku-20241022-v1:0',
-        'arn:aws:bedrock:us-east-1:022941184721:inference-profile/us.anthropic.claude-3-5-haiku-20241022-v1:0',
+        `arn:aws:bedrock:us-east-1:${process.env.CDK_DEFAULT_ACCOUNT}:inference-profile/us.anthropic.claude-3-5-haiku-20241022-v1:0`,
         'arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-3-5-haiku-20240620-v1:0',
         'arn:aws:bedrock:us-east-2::foundation-model/anthropic.claude-3-5-haiku-20241022-v1:0'
       ],
@@ -311,13 +311,13 @@ class CdkStack extends Stack {
 
     menuAnalyzerLambdaHandler.addToRolePolicy(new iam.PolicyStatement({
       actions: ['states:StartExecution'],
-      resources: ['arn:aws:states:us-east-1:022941184721:stateMachine:MenuAnalysisStepFunction61790BD0-tB0Guoud9VWt'], // Restrict the permission to your specific Step Function ARN
+      resources: [`arn:aws:states:us-east-1:${process.env.CDK_DEFAULT_ACCOUNT}:stateMachine:${secrets.step_function_name}`], // Restrict the permission to your specific Step Function ARN
     }));
 
     menuAnalyzerLambdaHandler.addToRolePolicy(new iam.PolicyStatement({
       effect: ['Allow'],
       actions: ['execute-api:ManageConnections'],
-      resources: ['arn:aws:execute-api:us-east-1:022941184721:djh0fnzlrc/prod/POST/@connections/{connectionId}'],
+      resources: [`arn:aws:execute-api:us-east-1:${process.env.CDK_DEFAULT_ACCOUNT}:${secrets.websocket_api_id}/prod/POST/@connections/{connectionId}`],
     }));
 
     // Import the DDB table from another stack using its exported ARN
@@ -375,7 +375,7 @@ class CdkStack extends Stack {
     usersLambda.addToRolePolicy(new iam.PolicyStatement({
       effect: ['Allow'],
       actions: ['execute-api:ManageConnections'],
-      resources: ['arn:aws:execute-api:us-east-1:022941184721:djh0fnzlrc/prod/POST/@connections/{connectionId}'],
+      resources: [`arn:aws:execute-api:us-east-1:${process.env.CDK_DEFAULT_ACCOUNT}:${secrets.websocket_api_id}/prod/POST/@connections/{connectionId}`],
     }));
 
   }

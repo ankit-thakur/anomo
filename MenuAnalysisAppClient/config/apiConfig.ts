@@ -1,19 +1,20 @@
+// API endpoints — set these in MenuAnalysisAppClient/.env (see .env.example)
 export const API = {
   // Restaurant data
-  getRestaurant:     'https://w03yio9zle.execute-api.us-east-1.amazonaws.com/prod/getRestaurant',
-  getRecommendations:'https://w03yio9zle.execute-api.us-east-1.amazonaws.com/prod/getRecommendations',
-  getMenuItems:      'https://w03yio9zle.execute-api.us-east-1.amazonaws.com/prod/getMenuItems',
-  queryRestaurants:  'https://2ojlzevla1.execute-api.us-east-1.amazonaws.com/prod/queryRestaurants',
+  getRestaurant:     process.env.EXPO_PUBLIC_API_RESTAURANT_URL + '/getRestaurant',
+  getRecommendations:process.env.EXPO_PUBLIC_API_RESTAURANT_URL + '/getRecommendations',
+  getMenuItems:      process.env.EXPO_PUBLIC_API_RESTAURANT_URL + '/getMenuItems',
+  queryRestaurants:  process.env.EXPO_PUBLIC_API_QUERY_URL + '/queryRestaurants',
 
   // Menu
-  getMenu:           'https://7y8vlkzs17.execute-api.us-east-1.amazonaws.com/prod/getMenu',
-  analyzeMenu:       'https://jlpothzo0g.execute-api.us-east-1.amazonaws.com/prod/invokeAnalyzeMenu',
+  getMenu:           process.env.EXPO_PUBLIC_API_MENU_URL + '/getMenu',
+  analyzeMenu:       process.env.EXPO_PUBLIC_API_ANALYZE_URL + '/invokeAnalyzeMenu',
 
   // Search
-  searchPlaceId:     'https://5g1l055sob.execute-api.us-east-1.amazonaws.com/prod/searchPlaceId',
-  searchPlaceDetails:'https://5g1l055sob.execute-api.us-east-1.amazonaws.com/prod/searchPlaceDetails',
+  searchPlaceId:     process.env.EXPO_PUBLIC_API_SEARCH_URL + '/searchPlaceId',
+  searchPlaceDetails:process.env.EXPO_PUBLIC_API_SEARCH_URL + '/searchPlaceDetails',
 
   // User
-  userPreferences:   'https://vv6e672v23.execute-api.us-east-1.amazonaws.com/prod/',
-  updateUsers:       'https://s6z1m7cxr1.execute-api.us-east-1.amazonaws.com/prod/updateUsers',
+  userPreferences:   process.env.EXPO_PUBLIC_API_PREFERENCES_URL,
+  updateUsers:       process.env.EXPO_PUBLIC_API_USERS_URL + '/updateUsers',
 };
