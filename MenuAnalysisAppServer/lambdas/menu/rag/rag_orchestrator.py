@@ -14,8 +14,9 @@ s3 = boto3.client("s3")
 
 
 def invoke_rag(input):
+    import os
     stepfunctions_client = boto3.client('stepfunctions', region_name='us-east-1')
-    state_machine_arn = 'arn:aws:states:us-east-1:022941184721:stateMachine:RagStepFunctionA1003AA1-8mrPGy8DC73q'
+    state_machine_arn = os.environ['RAG_STEP_FUNCTION_ARN']
 
     try:
         # Start the Step Function execution

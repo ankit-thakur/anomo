@@ -32,11 +32,11 @@ class CognitoStack extends Stack {
         }
       },
       passwordPolicy: {
-        minLength: 8,
+        minLength: 6,
         requireLowercase: true,
-        requireUppercase: true,
-        requireDigits: true,
-        requireSymbols: true,
+        requireUppercase: false,
+        requireDigits: false,
+        requireSymbols: false,
       },
       accountRecovery: cognito.AccountRecovery.EMAIL_ONLY,
     });

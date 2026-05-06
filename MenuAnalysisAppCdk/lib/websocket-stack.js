@@ -25,18 +25,6 @@ class WebSocketApiStack extends Stack {
             cdk.Fn.importValue('ConnectionIdTableExport') // Import by export name
         );
 
-        // Lambda function for WebSocket message handling
-        const messageHandler = new lambda.Function(this, 'MessageHandler', {
-        runtime: lambda.Runtime.PYTHON_3_12,
-        code: lambda.Code.fromAsset(path.resolve(__dirname, '../../MenuAnalysisAppServer/lambdas/websocket')),
-        handler: 'message_handler.message_handler',
-        });
-
-        messageHandler.addToRolePolicy(new iam.PolicyStatement({
-            actions: ['execute-api:ManageConnections'],
-            resources: ['arn:aws:execute-api:us-east-1:022941184721:djh0fnzlrc/prod/POST/@connections/*']
-        }));
-
         // Lambda function for handling WebSocket connection lifecycle
         const connectionHandler = new lambda.Function(this, 'ConnectionHandler', {
             runtime: lambda.Runtime.PYTHON_3_12,
@@ -44,21 +32,40 @@ class WebSocketApiStack extends Stack {
             handler: 'connectionHandler.connectionHandler',
         });
 
-        importedConnectionIdTable.grantReadWriteData(messageHandler);
-
-        // Create WebSocket API
+        // Create WebSocket API before messageHandler so we can reference its ID in the IAM policy
         const webSocketApi = new WebSocketApi(this, 'WebSocketApi', {
             connectRouteOptions: { integration: new WebSocketLambdaIntegration('ConnectIntegration', connectionHandler) },
             disconnectRouteOptions: { integration: new WebSocketLambdaIntegration('DisconnectIntegration', connectionHandler) },
-            defaultRouteOptions: { integration: new WebSocketLambdaIntegration('MessageIntegration', messageHandler) },
         });
 
         // WebSocket API stage
-        new WebSocketStage(this, 'ProdStage', {
+        const webSocketStage = new WebSocketStage(this, 'ProdStage', {
             webSocketApi,
             stageName: 'prod',
             autoDeploy: true,
         });
+
+        // Lambda function for WebSocket message handling
+        const messageHandler = new lambda.Function(this, 'MessageHandler', {
+            runtime: lambda.Runtime.PYTHON_3_12,
+            code: lambda.Code.fromAsset(path.resolve(__dirname, '../../MenuAnalysisAppServer/lambdas/websocket')),
+            handler: 'message_handler.message_handler',
+            environment: {
+                CONNECTIONS_TABLE:  importedConnectionIdTable.tableName,
+                WEBSOCKET_ENDPOINT: `https://${webSocketApi.apiId}.execute-api.${this.region}.amazonaws.com/prod/`,
+            },
+        });
+
+        messageHandler.addToRolePolicy(new iam.PolicyStatement({
+            actions: ['execute-api:ManageConnections'],
+            resources: [`arn:aws:execute-api:${this.region}:${this.account}:${webSocketApi.apiId}/prod/POST/@connections/*`],
+        }));
+
+        webSocketApi.addRoute('$default', {
+            integration: new WebSocketLambdaIntegration('MessageIntegration', messageHandler),
+        });
+
+        importedConnectionIdTable.grantReadWriteData(messageHandler);
     }
 }
 

@@ -1,3 +1,4 @@
+import os
 import boto3
 import datetime
 from decimal import Decimal
@@ -17,7 +18,7 @@ def _to_ddb(obj):
 
 def update_restaurants_table(restaurant_id, name, address, menu_url, dish_allergen_summary=None):
     dynamodb = boto3.resource('dynamodb')
-    restaurant_table = dynamodb.Table('DdbStack-RestaurantTableBDE2029A-1QA3XQE9B836T')
+    restaurant_table = dynamodb.Table(os.environ['RESTAURANT_TABLE'])
 
     # Use update_item instead of put_item so fields set by other processes
     # (heroImage, images, etc.) are preserved when no summary is provided.
@@ -42,9 +43,9 @@ def update_restaurants_table(restaurant_id, name, address, menu_url, dish_allerg
     )
 
 
-def update_menu_items_table(restaurant_id, menu): 
+def update_menu_items_table(restaurant_id, menu):
     dynamodb = boto3.resource('dynamodb')
-    menu_items_table = dynamodb.Table('DdbStack-MenuItemsTableBDB50838-124BTKBL895OK')
+    menu_items_table = dynamodb.Table(os.environ['MENU_ITEMS_TABLE'])
 
     for item_name in menu:
         item = menu.get(item_name)
@@ -62,7 +63,7 @@ def update_menu_items_table(restaurant_id, menu):
         
 def add_to_email_list(email, add_email_to_list):
     dynamodb = boto3.resource('dynamodb')
-    email_list_table = dynamodb.Table('DdbStack-EmailListTableAEBE19F7-SSZ9PWM704XE')
+    email_list_table = dynamodb.Table(os.environ['EMAIL_LIST_TABLE'])
 
     if add_email_to_list:
         email_list_table.put_item(Item={

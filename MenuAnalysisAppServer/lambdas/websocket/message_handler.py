@@ -1,11 +1,12 @@
 import json
+import os
 import boto3
 
 
-websocket_client = boto3.client('apigatewaymanagementapi', 
-                      endpoint_url='https://djh0fnzlrc.execute-api.us-east-1.amazonaws.com/prod/')
+websocket_client = boto3.client('apigatewaymanagementapi',
+                      endpoint_url=os.environ['WEBSOCKET_ENDPOINT'])
 dynamodb = boto3.resource('dynamodb')
-connection_table = dynamodb.Table('DdbStack-ConnectionIdTable77777283-1306I0N1TTPNL')  
+connection_table = dynamodb.Table(os.environ['CONNECTIONS_TABLE'])
 
         
 def message_handler(event, context):

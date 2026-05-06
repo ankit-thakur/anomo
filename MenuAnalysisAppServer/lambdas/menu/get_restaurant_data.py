@@ -17,9 +17,9 @@ class _DecimalEncoder(json.JSONEncoder):
 
 dynamodb = boto3.resource('dynamodb')
 
-restaurant_table       = dynamodb.Table(os.environ.get('RESTAURANT_TABLE',       'DdbStack-RestaurantTableBDE2029A-1QA3XQE9B836T'))
-menu_items_table       = dynamodb.Table(os.environ.get('MENU_ITEMS_TABLE',       'DdbStack-MenuItemsTableBDB50838-124BTKBL895OK'))
-user_preferences_table = dynamodb.Table(os.environ.get('USER_PREFERENCES_TABLE', 'DdbStack-UserPreferencesTable'))
+restaurant_table       = dynamodb.Table(os.environ['RESTAURANT_TABLE'])
+menu_items_table       = dynamodb.Table(os.environ['MENU_ITEMS_TABLE'])
+user_preferences_table = dynamodb.Table(os.environ['USER_PREFERENCES_TABLE'])
 
 CORS_HEADERS = {
     'Content-Type': 'application/json',

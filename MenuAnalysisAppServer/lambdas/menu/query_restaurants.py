@@ -1,4 +1,5 @@
 import json
+import os
 import boto3
 from boto3.dynamodb.conditions import Key
 from botocore.exceptions import ClientError
@@ -12,10 +13,9 @@ class DecimalEncoder(json.JSONEncoder):
         return super().default(obj)
 
 
-# query DDB for place_id
 dynamodb = boto3.resource('dynamodb')
-restaurant_table = dynamodb.Table('DdbStack-RestaurantTableBDE2029A-1QA3XQE9B836T')
-menu_items_table = dynamodb.Table('DdbStack-MenuItemsTableBDB50838-124BTKBL895OK')
+restaurant_table = dynamodb.Table(os.environ['RESTAURANT_TABLE'])
+menu_items_table = dynamodb.Table(os.environ['MENU_ITEMS_TABLE'])
 
 def query_restaurants(event, context):
     print("*** QUERY RESTAURANTS ***")

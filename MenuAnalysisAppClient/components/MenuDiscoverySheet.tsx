@@ -71,7 +71,8 @@ function truncateUrl(url: string, max = 42): string {
   }
 }
 
-const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+const cap         = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+const menuTypeLabel = (type: string) => type === 'menu' ? 'Menu' : `${cap(type)} menu`;
 
 // ── Component ───────────────────────────────────────────────────────────────────────────
 
@@ -178,7 +179,7 @@ const MenuDiscoverySheet: React.FC<Props> = ({ params, onClose, onSubmitted }) =
   const ctaLabel     = () => {
     if (state === 'submitted') return '✓ Submitted';
     const type = manualVisible ? 'menu' : (links[selectedIdx]?.type ?? 'menu');
-    return `Analyze ${type} menu →`;
+    return `Analyze ${menuTypeLabel(type).toLowerCase()} →`;
   };
 
   // ── Sub-renders ───────────────────────────────────────────────────────────────────────────
@@ -223,7 +224,7 @@ const MenuDiscoverySheet: React.FC<Props> = ({ params, onClose, onSubmitted }) =
               {sel && <View style={s.radioDot} />}
             </View>
             <View style={s.linkMeta}>
-              <Text style={s.linkType}>{cap(link.type)} menu</Text>
+              <Text style={s.linkType}>{menuTypeLabel(link.type)}</Text>
               <Text style={s.linkUrl} numberOfLines={1}>{truncateUrl(link.url)}</Text>
             </View>
             {i === 0 && (

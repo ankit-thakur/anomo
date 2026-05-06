@@ -75,8 +75,8 @@ class ImageStack extends Stack {
         CLOUDFRONT_URL:    distribution.distributionDomainName,
         CLAUDE_HAIKU:      'us.anthropic.claude-haiku-4-5-20251001-v1:0',
         GOOGLE_API_KEY:    secrets.google_api_key,
-        RESTAURANT_TABLE:  'DdbStack-RestaurantTableBDE2029A-1QA3XQE9B836T',
-        MENU_ITEMS_TABLE:  'DdbStack-MenuItemsTableBDB50838-124BTKBL895OK',
+        RESTAURANT_TABLE:  importedRestaurantTable.tableName,
+        MENU_ITEMS_TABLE:  importedMenuItemsTable.tableName,
         FIRECRAWL_API_KEY: secrets.firecrawl_api_key,
       },
     });

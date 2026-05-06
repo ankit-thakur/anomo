@@ -5,7 +5,7 @@ const dynamodb = require('aws-cdk-lib/aws-dynamodb');
 const iam = require('aws-cdk-lib/aws-iam');
 const path = require('path');
 const cdk = require('aws-cdk-lib');
-const secrets = require('./secrets.json');
+const secrets = require('../secrets.json');
 
 
 class CdkStack extends Stack {
@@ -56,11 +56,11 @@ class CdkStack extends Stack {
     );
 
     // Import the Lambda Layer from another stack using its exported ARN
-    const importedOpenAiLayer = lambda.LayerVersion.fromLayerVersionArn(
-      this,
-      'OpenAiLayer',
-      cdk.Fn.importValue('OpenAiLayerVersionArn') // Import by export name
-    );
+    // const importedOpenAiLayer = lambda.LayerVersion.fromLayerVersionArn(
+    //   this,
+    //   'OpenAiLayer',
+    //   cdk.Fn.importValue('OpenAiLayerVersionArn') // Import by export name
+    // );
     
     // // requests module lambda layer
     // const requestsLayer = new lambda.LayerVersion(this, 'RequestsLayer', {
@@ -159,7 +159,11 @@ class CdkStack extends Stack {
       handler: 'query_restaurants.query_restaurants',
       code: lambda.Code.fromAsset(path.join(__dirname, '../../MenuAnalysisAppServer/lambdas/menu')),
       timeout: Duration.minutes(15),
-      layers: [ importedRequestsLayer ]
+      layers: [ importedRequestsLayer ],
+      environment: {
+        RESTAURANT_TABLE: importedRestaurantTable.tableName,
+        MENU_ITEMS_TABLE: importedMenuItemsTable.tableName,
+      },
     });
 
     // defines API resource that will invoke lambda which gets Google's PlaceId
@@ -196,8 +200,8 @@ class CdkStack extends Stack {
       timeout: Duration.minutes(15),
       layers: [ importedRequestsLayer ],
       environment: {
-        RESTAURANT_TABLE:       'DdbStack-RestaurantTableBDE2029A-1QA3XQE9B836T',
-        MENU_ITEMS_TABLE:       'DdbStack-MenuItemsTableBDB50838-124BTKBL895OK',
+        RESTAURANT_TABLE:       importedRestaurantTable.tableName,
+        MENU_ITEMS_TABLE:       importedMenuItemsTable.tableName,
         USER_PREFERENCES_TABLE: importedUserPreferencesTable.tableName,
       },
     });
@@ -241,7 +245,7 @@ class CdkStack extends Stack {
       code: lambda.Code.fromAsset(path.join(__dirname, '../../MenuAnalysisAppServer/lambdas/menu')),
       timeout: Duration.minutes(2),
       environment: {
-        RESTAURANT_TABLE:       'DdbStack-RestaurantTableBDE2029A-1QA3XQE9B836T',
+        RESTAURANT_TABLE:       importedRestaurantTable.tableName,
         USER_PREFERENCES_TABLE: importedUserPreferencesTable.tableName,
       },
       layers: [ importedRequestsLayer ],
@@ -306,7 +310,10 @@ class CdkStack extends Stack {
       code: lambda.Code.fromAsset(path.join(__dirname, '../../MenuAnalysisAppServer/lambdas/menu')),
       timeout: Duration.minutes(15),
       memory: 3008,
-      layers: [ myBoto3Layer, importedRequestsLayer, importedBs4Layer ]
+      layers: [ myBoto3Layer, importedRequestsLayer, importedBs4Layer ],
+      environment: {
+        STEP_FUNCTION_ARN: `arn:aws:states:${this.region}:${this.account}:stateMachine:${secrets.step_function_name}`,
+      },
     });
 
     menuAnalyzerLambdaHandler.addToRolePolicy(new iam.PolicyStatement({
@@ -354,7 +361,10 @@ class CdkStack extends Stack {
       code: lambda.Code.fromAsset(path.join(__dirname, '../../MenuAnalysisAppServer/lambdas/menu')),
       timeout: Duration.minutes(15),
       memory: 3008,
-      layers: [ myBoto3Layer, importedRequestsLayer ]
+      layers: [ myBoto3Layer, importedRequestsLayer ],
+      environment: {
+        USERS_TABLE: importedUsersTable.tableName,
+      },
     });
 
     importedUsersTable.grantReadWriteData(usersLambda);

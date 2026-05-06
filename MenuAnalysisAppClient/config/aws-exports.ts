@@ -39,6 +39,8 @@ const awsConfig = {
     // environment helper to pick the correct one from the list.
     redirectSignIn: getRedirectUri(SIGNIN_URIS, 'signIn'),
     redirectSignOut: getRedirectUri(SIGNOUT_URIS, 'signOut'),
+    // redirectSignIn: 'http://localhost:8081/signin',
+    // redirectSignOut: 'http://localhost:8081/home',
     responseType: 'code',
   },
 };

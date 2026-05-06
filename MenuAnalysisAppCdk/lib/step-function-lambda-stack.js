@@ -46,8 +46,8 @@ class StepFunctionWithLambdasStack extends cdk.Stack {
     const importedDotenvLayer = lambda.LayerVersion.fromLayerVersionArn(
       this, 'dotenv_layer', cdk.Fn.importValue('DotenvLayerVersionArn'));
 
-    const importedOpenAiLayer = lambda.LayerVersion.fromLayerVersionArn(
-      this, 'OpenAiLayer', cdk.Fn.importValue('OpenAiLayerVersionArn'));
+    // const importedOpenAiLayer = lambda.LayerVersion.fromLayerVersionArn(
+    //   this, 'OpenAiLayer', cdk.Fn.importValue('OpenAiLayerVersionArn'));
 
     const importedPdfReaderLayer = lambda.LayerVersion.fromLayerVersionArn(
       this, 'PdfReaderLayer', cdk.Fn.importValue('PdfReaderLayerVersionArn'));
@@ -188,9 +188,9 @@ class StepFunctionWithLambdasStack extends cdk.Stack {
       layers: [importedBoto3Layer, importedRequestsLayer],
       environment: {
         ...agentEnv,
-        RESTAURANT_TABLE: 'DdbStack-RestaurantTableBDE2029A-1QA3XQE9B836T',
-        MENU_ITEMS_TABLE:  'DdbStack-MenuItemsTableBDB50838-124BTKBL895OK',
-        EMAIL_LIST_TABLE:  'DdbStack-EmailListTableAEBE19F7-SSZ9PWM704XE',
+        RESTAURANT_TABLE: importedRestaurantTable.tableName,
+        MENU_ITEMS_TABLE: importedMenuItemsTable.tableName,
+        EMAIL_LIST_TABLE: importedEmailListTable.tableName,
       },
     });
 
@@ -217,7 +217,7 @@ class StepFunctionWithLambdasStack extends cdk.Stack {
       handler: 'get_menu.get_menu',
       code: agentCode,
       timeout: Duration.minutes(15),
-      layers: [importedBoto3Layer, importedRequestsLayer, importedOpenAiLayer, importedPdfReaderLayer],
+      layers: [importedBoto3Layer, importedRequestsLayer, importedPdfReaderLayer],
       environment: agentEnv,
     });
     getMenuLambda.addToRolePolicy(bedrockPolicy);

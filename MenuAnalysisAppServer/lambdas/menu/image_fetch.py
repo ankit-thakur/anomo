@@ -41,8 +41,8 @@ GOOGLE_API_KEY    = os.environ['GOOGLE_API_KEY']
 IMAGES_BUCKET     = os.environ['IMAGES_BUCKET']
 CLOUDFRONT_URL    = os.environ.get('CLOUDFRONT_URL', '')
 CLAUDE_MODEL      = os.environ.get('CLAUDE_HAIKU', 'us.anthropic.claude-haiku-4-5-20251001-v1:0')
-RESTAURANT_TABLE  = os.environ.get('RESTAURANT_TABLE', 'DdbStack-RestaurantTableBDE2029A-1QA3XQE9B836T')
-MENU_ITEMS_TABLE  = os.environ.get('MENU_ITEMS_TABLE', 'DdbStack-MenuItemsTableBDB50838-124BTKBL895OK')
+RESTAURANT_TABLE  = os.environ['RESTAURANT_TABLE']
+MENU_ITEMS_TABLE  = os.environ['MENU_ITEMS_TABLE']
 FIRECRAWL_API_KEY = os.environ.get('FIRECRAWL_API_KEY', '')
 
 FIRECRAWL_SCRAPE_URL = 'https://api.firecrawl.dev/v2/scrape'

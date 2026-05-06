@@ -98,7 +98,6 @@ function getMaxConf(data: Record<string, number> | string[] | undefined | null, 
 }
 
 function classifyDish(dish: any, allergens: string[], diets: string[]): Classification {
-  if (dish.classification) return dish.classification as Classification;
   const ac = getMaxConf(dish.allergens, allergens);
   const dc = getMaxConf(dish.diet_restrictions, diets);
   if (ac >= 0.7 || dc >= 0.7) return 'unsafe';

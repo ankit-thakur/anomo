@@ -1,4 +1,5 @@
 import json
+import os
 import boto3
 import uuid
 from datetime import datetime, timezone
@@ -6,7 +7,7 @@ from boto3.dynamodb.conditions import Key
 from botocore.exceptions import ClientError
 
 dynamodb = boto3.resource('dynamodb')
-users_table = dynamodb.Table('DdbStack-UsersTable9725E9C8-SRM499JXGDIK')
+users_table = dynamodb.Table(os.environ['USERS_TABLE'])
 
 def update_users_handler(event, context):
     print("*** UPDATE USERS ***")

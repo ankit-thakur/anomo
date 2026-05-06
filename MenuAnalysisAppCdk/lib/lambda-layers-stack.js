@@ -44,17 +44,17 @@ class LambdaLayersStack extends Stack {
             exportName: 'DotenvLayerVersionArn', // This name will be used to import the layer in another stack
         });
 
-        // OpenAI module lambda layer
-        const openAiLayer = new lambda.LayerVersion(this, 'OpenAiLayer', {
-            code: lambda.Code.fromAsset(path.join(__dirname, '../../MenuAnalysisAppServer/lambdas/layers/openai_layer')),
-            compatibleRuntimes: [lambda.Runtime.PYTHON_3_12],
-        });  
+        // // OpenAI module lambda layer
+        // const openAiLayer = new lambda.LayerVersion(this, 'OpenAiLayer', {
+        //     code: lambda.Code.fromAsset(path.join(__dirname, '../../MenuAnalysisAppServer/lambdas/layers/openai_layer')),
+        //     compatibleRuntimes: [lambda.Runtime.PYTHON_3_12],
+        // });  
 
-        // Export the Layer ARN to be used in other stacks
-        new cdk.CfnOutput(this, 'OpenAiLayerVersionArn', {
-            value: openAiLayer.layerVersionArn,
-            exportName: 'OpenAiLayerVersionArn', // This name will be used to import the layer in another stack
-        });
+        // // Export the Layer ARN to be used in other stacks
+        // new cdk.CfnOutput(this, 'OpenAiLayerVersionArn', {
+        //     value: openAiLayer.layerVersionArn,
+        //     exportName: 'OpenAiLayerVersionArn', // This name will be used to import the layer in another stack
+        // });
 
         // PdfReader module lambda layer
         const pdfReaderLayer = new lambda.LayerVersion(this, 'PdfReaderLayer', {

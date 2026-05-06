@@ -27,12 +27,8 @@ from scoring import score_from_summary
 
 dynamodb = boto3.resource('dynamodb')
 
-restaurant_table = dynamodb.Table(
-    os.environ.get('RESTAURANT_TABLE', 'DdbStack-RestaurantTableBDE2029A-1QA3XQE9B836T')
-)
-user_preferences_table = dynamodb.Table(
-    os.environ.get('USER_PREFERENCES_TABLE', 'DdbStack-UserPreferencesTable')
-)
+restaurant_table = dynamodb.Table(os.environ['RESTAURANT_TABLE'])
+user_preferences_table = dynamodb.Table(os.environ['USER_PREFERENCES_TABLE'])
 
 RECOMMENDATION_LIMIT = 10
 

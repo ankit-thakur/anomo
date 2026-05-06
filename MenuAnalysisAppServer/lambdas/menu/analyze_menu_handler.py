@@ -22,7 +22,7 @@ def menu_analyzer_lambda_handler(event, context):
     email = body_json['email']
     add_email_to_list = body_json['addToList']
         
-    state_machine_arn = 'arn:aws:states:us-east-1:022941184721:stateMachine:MenuAnalysisStepFunction61790BD0-tB0Guoud9VWt'
+    state_machine_arn = os.environ['STEP_FUNCTION_ARN']
         
     try:
         # Start the Step Function execution

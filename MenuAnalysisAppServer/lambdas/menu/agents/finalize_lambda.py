@@ -37,9 +37,9 @@ def _to_decimal(obj):
         return [_to_decimal(v) for v in obj]
     return obj
 
-RESTAURANT_TABLE   = os.environ.get("RESTAURANT_TABLE",   "DdbStack-RestaurantTableBDE2029A-1QA3XQE9B836T")
-MENU_ITEMS_TABLE   = os.environ.get("MENU_ITEMS_TABLE",   "DdbStack-MenuItemsTableBDB50838-124BTKBL895OK")
-EMAIL_LIST_TABLE   = os.environ.get("EMAIL_LIST_TABLE",   "DdbStack-EmailListTableAEBE19F7-SSZ9PWM704XE")
+RESTAURANT_TABLE = os.environ['RESTAURANT_TABLE']
+MENU_ITEMS_TABLE = os.environ['MENU_ITEMS_TABLE']
+EMAIL_LIST_TABLE = os.environ['EMAIL_LIST_TABLE']
 
 
 def _update_menu_items_table(restaurant_id, dishes):
