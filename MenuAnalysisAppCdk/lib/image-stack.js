@@ -6,6 +6,7 @@ const origins = require('aws-cdk-lib/aws-cloudfront-origins');
 const iam = require('aws-cdk-lib/aws-iam');
 const dynamodb = require('aws-cdk-lib/aws-dynamodb');
 const path = require('path');
+const secrets = require('../secrets.json');
 const { Stack } = require('aws-cdk-lib');
 
 
@@ -73,10 +74,10 @@ class ImageStack extends Stack {
         IMAGES_BUCKET:     imagesBucket.bucketName,
         CLOUDFRONT_URL:    distribution.distributionDomainName,
         CLAUDE_HAIKU:      'us.anthropic.claude-haiku-4-5-20251001-v1:0',
-        GOOGLE_API_KEY:    'REDACTED_GOOGLE_API_KEY',
+        GOOGLE_API_KEY:    secrets.google_api_key,
         RESTAURANT_TABLE:  'DdbStack-RestaurantTableBDE2029A-1QA3XQE9B836T',
         MENU_ITEMS_TABLE:  'DdbStack-MenuItemsTableBDB50838-124BTKBL895OK',
-        FIRECRAWL_API_KEY: 'REDACTED_FIRECRAWL_API_KEY',
+        FIRECRAWL_API_KEY: secrets.firecrawl_api_key,
       },
     });
 
