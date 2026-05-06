@@ -7,6 +7,7 @@ const dynamodb = require('aws-cdk-lib/aws-dynamodb');
 const path = require('path');
 const Construct = require('constructs');
 const { Stack, Duration } = require('aws-cdk-lib');
+const secrets = require('./secrets.json');
 
 
 // Bedrock model ARNs to grant InvokeModel access.
@@ -205,7 +206,7 @@ class StepFunctionWithLambdasStack extends cdk.Stack {
     }));
     finalizeLambda.addToRolePolicy(new iam.PolicyStatement({
       actions: ['execute-api:ManageConnections'],
-      resources: ['arn:aws:execute-api:us-east-1:022941184721:djh0fnzlrc/prod/POST/@connections/{connectionId}'],
+      resources: [`arn:aws:execute-api:us-east-1:${process.env.CDK_DEFAULT_ACCOUNT}:${secrets.websocket_api_id}/prod/POST/@connections/{connectionId}`],
     }));
 
     // -----------------------------------------------------------------------

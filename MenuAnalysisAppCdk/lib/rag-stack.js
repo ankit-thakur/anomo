@@ -7,6 +7,7 @@ const dynamodb = require('aws-cdk-lib/aws-dynamodb');
 const path = require('path');
 const Construct = require('constructs');
 const { Stack, Duration } = require('aws-cdk-lib');
+const secrets = require('./secrets.json');
 
 
 class RagStack extends cdk.Stack {
@@ -70,7 +71,7 @@ class RagStack extends cdk.Stack {
           timeout: Duration.minutes(15),
           memory: 10240,
           environment: {
-            'OPENSEARCH_ENDPOINT': '36isqxovq492ejdetb15.us-east-1.aoss.amazonaws.com',
+            'OPENSEARCH_ENDPOINT': secrets.opensearch_endpoint,
           },
           layers: [ importedBoto3Layer, importedRequestsLayer, importedDotenvLayer, importedOpenSearchLayer, importedPdfReaderLayer ],
         });
