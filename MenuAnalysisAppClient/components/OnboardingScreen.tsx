@@ -4,12 +4,10 @@ import {
   Animated, Dimensions, Platform, ActivityIndicator,
 } from 'react-native';
 import { router } from 'expo-router';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { updateDietaryPreferences } from './UserPreferences';
 
 // Bump this number to re-trigger onboarding for all users on major updates.
 export const ONBOARDING_VERSION = 1;
-export const ONBOARDING_VERSION_KEY = 'onboarding_version';
 
 const { width: SCREEN_W } = Dimensions.get('window');
 const TILE_W = (SCREEN_W - 40 - 21) / 4;
@@ -99,20 +97,21 @@ export default function OnboardingScreen() {
   const handleFinishProfile = async () => {
     setIsSaving(true);
     try {
-      if (allergens.length > 0 || diets.length > 0) {
-        await updateDietaryPreferences({ allergens, dietaryRestrictions: diets });
-      }
+      await updateDietaryPreferences({
+        allergens,
+        dietaryRestrictions: diets,
+        onboardingVersion: ONBOARDING_VERSION,
+      });
     } catch (e) {
       console.warn('[Onboarding] Failed to save preferences:', e);
+      // Still advance — on next launch the user will see onboarding again if the write failed (fail-safe)
     } finally {
       setIsSaving(false);
     }
-    await AsyncStorage.setItem(ONBOARDING_VERSION_KEY, String(ONBOARDING_VERSION));
     goToStep(3);
   };
 
-  const handleComplete = async () => {
-    await AsyncStorage.setItem(ONBOARDING_VERSION_KEY, String(ONBOARDING_VERSION));
+  const handleComplete = () => {
     router.replace('/home');
   };
 

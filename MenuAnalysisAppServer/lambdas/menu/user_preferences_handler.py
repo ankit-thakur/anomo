@@ -86,6 +86,9 @@ def update_dietary_preferences(user_id: str, preferences: Dict[str, Any]) -> Dic
             ':a': preferences['allergens'],
             ':d': preferences['dietaryRestrictions']
         }
+        if 'onboardingVersion' in preferences:
+            update_expr += ', onboardingVersion = :ov'
+            expr_values[':ov'] = int(preferences['onboardingVersion'])
         table.update_item(
             Key={'userId': user_id},
             UpdateExpression=update_expr,
@@ -95,6 +98,8 @@ def update_dietary_preferences(user_id: str, preferences: Dict[str, Any]) -> Dic
             'allergens': preferences['allergens'],
             'dietaryRestrictions': preferences['dietaryRestrictions']
         })
+        if 'onboardingVersion' in preferences:
+            current_prefs['onboardingVersion'] = int(preferences['onboardingVersion'])
         return make_response(200, current_prefs)
     except Exception as e:
         print(f'Error updating dietary preferences: {str(e)}')

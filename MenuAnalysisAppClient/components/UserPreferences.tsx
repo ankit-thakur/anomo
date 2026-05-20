@@ -12,6 +12,7 @@ interface SavedRestaurants {
 
 interface UserPreferences extends DietaryPreferences {
   savedRestaurants: string[];
+  onboardingVersion?: number;
 }
 
 const API_BASE_URL = API.userPreferences;
@@ -107,14 +108,16 @@ export const getUserPreferences = async (): Promise<UserPreferences> => {
     };
   } catch (error) {
     if (axios.isAxiosError(error) && (error.response?.status === 404 || error.response?.status === 401)) {
-      return { allergens: [], dietaryRestrictions: [], savedRestaurants: [] };
+      return { allergens: [], dietaryRestrictions: [], savedRestaurants: [], onboardingVersion: 0 };
     }
     throw error;
   }
 };
 
-// Update only dietary preferences
-export const updateDietaryPreferences = async (preferences: DietaryPreferences): Promise<UserPreferences> => {
+// Update only dietary preferences (optionally includes onboardingVersion)
+export const updateDietaryPreferences = async (
+  preferences: DietaryPreferences & { onboardingVersion?: number }
+): Promise<UserPreferences> => {
   const headers = await getAuthHeader();
   const response = await axios.put<UserPreferences>(
     `${API_BASE_URL}preferences/dietary`,
