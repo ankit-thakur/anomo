@@ -1,6 +1,7 @@
 import json
 import os
 import boto3
+import decimal
 from typing import Dict, Any
 
 # CORS headers for all responses
@@ -12,11 +13,18 @@ CORS_HEADERS = {
     "Access-Control-Allow-Methods": "OPTIONS,GET,PUT,DELETE"
 }
 
+class _DecimalEncoder(json.JSONEncoder):
+    # boto3 returns DynamoDB Number types as Decimal; json.dumps can't handle them.
+    def default(self, obj):
+        if isinstance(obj, decimal.Decimal):
+            return int(obj) if obj % 1 == 0 else float(obj)
+        return super().default(obj)
+
 def make_response(status_code: int, body: Any) -> Dict[str, Any]:
     return {
         "statusCode": status_code,
         "headers": CORS_HEADERS,
-        "body": json.dumps(body)
+        "body": json.dumps(body, cls=_DecimalEncoder)
     }
 
 dynamodb = boto3.resource('dynamodb')

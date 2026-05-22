@@ -35,25 +35,33 @@ function AuthGate({ children }: { children: React.ReactNode }) {
       return;
     }
 
-    if (hasCheckedOnboarding.current) return;
+    // Navigation from a previous check just settled — clear the spinner and stop.
+    if (hasCheckedOnboarding.current) {
+      setIsCheckingOnboarding(false);
+      return;
+    }
+
     hasCheckedOnboarding.current = true;
+    setIsCheckingOnboarding(true);
 
     const checkOnboarding = async () => {
-      setIsCheckingOnboarding(true);
       let needsOnboarding = true; // fail-safe default
       try {
         const prefs = await getUserPreferences();
         needsOnboarding = (prefs.onboardingVersion ?? 0) < ONBOARDING_VERSION;
       } catch (e) {
         console.warn('[AuthGate] Preferences fetch failed, defaulting to onboarding', e);
-      } finally {
-        setIsCheckingOnboarding(false);
       }
 
       if (needsOnboarding && current !== '/onboarding') {
         router.replace('/onboarding');
+        // Spinner clears when segments update to '/onboarding' and effect re-runs above.
       } else if (!needsOnboarding && (current === '/onboarding' || AUTH_ROUTES.includes(current))) {
         router.replace('/home');
+        // Spinner clears when segments update to '/home' and effect re-runs above.
+      } else {
+        // Already on the correct route — no navigation needed.
+        setIsCheckingOnboarding(false);
       }
     };
 

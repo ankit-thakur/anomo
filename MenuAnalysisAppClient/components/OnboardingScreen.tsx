@@ -133,9 +133,9 @@ export default function OnboardingScreen() {
               <Text style={s.heroTagline}>eat with confidence</Text>
             </View>
             <View style={s.textBlock}>
-              <Text style={s.stepTitle}>Welcome to ANOMO</Text>
-              <Text style={s.stepBody}>
-                ANOMO helps you discover restaurants and navigate menus safely based on your allergens and dietary needs.
+              <Text style={s.stepTitle}>Welcome to </Text><Text style={s.stepTitleAnomo}>anomo</Text>
+              <Text style={s.stepBodyAnomo}>anomo</Text><Text style={s.stepBody}>
+                 helps you discover restaurants and navigate menus safely based on your allergens and dietary needs.
               </Text>
               <Text style={[s.stepBody, { marginTop: 12 }]}>
                 Let's take a minute to set up your profile so every search is personalised to you.
@@ -151,7 +151,7 @@ export default function OnboardingScreen() {
         return (
           <View style={s.stepContent}>
             <Text style={s.stepTitle}>Important Disclaimers</Text>
-            <Text style={s.stepBodySmall}>Please read the following before using ANOMO.</Text>
+            <Text style={s.stepBodySmall}>Please read the following before using </Text><Text style={s.stepBodyAnomo}>anomo.</Text>
             <ScrollView style={s.scrollArea} showsVerticalScrollIndicator={false}>
               {DISCLAIMER_SECTIONS.map((sec, i) => (
                 <View key={i} style={s.disclaimerSection}>
@@ -343,8 +343,21 @@ const s = StyleSheet.create({
     color: C.text,
     marginBottom: 12,
   },
+  stepTitleAnomo: {
+    fontFamily: 'Fraunces_700Bold',
+    fontSize: 14,
+    color: C.textMuted,
+    marginTop: 4,
+    letterSpacing: 0.5,
+  },
   stepBody: {
     fontFamily: 'Inter_400Regular',
+    fontSize: 15,
+    color: C.textMuted,
+    lineHeight: 23,
+  },
+  stepBodyAnomo: {
+    fontFamily: 'Fraunces_700Bold',
     fontSize: 15,
     color: C.textMuted,
     lineHeight: 23,

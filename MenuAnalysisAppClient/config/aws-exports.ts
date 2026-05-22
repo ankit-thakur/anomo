@@ -27,13 +27,7 @@ const awsConfig = {
   aws_user_pools_id: COGNITO_CONFIG.UserPoolId,
   aws_user_pools_web_client_id: COGNITO_CONFIG.ClientId,
   oauth: {
-    // Use the domain prefix configured in Cognito (DomainPrefix). Do NOT
-    // build the domain from the UserPoolId — that produces an invalid domain
-    // like 'us-east-1.auth.us-east-1.amazoncognito.com'. Set COGNITO_CONFIG.DomainPrefix
-    // to the prefix you created in the console (e.g. 'menu-analysis-app').
-    domain: COGNITO_CONFIG.DomainPrefix
-      ? `${COGNITO_CONFIG.DomainPrefix}.auth.${COGNITO_CONFIG.Region}.amazoncognito.com`
-      : `${COGNITO_CONFIG.UserPoolId.split('_')[0]}.auth.${COGNITO_CONFIG.Region}.amazoncognito.com`,
+    domain: `${COGNITO_CONFIG.DomainPrefix}.auth.${COGNITO_CONFIG.Region}.amazoncognito.com`,
     scope: ['email', 'openid', 'profile'],
     // Amplify expects a single redirect string at runtime. Use the
     // environment helper to pick the correct one from the list.

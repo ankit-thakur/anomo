@@ -6,7 +6,6 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { AuthContext } from '../context/AuthContext';
-import { useRouter } from 'expo-router';
 
 const C = {
   bg:        '#2A1F14',
@@ -29,14 +28,13 @@ const FEATURES = [
 
 export default function SignInScreen() {
   const { signIn } = useContext(AuthContext);
-  const router = useRouter();
   const [loading, setLoading] = useState(false);
 
   const handleSignIn = async () => {
     setLoading(true);
     try {
       await signIn();
-      router.replace('/home');
+      // AuthGate handles routing after sign-in based on onboarding state.
     } catch (e: any) {
       console.error('Sign in failed:', e);
     } finally {
