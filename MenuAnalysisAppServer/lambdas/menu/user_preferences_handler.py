@@ -48,6 +48,8 @@ def handler(event, context):
                 return update_dietary_preferences(user_id, body)
             elif pref_type == 'restaurants':
                 return update_saved_restaurants(user_id, body)
+            elif '/push-token' in path:
+                return update_push_token(user_id, body)
             else:
                 return make_response(400, {'error': 'Invalid preference type'})
         elif http_method == 'DELETE':
@@ -143,6 +145,22 @@ def delete_dietary_preferences(user_id: str) -> Dict[str, Any]:
     except Exception as e:
         print(f'Error deleting dietary preferences: {str(e)}')
         return make_response(500, {'error': 'Internal server error'})
+
+def update_push_token(user_id: str, body: Dict[str, Any]) -> Dict[str, Any]:
+    try:
+        token = body.get('expoPushToken')
+        if not token:
+            return make_response(400, {'error': 'Missing expoPushToken'})
+        table.update_item(
+            Key={'userId': user_id},
+            UpdateExpression='SET expoPushToken = :t',
+            ExpressionAttributeValues={':t': token}
+        )
+        return make_response(200, {'message': 'Push token saved'})
+    except Exception as e:
+        print(f'Error updating push token: {str(e)}')
+        return make_response(500, {'error': 'Internal server error'})
+
 
 def delete_saved_restaurants(user_id: str) -> Dict[str, Any]:
     try:

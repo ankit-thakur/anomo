@@ -23,6 +23,7 @@ export interface DiscoveryParams {
   name:         string;
   address:      string;
   website?:     string;
+  userId?:      string;
 }
 
 interface Props {
@@ -143,12 +144,13 @@ const MenuDiscoverySheet: React.FC<Props> = ({ params, onClose, onSubmitted }) =
 
     try {
       await axios.post(ANALYZE_URL, {
-        place_id: params.restaurantId,
-        name:     params.name,
-        address:  params.address,
-        email: '',
+        place_id:  params.restaurantId,
+        name:      params.name,
+        address:   params.address,
+        email:     '',
         addToList: false,
-        menu_url: chosen.url,
+        menu_url:  chosen.url,
+        userId:    params.userId ?? '',
       });
     } catch (e) {
       console.error('[MenuDiscoverySheet] submit error:', e);

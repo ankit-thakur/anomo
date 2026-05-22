@@ -15,5 +15,6 @@ export const API = {
 
   // User
   userPreferences:   'https://vv6e672v23.execute-api.us-east-1.amazonaws.com/prod/',
+  pushToken:         'https://vv6e672v23.execute-api.us-east-1.amazonaws.com/prod/push-token',
   updateUsers:       'https://s6z1m7cxr1.execute-api.us-east-1.amazonaws.com/prod/updateUsers',
 };

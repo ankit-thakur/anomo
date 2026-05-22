@@ -11,6 +11,7 @@ Receives verified dishes from the Verification Agent and:
 import json
 import sys
 import os
+import urllib.request
 from decimal import Decimal
 
 import boto3
@@ -37,9 +38,10 @@ def _to_decimal(obj):
         return [_to_decimal(v) for v in obj]
     return obj
 
-RESTAURANT_TABLE   = os.environ.get("RESTAURANT_TABLE",   "DdbStack-RestaurantTableBDE2029A-1QA3XQE9B836T")
-MENU_ITEMS_TABLE   = os.environ.get("MENU_ITEMS_TABLE",   "DdbStack-MenuItemsTableBDB50838-124BTKBL895OK")
-EMAIL_LIST_TABLE   = os.environ.get("EMAIL_LIST_TABLE",   "DdbStack-EmailListTableAEBE19F7-SSZ9PWM704XE")
+RESTAURANT_TABLE        = os.environ.get("RESTAURANT_TABLE",        "DdbStack-RestaurantTableBDE2029A-1QA3XQE9B836T")
+MENU_ITEMS_TABLE        = os.environ.get("MENU_ITEMS_TABLE",        "DdbStack-MenuItemsTableBDB50838-124BTKBL895OK")
+EMAIL_LIST_TABLE        = os.environ.get("EMAIL_LIST_TABLE",        "DdbStack-EmailListTableAEBE19F7-SSZ9PWM704XE")
+USER_PREFERENCES_TABLE  = os.environ.get("USER_PREFERENCES_TABLE",  "")
 
 
 def _update_menu_items_table(restaurant_id, dishes):
@@ -64,6 +66,34 @@ def _update_menu_items_table(restaurant_id, dishes):
         table.put_item(Item=item)
 
 
+def _send_push_notification(user_id: str, place_id: str, restaurant_name: str):
+    if not USER_PREFERENCES_TABLE or not user_id:
+        return
+    prefs_table = dynamodb.Table(USER_PREFERENCES_TABLE)
+    try:
+        response = prefs_table.get_item(Key={"userId": user_id})
+        token = response.get("Item", {}).get("expoPushToken")
+        if not token:
+            print(f"[FinalizeLambda] No push token for user {user_id} — skipping push.")
+            return
+        payload = json.dumps({
+            "to": token,
+            "title": "Analysis ready!",
+            "body": f"Your {restaurant_name} menu analysis is complete.",
+            "data": {"placeId": place_id},
+            "sound": "default",
+        }).encode("utf-8")
+        req = urllib.request.Request(
+            "https://exp.host/--/api/v2/push/send",
+            data=payload,
+            headers={"Content-Type": "application/json", "Accept": "application/json"},
+        )
+        with urllib.request.urlopen(req, timeout=5) as resp:
+            print(f"[FinalizeLambda] Push sent: {resp.read().decode()}")
+    except Exception as e:
+        print(f"[FinalizeLambda] Push notification failed (non-fatal): {e}")
+
+
 def _add_to_email_list(email, add_to_list):
     if add_to_list and email:
         table = dynamodb.Table(EMAIL_LIST_TABLE)
@@ -80,6 +110,7 @@ def lambda_handler(event, context):
     menu_url    = event.get("menu_url", "")
     email       = event.get("email", "")
     add_to_list = event.get("addToList", False)
+    user_id     = event.get("userId", "")
 
     print(f"[FinalizeLambda] Writing {len(dishes)} dish(es) for restaurant: {name} ({place_id})")
 
@@ -93,6 +124,8 @@ def lambda_handler(event, context):
             send_email(email, place_id, name, dishes)
         except ClientError as e:
             print(f"[FinalizeLambda] Email send failed (non-fatal): {e}")
+
+    _send_push_notification(user_id, place_id, name)
 
     return {
         "statusCode": 200,

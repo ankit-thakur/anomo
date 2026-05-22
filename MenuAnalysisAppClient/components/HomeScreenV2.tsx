@@ -182,6 +182,7 @@ function HomeScreenV2({ placeId }: Props) {
         name:         searchResult.name ?? '',
         address:      searchResult.formatted_address ?? '',
         website:      searchResult.website ?? '',
+        userId:       userId ?? '',
       });
     } catch (error) {
       console.error('Error querying restaurants:', error);

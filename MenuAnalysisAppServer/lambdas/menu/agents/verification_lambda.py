@@ -25,6 +25,7 @@ def lambda_handler(event, context):
     menu_url    = event.get("menu_url", "")
     email       = event.get("email", "")
     add_to_list = event.get("addToList", False)
+    user_id     = event.get("userId", "")
 
     if not dishes:
         print("[VerificationLambda] No dishes received — passing through.")
@@ -42,4 +43,5 @@ def lambda_handler(event, context):
         "address": address,
         "email": email,
         "addToList": add_to_list,
+        "userId": user_id,
     }

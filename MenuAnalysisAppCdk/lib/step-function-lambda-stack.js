@@ -85,6 +85,9 @@ class StepFunctionWithLambdasStack extends cdk.Stack {
     const importedUsersTable = dynamodb.Table.fromTableArn(
       this, 'UsersTable', cdk.Fn.importValue('UsersTableExport'));
 
+    const importedUserPreferencesTable = dynamodb.Table.fromTableArn(
+      this, 'UserPreferencesTable', cdk.Fn.importValue('UserPreferencesTableExport'));
+
     // -----------------------------------------------------------------------
     // Common Bedrock policy (shared across agent Lambdas)
     // -----------------------------------------------------------------------
@@ -187,9 +190,10 @@ class StepFunctionWithLambdasStack extends cdk.Stack {
       layers: [importedBoto3Layer, importedRequestsLayer],
       environment: {
         ...agentEnv,
-        RESTAURANT_TABLE: 'DdbStack-RestaurantTableBDE2029A-1QA3XQE9B836T',
-        MENU_ITEMS_TABLE:  'DdbStack-MenuItemsTableBDB50838-124BTKBL895OK',
-        EMAIL_LIST_TABLE:  'DdbStack-EmailListTableAEBE19F7-SSZ9PWM704XE',
+        RESTAURANT_TABLE:       'DdbStack-RestaurantTableBDE2029A-1QA3XQE9B836T',
+        MENU_ITEMS_TABLE:       'DdbStack-MenuItemsTableBDB50838-124BTKBL895OK',
+        EMAIL_LIST_TABLE:       'DdbStack-EmailListTableAEBE19F7-SSZ9PWM704XE',
+        USER_PREFERENCES_TABLE: cdk.Fn.select(1, cdk.Fn.split('/', cdk.Fn.importValue('UserPreferencesTableExport'))),
       },
     });
 
@@ -199,6 +203,7 @@ class StepFunctionWithLambdasStack extends cdk.Stack {
     importedEmailListTable.grantReadWriteData(finalizeLambda);
     importedUsersTable.grantReadWriteData(finalizeLambda);
     importedConnectionIdTable.grantReadWriteData(finalizeLambda);
+    importedUserPreferencesTable.grantReadData(finalizeLambda);
     finalizeLambda.addToRolePolicy(new iam.PolicyStatement({
       actions: ['ses:SendEmail', 'ses:SendRawEmail'],
       resources: ['*'],

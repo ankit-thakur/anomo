@@ -14,10 +14,9 @@ def send_email(email, place_id, restaurant_name, results):
 
     body = "Your results for " + restaurant_name + " are ready! Come check them out here: " + url
     
-    SENDER_EMAIL = 'ankitthakur78701@gmail.com'
+    SENDER_EMAIL = os.environ.get('SENDER_EMAIL', 'ankitthakur78701@gmail.com')
 
     response = ses_client.send_email(
-        # Source=os.environ["SENDER_EMAIL"],
         Source=SENDER_EMAIL,
         Destination={"ToAddresses": [email]},
         Message={

@@ -25,6 +25,7 @@ def lambda_handler(event, context):
     address    = body.get("address", "")
     email      = body.get("email", "")
     add_to_list = body.get("addToList", False)
+    user_id    = body.get("userId", "")
 
     if not menu_url:
         return {"statusCode": 400, "body": "menu_url is required"}
@@ -42,4 +43,5 @@ def lambda_handler(event, context):
         "address": address,
         "email": email,
         "addToList": add_to_list,
+        "userId": user_id,
     }
