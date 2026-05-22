@@ -7,7 +7,7 @@ const dynamodb = require('aws-cdk-lib/aws-dynamodb');
 const path = require('path');
 const Construct = require('constructs');
 const { Stack, Duration } = require('aws-cdk-lib');
-const secrets = require('./secrets.json');
+const secrets = require('../secrets.json');
 
 
 // Bedrock model ARNs to grant InvokeModel access.

@@ -1,6 +1,7 @@
 import json
 import os
 import boto3
+import decimal
 from typing import Dict, Any
 
 # CORS headers for all responses
@@ -12,11 +13,18 @@ CORS_HEADERS = {
     "Access-Control-Allow-Methods": "OPTIONS,GET,PUT,DELETE"
 }
 
+class _DecimalEncoder(json.JSONEncoder):
+    # boto3 returns DynamoDB Number types as Decimal; json.dumps can't handle them.
+    def default(self, obj):
+        if isinstance(obj, decimal.Decimal):
+            return int(obj) if obj % 1 == 0 else float(obj)
+        return super().default(obj)
+
 def make_response(status_code: int, body: Any) -> Dict[str, Any]:
     return {
         "statusCode": status_code,
         "headers": CORS_HEADERS,
-        "body": json.dumps(body)
+        "body": json.dumps(body, cls=_DecimalEncoder)
     }
 
 dynamodb = boto3.resource('dynamodb')
@@ -86,6 +94,9 @@ def update_dietary_preferences(user_id: str, preferences: Dict[str, Any]) -> Dic
             ':a': preferences['allergens'],
             ':d': preferences['dietaryRestrictions']
         }
+        if 'onboardingVersion' in preferences:
+            update_expr += ', onboardingVersion = :ov'
+            expr_values[':ov'] = int(preferences['onboardingVersion'])
         table.update_item(
             Key={'userId': user_id},
             UpdateExpression=update_expr,
@@ -95,6 +106,8 @@ def update_dietary_preferences(user_id: str, preferences: Dict[str, Any]) -> Dic
             'allergens': preferences['allergens'],
             'dietaryRestrictions': preferences['dietaryRestrictions']
         })
+        if 'onboardingVersion' in preferences:
+            current_prefs['onboardingVersion'] = int(preferences['onboardingVersion'])
         return make_response(200, current_prefs)
     except Exception as e:
         print(f'Error updating dietary preferences: {str(e)}')
