@@ -91,8 +91,6 @@ function HomeScreenV2({ placeId }: Props) {
     try {
       const res = await axios.post(endpoint, {
         ...(userId ? { userId } : {}),
-        // Send current client-side prefs inline so scoring reflects any
-        // unsaved-to-server changes (avoids race with FilterDropdownComponent save).
         allergens:            selectedAllergens,
         dietaryRestrictions:  selectedDiets,
         limit: 10,
@@ -134,7 +132,6 @@ function HomeScreenV2({ placeId }: Props) {
     if (placeId) queryRestaurants({ place_id: placeId });
   }, [placeId]);
 
-  // Re-fetch whenever userId resolves OR preferences change so scores reflect current filters.
   useEffect(() => {
     fetchRestaurants();
   }, [userId, selectedAllergens, selectedDiets]);
@@ -145,7 +142,6 @@ function HomeScreenV2({ placeId }: Props) {
     const safe: any[] = [];
     const unsafe: any[] = [];
     results.forEach((item: any) => {
-      // allergens/diet_restrictions may be a map {key: confidence} or a legacy list
       const allergenKeys = Array.isArray(item.allergens)
         ? item.allergens
         : Object.keys(item.allergens ?? {});
@@ -176,20 +172,18 @@ function HomeScreenV2({ placeId }: Props) {
         });
         return;
       }
-      // No existing analysis — open the discovery sheet, which handles menu URL
-      // detection and analysis submission internally.
       setDiscoveryParams({
         restaurantId: searchResult.place_id,
         name:         searchResult.name ?? '',
         address:      searchResult.formatted_address ?? '',
         website:      searchResult.website ?? '',
+        userId:       userId ?? '',
       });
     } catch (error) {
       console.error('Error querying restaurants:', error);
     }
   };
 
-  // Legacy getMenu — kept for reference; no longer called by queryRestaurants.
   const getMenu = async (searchResult: any) => {
     const response = await axios.post(
       API.getMenu,
@@ -217,7 +211,6 @@ function HomeScreenV2({ placeId }: Props) {
         </View>
       )}
 
-      {/* Header: filter + search */}
       <View style={styles.header}>
         <FilterDropdownComponent
           userPreferences={{ allergens: selectedAllergens, dietaryRestrictions: selectedDiets }}
@@ -229,7 +222,6 @@ function HomeScreenV2({ placeId }: Props) {
         <SearchBar onSelect={(result) => queryRestaurants(result)} />
       </View>
 
-      {/* Tabs — hidden while showing analysis results */}
       {!showingResults && (
         <View style={styles.tabRow}>
           {(['recommended', 'saved'] as Tab[]).map(tab => (
@@ -246,7 +238,6 @@ function HomeScreenV2({ placeId }: Props) {
         </View>
       )}
 
-      {/* Back button when showing analysis results */}
       {showingResults && (
         <TouchableOpacity
           style={styles.backButton}
@@ -256,7 +247,6 @@ function HomeScreenV2({ placeId }: Props) {
         </TouchableOpacity>
       )}
 
-      {/* Restaurant list */}
       {!showingResults && (
         <>
           {displayRestaurants.length === 0 && activeTab === 'saved' ? (
@@ -302,7 +292,6 @@ function HomeScreenV2({ placeId }: Props) {
         </>
       )}
 
-      {/* Menu discovery sheet (new) */}
       {discoveryParams && (
         <MenuDiscoverySheet
           params={discoveryParams}
@@ -310,7 +299,6 @@ function HomeScreenV2({ placeId }: Props) {
         />
       )}
 
-      {/* Legacy menu input — rendered only when menuAnalysisParams is set directly */}
       {menuAnalysisParams && (
         <MenuInputComponent
           params={menuAnalysisParams}
@@ -318,7 +306,6 @@ function HomeScreenV2({ placeId }: Props) {
         />
       )}
 
-      {/* Analysis results */}
       {showingResults && (
         <ResultsSection
           safeResults={safeResults}
@@ -328,7 +315,6 @@ function HomeScreenV2({ placeId }: Props) {
         />
       )}
 
-      {/* Restaurant detail overlay */}
       {selectedRestaurant && (
         <MenuDetailScreen
           restaurant={selectedRestaurant}
@@ -345,7 +331,6 @@ function HomeScreenV2({ placeId }: Props) {
         />
       )}
 
-      {/* Help FAB — above all overlays including MenuDetailScreen */}
       {!showHelp && (
         <View style={styles.fabGroup}>
           <TouchableOpacity style={styles.fab} onPress={() => setShowHelp(true)}>
@@ -354,7 +339,6 @@ function HomeScreenV2({ placeId }: Props) {
         </View>
       )}
 
-      {/* Help overlay — rendered last so it sits above MenuDetailScreen */}
       {showHelp && (
         <HelpScreen
           onClose={() => setShowHelp(false)}

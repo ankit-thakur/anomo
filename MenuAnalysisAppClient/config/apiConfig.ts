@@ -16,5 +16,6 @@ export const API = {
 
   // User
   userPreferences:   process.env.EXPO_PUBLIC_API_PREFERENCES_URL,
+  pushToken:         process.env.EXPO_PUBLIC_API_PREFERENCES_URL + '/push-token',
   updateUsers:       process.env.EXPO_PUBLIC_API_USERS_URL + '/updateUsers',
 };

@@ -23,6 +23,7 @@ export interface DiscoveryParams {
   name:         string;
   address:      string;
   website?:     string;
+  userId?:      string;
 }
 
 interface Props {
@@ -144,12 +145,13 @@ const MenuDiscoverySheet: React.FC<Props> = ({ params, onClose, onSubmitted }) =
 
     try {
       await axios.post(ANALYZE_URL, {
-        place_id: params.restaurantId,
-        name:     params.name,
-        address:  params.address,
-        email: '',
+        place_id:  params.restaurantId,
+        name:      params.name,
+        address:   params.address,
+        email:     '',
         addToList: false,
-        menu_url: chosen.url,
+        menu_url:  chosen.url,
+        userId:    params.userId ?? '',
       });
     } catch (e) {
       console.error('[MenuDiscoverySheet] submit error:', e);
@@ -334,8 +336,6 @@ const s = StyleSheet.create({
   },
   sheet: {
     backgroundColor: C.cream,
-    // borderTopLeftRadius: 24,
-    // borderTopRightRadius: 24,
     maxHeight: '84%',
     shadowColor: '#000',
     shadowOpacity: 0.15,
@@ -356,8 +356,6 @@ const s = StyleSheet.create({
     paddingTop: 12,
     paddingBottom: Platform.OS === 'ios' ? 44 : 28,
   },
-
-  // Restaurant row
   restRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -382,8 +380,6 @@ const s = StyleSheet.create({
     fontSize: 13,
     color: C.textMuted,
   },
-
-  // Scanning
   scanningWrap: {
     alignItems: 'center',
     paddingVertical: 40,
@@ -394,8 +390,6 @@ const s = StyleSheet.create({
     fontSize: 14,
     color: C.textMuted,
   },
-
-  // Found state
   sectionLabel: {
     fontFamily: 'Inter_700Bold',
     fontSize: 11,
@@ -453,8 +447,6 @@ const s = StyleSheet.create({
     fontSize: 11,
     color: C.white,
   },
-
-  // Manual toggle / URL input
   manualToggle: {
     paddingVertical: 8,
     marginBottom: 8,
@@ -482,8 +474,6 @@ const s = StyleSheet.create({
     color: C.red,
     marginBottom: 4,
   },
-
-  // Not found
   notFoundMsg: {
     fontFamily: 'Inter_400Regular',
     fontSize: 14,
@@ -491,8 +481,6 @@ const s = StyleSheet.create({
     lineHeight: 21,
     marginBottom: 14,
   },
-
-  // Submitted
   submittedWrap: {
     alignItems: 'center',
     paddingVertical: 32,
@@ -510,8 +498,6 @@ const s = StyleSheet.create({
     lineHeight: 21,
     maxWidth: 260,
   },
-
-  // CTA
   cta: {
     marginTop: 20,
     backgroundColor: C.green,

@@ -9,7 +9,7 @@ import os
 
 _here = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, _here)                    # /var/task/agents/ — finds scraper_agent
-sys.path.insert(0, os.path.join(_here, ".."))  # /var/task/       — finds extract_links, dish_extraction, etc.
+sys.path.insert(0, os.path.join(_here, "..."))  # /var/task/       — finds extract_links, dish_extraction, etc.
 
 from scraper_agent import run_scraper
 
@@ -25,6 +25,7 @@ def lambda_handler(event, context):
     address    = body.get("address", "")
     email      = body.get("email", "")
     add_to_list = body.get("addToList", False)
+    user_id    = body.get("userId", "")
 
     if not menu_url:
         return {"statusCode": 400, "body": "menu_url is required"}
@@ -42,4 +43,5 @@ def lambda_handler(event, context):
         "address": address,
         "email": email,
         "addToList": add_to_list,
+        "userId": user_id,
     }

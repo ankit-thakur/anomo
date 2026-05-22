@@ -18,10 +18,11 @@ def menu_analyzer_lambda_handler(event, context):
     body_json = json.loads(event['body'])
     menu_url = body_json['menu_url']
     place_id = body_json['place_id']    # Google Place ID
-    
+
     email = body_json['email']
     add_email_to_list = body_json['addToList']
-        
+    user_id = body_json.get('userId', '')   # Cognito sub — used to deliver push notification
+
     state_machine_arn = os.environ['STEP_FUNCTION_ARN']
         
     try:
@@ -29,11 +30,12 @@ def menu_analyzer_lambda_handler(event, context):
         response = stepfunctions_client.start_execution(
             stateMachineArn=state_machine_arn,
             input=json.dumps({
-                "menu_url": menu_url, 
-                "place_id": place_id, 
+                "menu_url": menu_url,
+                "place_id": place_id,
                 "name": body_json['name'],
                 "address": body_json['address'],
-                "email": email if add_email_to_list else ""
+                "email": email if add_email_to_list else "",
+                "userId": user_id,
             })
         )
         print("***response: ", response)

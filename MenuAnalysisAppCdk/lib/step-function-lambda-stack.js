@@ -86,6 +86,9 @@ class StepFunctionWithLambdasStack extends cdk.Stack {
     const importedUsersTable = dynamodb.Table.fromTableArn(
       this, 'UsersTable', cdk.Fn.importValue('UsersTableExport'));
 
+    const importedUserPreferencesTable = dynamodb.Table.fromTableArn(
+      this, 'UserPreferencesTable', cdk.Fn.importValue('UserPreferencesTableExport'));
+
     // -----------------------------------------------------------------------
     // Common Bedrock policy (shared across agent Lambdas)
     // -----------------------------------------------------------------------
@@ -177,7 +180,7 @@ class StepFunctionWithLambdasStack extends cdk.Stack {
 
     // -----------------------------------------------------------------------
     // 4. Finalize Lambda
-    //    Writes results to DynamoDB, sends notification email
+    //    Writes results to DynamoDB, sends notification email and push
     // -----------------------------------------------------------------------
     const finalizeLambda = new lambda.Function(this, 'FinalizeMenuLambda', {
       runtime: lambda.Runtime.PYTHON_3_12,
@@ -188,9 +191,10 @@ class StepFunctionWithLambdasStack extends cdk.Stack {
       layers: [importedBoto3Layer, importedRequestsLayer],
       environment: {
         ...agentEnv,
-        RESTAURANT_TABLE: importedRestaurantTable.tableName,
-        MENU_ITEMS_TABLE: importedMenuItemsTable.tableName,
-        EMAIL_LIST_TABLE: importedEmailListTable.tableName,
+        RESTAURANT_TABLE:       importedRestaurantTable.tableName,
+        MENU_ITEMS_TABLE:       importedMenuItemsTable.tableName,
+        EMAIL_LIST_TABLE:       importedEmailListTable.tableName,
+        USER_PREFERENCES_TABLE: importedUserPreferencesTable.tableName,
       },
     });
 
@@ -200,6 +204,7 @@ class StepFunctionWithLambdasStack extends cdk.Stack {
     importedEmailListTable.grantReadWriteData(finalizeLambda);
     importedUsersTable.grantReadWriteData(finalizeLambda);
     importedConnectionIdTable.grantReadWriteData(finalizeLambda);
+    importedUserPreferencesTable.grantReadData(finalizeLambda);
     finalizeLambda.addToRolePolicy(new iam.PolicyStatement({
       actions: ['ses:SendEmail', 'ses:SendRawEmail'],
       resources: ['*'],
