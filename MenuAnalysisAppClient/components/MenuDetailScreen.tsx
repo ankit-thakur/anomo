@@ -75,6 +75,7 @@ export interface DetailRestaurant {
   heroImage: string;
   images?: string[];
   safety_score?: SafetyScore;
+  status?: string;
 }
 
 interface Props {
@@ -300,7 +301,11 @@ export default function MenuDetailScreen({ restaurant, userId, selectedAllergens
         </View>
       ) : dishes.length === 0 ? (
         <View style={styles.emptyState}>
-          <Text style={styles.emptyText}>No menu items available.</Text>
+          <Text style={styles.emptyText}>
+            {restaurant.status === 'pending'
+              ? 'Menu analysis is in progress — check back soon.'
+              : 'No menu items available.'}
+          </Text>
         </View>
       ) : (
         <SectionList

@@ -22,13 +22,14 @@ def update_restaurants_table(restaurant_id, name, address, menu_url, dish_allerg
 
     # Use update_item instead of put_item so fields set by other processes
     # (heroImage, images, etc.) are preserved when no summary is provided.
-    update_expr = 'SET #nm = :n, address = :a, menuUrl = :m, updatedAt = :t'
-    expr_names  = {'#nm': 'name'}   # 'name' is a DynamoDB reserved word
+    update_expr = 'SET #nm = :n, address = :a, menuUrl = :m, updatedAt = :t, #st = :status'
+    expr_names  = {'#nm': 'name', '#st': 'status'}   # 'name'/'status' are DynamoDB reserved words
     expr_values = {
         ':n': name or '',
         ':a': address or '',
         ':m': menu_url or '',
         ':t': datetime.datetime.now().isoformat(),
+        ':status': 'complete',
     }
 
     if dish_allergen_summary is not None:

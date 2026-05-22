@@ -225,10 +225,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             if (tokens.id_token) await AsyncStorage.setItem('idToken', tokens.id_token);
             setUser({ accessToken: tokens.access_token, idToken: tokens.id_token || idToken });
             scheduleRefresh(tokens.expires_in || 3600);
-          } catch (e) {
-            // Refresh token itself expired (after 30 days) — user must sign in again.
-            console.log('Refresh token expired, clearing session');
-            await AsyncStorage.multiRemove(['accessToken', 'idToken', 'refreshToken']);
+          } catch (e: any) {
+            // Only clear tokens when the refresh token is genuinely expired or
+            // revoked (Cognito returns "invalid_grant"). For transient failures
+            // (network error, server error on app open) keep the stored access
+            // token so the user stays logged in.
+            const isInvalidGrant = (e?.message ?? '').includes('invalid_grant');
+            if (isInvalidGrant || !accessToken) {
+              console.log('Refresh token expired or revoked, clearing session');
+              await AsyncStorage.multiRemove(['accessToken', 'idToken', 'refreshToken']);
+            } else {
+              console.warn('Token refresh failed transiently, using stored access token');
+              setUser({ accessToken, idToken });
+            }
           }
         } else if (accessToken) {
           // Legacy: tokens from before refresh_token support — keep the user

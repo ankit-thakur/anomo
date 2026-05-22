@@ -173,6 +173,7 @@ function HomeScreenV2({ placeId }: Props) {
           address: searchResult.formatted_address ?? '',
           heroImage: restaurant.heroImage ?? '',
           images: restaurant.images ?? [],
+          status: restaurant.status,
         });
         return;
       }
