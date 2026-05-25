@@ -313,6 +313,7 @@ class CdkStack extends Stack {
       layers: [ myBoto3Layer, importedRequestsLayer, importedBs4Layer ],
       environment: {
         STEP_FUNCTION_ARN: `arn:aws:states:${this.region}:${this.account}:stateMachine:${secrets.step_function_name}`,
+        RESTAURANT_TABLE: importedRestaurantTable.tableName,
       },
     });
 
