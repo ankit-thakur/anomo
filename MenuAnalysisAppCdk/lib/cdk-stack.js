@@ -180,7 +180,6 @@ class CdkStack extends Stack {
     });
 
     queryRestaurantsLambda.addToRolePolicy(new iam.PolicyStatement({
-      effect: ['Allow'],
       actions: ['execute-api:ManageConnections'],
       resources: [`arn:aws:execute-api:us-east-1:${process.env.CDK_DEFAULT_ACCOUNT}:${secrets.websocket_api_id}/prod/POST/@connections/{connectionId}`],
     }));
@@ -312,18 +311,17 @@ class CdkStack extends Stack {
       memory: 3008,
       layers: [ myBoto3Layer, importedRequestsLayer, importedBs4Layer ],
       environment: {
-        STEP_FUNCTION_ARN: `arn:aws:states:${this.region}:${this.account}:stateMachine:${secrets.step_function_name}`,
+        STEP_FUNCTION_ARN: cdk.Fn.importValue('MenuAnalysisStateMachineArnExport'),
         RESTAURANT_TABLE: importedRestaurantTable.tableName,
       },
     });
 
     menuAnalyzerLambdaHandler.addToRolePolicy(new iam.PolicyStatement({
       actions: ['states:StartExecution'],
-      resources: [`arn:aws:states:us-east-1:${process.env.CDK_DEFAULT_ACCOUNT}:stateMachine:${secrets.step_function_name}`], // Restrict the permission to your specific Step Function ARN
+      resources: [cdk.Fn.importValue('MenuAnalysisStateMachineArnExport')],
     }));
 
     menuAnalyzerLambdaHandler.addToRolePolicy(new iam.PolicyStatement({
-      effect: ['Allow'],
       actions: ['execute-api:ManageConnections'],
       resources: [`arn:aws:execute-api:us-east-1:${process.env.CDK_DEFAULT_ACCOUNT}:${secrets.websocket_api_id}/prod/POST/@connections/{connectionId}`],
     }));
@@ -384,7 +382,6 @@ class CdkStack extends Stack {
     });
 
     usersLambda.addToRolePolicy(new iam.PolicyStatement({
-      effect: ['Allow'],
       actions: ['execute-api:ManageConnections'],
       resources: [`arn:aws:execute-api:us-east-1:${process.env.CDK_DEFAULT_ACCOUNT}:${secrets.websocket_api_id}/prod/POST/@connections/{connectionId}`],
     }));

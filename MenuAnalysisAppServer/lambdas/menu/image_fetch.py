@@ -51,8 +51,8 @@ dynamodb = boto3.resource('dynamodb')
 s3       = boto3.client('s3')
 bedrock  = boto3.client('bedrock-runtime', region_name='us-east-1')
 
-PLACES_DETAILS_URL = 'https://maps.googleapis.com/maps/api/place/details/json'
-PLACES_PHOTO_URL   = 'https://maps.googleapis.com/maps/api/place/photo'
+PLACES_DETAILS_URL = 'https://places.googleapis.com/v1/places'
+PLACES_PHOTO_URL   = 'https://places.googleapis.com/v1'
 
 MAX_PLACES_PHOTOS = 10
 MAX_WEB_IMAGES    = 10   # keeps combined total ≤ 20 for Vision API
@@ -165,26 +165,26 @@ def _process_restaurant(restaurant_id: str, menu_url: str):
 def _download_places_photos(restaurant_id: str) -> list[tuple[bytes, str, str]]:
     try:
         resp = requests.get(
-            PLACES_DETAILS_URL,
-            params={'place_id': restaurant_id, 'fields': 'photos', 'key': GOOGLE_API_KEY},
+            f'{PLACES_DETAILS_URL}/{restaurant_id}',
+            headers={'X-Goog-Api-Key': GOOGLE_API_KEY, 'X-Goog-FieldMask': 'photos'},
             timeout=10,
         )
         resp.raise_for_status()
-        photo_refs = [
-            p['photo_reference']
-            for p in resp.json().get('result', {}).get('photos', [])
-            if 'photo_reference' in p
+        photo_names = [
+            p['name']
+            for p in resp.json().get('photos', [])
+            if 'name' in p
         ]
     except Exception as exc:
         print(f'[ImageFetch] Places Details call failed: {exc}')
         return []
 
     results: list[tuple[bytes, str, str]] = []
-    for i, ref in enumerate(photo_refs[:MAX_PLACES_PHOTOS]):
+    for i, photo_name in enumerate(photo_names[:MAX_PLACES_PHOTOS]):
         try:
             img_resp = requests.get(
-                PLACES_PHOTO_URL,
-                params={'maxwidth': 800, 'photo_reference': ref, 'key': GOOGLE_API_KEY},
+                f'{PLACES_PHOTO_URL}/{photo_name}/media',
+                params={'maxWidthPx': 800, 'key': GOOGLE_API_KEY},
                 timeout=15,
                 allow_redirects=True,
             )

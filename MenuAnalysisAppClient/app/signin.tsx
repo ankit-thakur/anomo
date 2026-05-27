@@ -56,7 +56,7 @@ export default function SignInScreen() {
         <View style={styles.brandSection}>
           <View style={styles.logoRing}>
             <Image
-              source={require('../assets/images/anomo-logo-2.png')}
+              source={require('../assets/images/anomo-logo-3.png')}
               style={styles.logoImg}
               resizeMode="stretch"
             />

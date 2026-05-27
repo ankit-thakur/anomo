@@ -2,157 +2,97 @@ import requests
 import json
 import os
 
-# Access your API key
-google_api_key = os.environ['GOOGLE_API_KEY'],
+google_api_key = os.environ['GOOGLE_API_KEY']
 
-"""
-1. Call Google Places API
-2. Get 
-"""
+_CORS_HEADERS = {
+    'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'Content-Type, Origin, Accept',
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS'
+}
+
 def get_place_id(event, context):
-    base_url = "https://maps.googleapis.com/maps/api/place/textsearch/json?"
-        
     print("* event: ", event)
     print("* context: ", context)
-    
+
     body_json = json.loads(event["body"])
-    
-    # Define the parameters for the API request
-    params = {
-        'key': google_api_key,
-        'query': body_json['searchQuery']
-        # 'location': 42.3601° N, 71.0589° W,  # latitude,longitude
-        # 'radius': radius,      # Search radius in meters
-        # 'keyword': place_name, # Name or keyword of the place to search for
-        # 'type': place_type     # Type of place (e.g., restaurant, store)
+
+    # New Places API v1 — Text Search
+    url = "https://places.googleapis.com/v1/places:searchText"
+    headers = {
+        'Content-Type': 'application/json',
+        'X-Goog-Api-Key': google_api_key,
+        'X-Goog-FieldMask': 'places.id,places.displayName,places.formattedAddress,places.types',
     }
-   
-    # Calls the Google Places TextSearch API
-    response = requests.get(base_url, params=params)
+    body = {'textQuery': body_json['searchQuery']}
+
+    response = requests.post(url, headers=headers, json=body)
+    print(f"Google Places response status: {response.status_code}")
+
     if response.status_code == 200:
         data = response.json()
-        data_str = json.dumps(data['results'])
+        raw_places = data.get('places', [])
+        # Normalize to the shape the frontend expects: place_id, name, formatted_address
+        results = [
+            {
+                'place_id': p.get('id', ''),
+                'name': p.get('displayName', {}).get('text', ''),
+                'formatted_address': p.get('formattedAddress', ''),
+                'types': p.get('types', []),
+            }
+            for p in raw_places
+        ]
         return {
             'statusCode': 200,
-            'headers': {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Headers': 'Content-Type, Origin, Accept',
-                'Access-Control-Allow-Methods': 'GET, POST, OPTIONS'
-            },
-            'body': data_str
+            'headers': _CORS_HEADERS,
+            'body': json.dumps(results)
         }
-
     else:
-        # Handle error
         print(f"Error: {response.status_code}, {response.text}")
         return {
             'statusCode': response.status_code,
-            'headers': {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Headers': 'Content-Type, Origin, Accept',
-                'Access-Control-Allow-Methods': 'GET, POST, OPTIONS'
-            },
-            'body': "Error calling googleapis place textsearch api: " + response.text
+            'headers': _CORS_HEADERS,
+            'body': "Error calling Places API text search: " + response.text
         }
-    
 
-def get_place_details(event, context):  
+
+def get_place_details(event, context):
     print("* event: ", event)
     print("* context: ", context)
-    
-    qry_str_params = event.get("queryStringParameters") or {}
 
+    qry_str_params = event.get("queryStringParameters") or {}
     place_id = qry_str_params['placeId']
-    
-    params = {
-        'place_id': place_id,
-        'fields': 'name,website,formatted_address',
-        'key': google_api_key
+
+    # New Places API v1 — Place Details
+    url = f"https://places.googleapis.com/v1/places/{place_id}"
+    headers = {
+        'Content-Type': 'application/json',
+        'X-Goog-Api-Key': google_api_key,
+        'X-Goog-FieldMask': 'id,displayName,websiteUri,formattedAddress',
     }
-    
-    # Make the API request to Google Places Details API
-    base_url = "https://maps.googleapis.com/maps/api/place/details/json"
-    response = requests.get(base_url, params=params)
-    
+
+    response = requests.get(url, headers=headers)
+    print(f"Google Places details response status: {response.status_code}")
+
     if response.status_code == 200:
         data = response.json()
-        ret_data = data['result']
-        ret_data['id'] = place_id
-        
+        ret_data = {
+            'id': place_id,
+            'name': data.get('displayName', {}).get('text', ''),
+            'website': data.get('websiteUri', ''),
+            'formatted_address': data.get('formattedAddress', ''),
+        }
         return {
             'statusCode': 200,
-            'headers': {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Headers': 'Content-Type, Origin, Accept',
-                'Access-Control-Allow-Methods': 'GET, POST, OPTIONS'
-            },
+            'headers': _CORS_HEADERS,
             'body': json.dumps(ret_data)
         }
-
     else:
-        # Handle error
         print(f"Error: {response.status_code}, {response.text}")
         return {
             'statusCode': response.status_code,
-            'headers': {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Headers': 'Content-Type, Origin, Accept',
-                'Access-Control-Allow-Methods': 'GET, POST, OPTIONS'
-            },
-            'body': "Error calling googleapis place details api: " + response.text
+            'headers': _CORS_HEADERS,
+            'body': "Error calling Places API details: " + response.text
         }
     
-    
-
-def get_place_photos(event, context):    
-    print("* event: ", event)
-    print("* context: ", context)
-    
-    qry_str_params = event.get("queryStringParameters") or {}
-
-    place_id = qry_str_params['placeId']
-    
-    params = {
-        'place_id': place_id,
-        'fields': 'name,website,formatted_address',
-        'key': google_api_key
-    }
-    
-    # Make the API request to Google Places Details API
-    base_url = "https://maps.googleapis.com/maps/api/place/details/json"
-    response = requests.get(base_url, params=params)
-    
-    if response.status_code == 200:
-        data = response.json()
-        ret_data = data['result']
-        ret_data['id'] = place_id
         
-        return {
-            'statusCode': 200,
-            'headers': {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Headers': 'Content-Type, Origin, Accept',
-                'Access-Control-Allow-Methods': 'GET, POST, OPTIONS'
-            },
-            'body': json.dumps(ret_data)
-        }
-
-    else:
-        # Handle error
-        print(f"Error: {response.status_code}, {response.text}")
-        return {
-            'statusCode': response.status_code,
-            'headers': {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Headers': 'Content-Type, Origin, Accept',
-                'Access-Control-Allow-Methods': 'GET, POST, OPTIONS'
-            },
-            'body': "Error calling googleapis place details api: " + response.text
-        }
-    

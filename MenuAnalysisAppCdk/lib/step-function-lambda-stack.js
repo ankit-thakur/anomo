@@ -271,10 +271,15 @@ class StepFunctionWithLambdasStack extends cdk.Stack {
       .next(verificationTask)
       .next(finalizeTask);
 
-    new stepfunctions.StateMachine(this, 'MenuAnalysisStepFunction', {
+    const stateMachine = new stepfunctions.StateMachine(this, 'MenuAnalysisStepFunction', {
       definition,
       timeout: cdk.Duration.minutes(60),
       role: lambdaInvokeRole,
+    });
+
+    new cdk.CfnOutput(this, 'MenuAnalysisStateMachineArnOutput', {
+      value: stateMachine.stateMachineArn,
+      exportName: 'MenuAnalysisStateMachineArnExport',
     });
   }
 }

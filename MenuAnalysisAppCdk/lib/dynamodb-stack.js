@@ -80,9 +80,9 @@ class DdbStack extends Stack {
     });
 
     const usersTable = new dynamodb.Table(this, 'UsersTable', {
-      partitionKey: { name: 'submission_id', type: dynamodb.AttributeType.STRING },  // Partition key
-      billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,                            // Billing mode
-      // removalPolicy: cdk.RemovalPolicy.DESTROY,                                  // Removes table when stack is destroyed
+      partitionKey: { name: 'email', type: dynamodb.AttributeType.STRING },
+      billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
+      // removalPolicy: cdk.RemovalPolicy.DESTROY,
     });
 
     // Export the table ARN to be used in other stacks

@@ -1,7 +1,6 @@
 import json
 import os
 import boto3
-import uuid
 from datetime import datetime, timezone
 from boto3.dynamodb.conditions import Key
 from botocore.exceptions import ClientError
@@ -9,84 +8,63 @@ from botocore.exceptions import ClientError
 dynamodb = boto3.resource('dynamodb')
 users_table = dynamodb.Table(os.environ['USERS_TABLE'])
 
+HEADERS = {
+    'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'Content-Type, Origin, Accept',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS'
+}
+
 def update_users_handler(event, context):
     print("*** UPDATE USERS ***")
-    
     print("* event: ", event)
-    print("* context: ", context)
-    
+
     try:
         body_json = json.loads(event['body'])
-        email = body_json.get('email')
+        email = body_json.get('email') or 'anonymous'
         submission_type = body_json.get('type')
-        feedback = None
-        reported_issue = None
-        
-        if submission_type == 'feedback':
-            # Handle feedback submission
-            feedback = body_json.get('content')  
-        elif submission_type == 'issue':
-            # Handle feedback submission
-            reported_issue = body_json.get('content')
-        
-        item = create_user_submission(
-            email=email,
-            feedback=feedback,
-            reported_issue=reported_issue
+        content = body_json.get('content', '').strip()
+
+        if submission_type not in ('feedback', 'issue'):
+            return {
+                'statusCode': 400,
+                'headers': HEADERS,
+                'body': json.dumps({'error': 'type must be feedback or issue'})
+            }
+
+        if not content:
+            return {
+                'statusCode': 400,
+                'headers': HEADERS,
+                'body': json.dumps({'error': 'content is required'})
+            }
+
+        entry = {
+            'content': content,
+            'submitted_at': datetime.now(timezone.utc).isoformat(),
+        }
+
+        list_attr = 'feedback' if submission_type == 'feedback' else 'issues'
+
+        users_table.update_item(
+            Key={'email': email},
+            UpdateExpression=f'SET {list_attr} = list_append(if_not_exists({list_attr}, :empty), :entry)',
+            ExpressionAttributeValues={
+                ':entry': [entry],
+                ':empty': [],
+            }
         )
- 
+
         return {
             'statusCode': 200,
-            'headers': {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Headers': 'Content-Type, Origin, Accept',
-                'Access-Control-Allow-Methods': 'POST, OPTIONS'
-            },
-            'body': json.dumps(item)
+            'headers': HEADERS,
+            'body': json.dumps({'ok': True})
         }
-        
+
     except (ClientError, Exception) as e:
+        print("ERROR:", e)
         return {
-            'statusCode': 400,
-            'headers': {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Headers': 'Content-Type',
-                'Access-Control-Allow-Methods': 'GET, POST, OPTIONS'
-            },
-            'body': "ERROR: Error updating user submission: " + str(e)
+            'statusCode': 500,
+            'headers': HEADERS,
+            'body': json.dumps({'error': str(e)})
         }
-
-def create_user_submission(
-    email: str = None,
-    feedback: str = None,
-    reported_issue: str = None
-):
-    """
-    Create a new user submission record in DynamoDB.
-
-    Each submission gets a unique UUID as the partition key so multiple
-    submissions can exist for the same user (or anonymously).
-    """
-
-    # Unique ID for this submission
-    submission_id = str(uuid.uuid4())
-
-    item = {
-        "submission_id": submission_id,  # PartitionKey
-        "submitted_at": datetime.now(timezone.utc).isoformat()
-    }
-
-    # Add optional fields if provided
-    if email:
-        item["email"] = email
-    if feedback:
-        item["feedback"] = feedback
-    if reported_issue:
-        item["issue"] = reported_issue
-
-    # Store in DynamoDB
-    users_table.put_item(Item=item)
-
-    return item
