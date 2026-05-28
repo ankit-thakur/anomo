@@ -26,6 +26,7 @@ const C = {
   textMuted:  '#7A7570',
   textLight:  '#ADA89F',
   white:      '#FFFFFF',
+  brand:      '#2A1F14',  // matches sign-in wordmark
 };
 
 const ALLERGENS = [
@@ -63,13 +64,31 @@ const DISCLAIMER_SECTIONS = [
   },
   {
     heading: 'Your Agreement',
-    body: "By continuing, you acknowledge that you assume full responsibility for any decisions made based on this app's information. ANOMO and its affiliates are not liable for errors, omissions, or consequences resulting from your use of this app.",
+    body: "By continuing, you acknowledge that you assume full responsibility for any decisions made based on this app's information. anomo and its affiliates are not liable for errors, omissions, or consequences resulting from your use of this app.",
   },
   {
     heading: 'Medical Emergencies',
     body: 'If you have or suspect a medical condition, seek immediate professional advice. Never delay seeking medical help because of something you read in this app.',
   },
 ];
+
+// Renders disclaimer body text with "anomo" styled as the brand wordmark inline.
+const renderDisclaimerBody = (text: string) => {
+  const parts = text.split('anomo');
+  if (parts.length === 1) return <Text style={s.disclaimerBody}>{text}</Text>;
+  return (
+    <Text style={s.disclaimerBody}>
+      {parts.map((part, i) => (
+        <React.Fragment key={i}>
+          {part}
+          {i < parts.length - 1 && (
+            <Text style={[s.disclaimerBody, s.anomoBrand]}>anomo</Text>
+          )}
+        </React.Fragment>
+      ))}
+    </Text>
+  );
+};
 
 const TOTAL_STEPS = 4;
 
@@ -133,9 +152,11 @@ export default function OnboardingScreen() {
               <Text style={s.heroTagline}>eat with confidence</Text>
             </View>
             <View style={s.textBlock}>
-              <Text style={s.stepTitle}>Welcome to ANOMO</Text>
+              <Text style={s.stepTitle}>
+                Welcome to <Text style={[s.stepTitle, s.anomoBrand]}>anomo</Text>
+              </Text>
               <Text style={s.stepBody}>
-                ANOMO helps you discover restaurants and navigate menus safely based on your allergens and dietary needs.
+                <Text style={[s.stepBody, s.anomoBrand]}>anomo</Text> helps you discover restaurants and navigate menus safely based on your allergens and dietary needs.
               </Text>
               <Text style={[s.stepBody, { marginTop: 12 }]}>
                 Let's take a minute to set up your profile so every search is personalised to you.
@@ -151,12 +172,14 @@ export default function OnboardingScreen() {
         return (
           <View style={s.stepContent}>
             <Text style={s.stepTitle}>Important Disclaimers</Text>
-            <Text style={s.stepBodySmall}>Please read the following before using ANOMO.</Text>
+            <Text style={s.stepBodySmall}>
+              Please read the following before using <Text style={[s.stepBodySmall, s.anomoBrand]}>anomo.</Text>
+            </Text>
             <ScrollView style={s.scrollArea} showsVerticalScrollIndicator={false}>
               {DISCLAIMER_SECTIONS.map((sec, i) => (
                 <View key={i} style={s.disclaimerSection}>
                   <Text style={s.disclaimerHeading}>{sec.heading}</Text>
-                  <Text style={s.disclaimerBody}>{sec.body}</Text>
+                  {renderDisclaimerBody(sec.body)}
                 </View>
               ))}
               <View style={{ height: 8 }} />
@@ -250,7 +273,7 @@ export default function OnboardingScreen() {
             <Text style={[s.stepTitle, { textAlign: 'center', marginTop: 24 }]}>You're all set!</Text>
             <Text style={[s.stepBody, { textAlign: 'center', marginTop: 12 }]}>
               {totalSelections > 0
-                ? `We've saved your profile with ${allergens.length} allergen${allergens.length !== 1 ? 's' : ''} and ${diets.length} dietary preference${diets.length !== 1 ? 's' : ''}. ANOMO will highlight safe options for you.`
+                ? <>We've saved your profile with {allergens.length} allergen{allergens.length !== 1 ? 's' : ''} and {diets.length} dietary preference{diets.length !== 1 ? 's' : ''}. <Text style={[s.stepBody, s.anomoBrand]}>anomo</Text> will highlight safe options for you.</>
                 : "You can set up your dietary profile anytime using the + button at the top of the home screen."
               }
             </Text>
@@ -322,7 +345,7 @@ const s = StyleSheet.create({
   heroLogo: {
     fontFamily: 'Fraunces_700Bold',
     fontSize: 52,
-    color: C.green,
+    color: C.brand,
     letterSpacing: -1,
   },
   heroTagline: {
@@ -331,6 +354,12 @@ const s = StyleSheet.create({
     color: C.textMuted,
     marginTop: 4,
     letterSpacing: 0.5,
+  },
+
+  // Brand wordmark — applied inline via nested <Text> to match sign-in logo style
+  anomoBrand: {
+    fontFamily: 'Fraunces_700Bold',
+    color: C.brand,
   },
 
   // Text
