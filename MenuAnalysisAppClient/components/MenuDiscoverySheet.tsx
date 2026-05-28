@@ -7,7 +7,7 @@ import {
 import axios from 'axios';
 import { API } from '../config/apiConfig';
 
-// ── Types ─────────────────────────────────────────────────────────────────────────────
+// ── Types ────────────────────────────────────────────────────────────────────
 
 type SheetState = 'scanning' | 'found' | 'not_found' | 'submitted';
 type MenuType   = 'dinner' | 'brunch' | 'lunch' | 'drinks' | 'all-day' | 'menu';
@@ -29,10 +29,10 @@ export interface DiscoveryParams {
 interface Props {
   params:       DiscoveryParams;
   onClose:      () => void;
-  onSubmitted?: () => void;
+  onSubmitted?: (placeId: string, name: string, address: string) => void;
 }
 
-// ── Constants ─────────────────────────────────────────────────────────────────────────
+// ── Constants ─────────────────────────────────────────────────────────────────
 
 const C = {
   cream:     '#F2EDE2',
@@ -50,7 +50,7 @@ const C = {
 const GET_MENU_URL = API.getMenu;
 const ANALYZE_URL  = API.analyzeMenu;
 
-// ── Helpers ───────────────────────────────────────────────────────────────────────────
+// ── Helpers ───────────────────────────────────────────────────────────────────
 
 function inferMenuType(url: string): MenuType {
   const u = url.toLowerCase();
@@ -72,10 +72,9 @@ function truncateUrl(url: string, max = 42): string {
   }
 }
 
-const cap         = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
-const menuTypeLabel = (type: string) => type === 'menu' ? 'Menu' : `${cap(type)} menu`;
+const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
-// ── Component ───────────────────────────────────────────────────────────────────────────
+// ── Component ─────────────────────────────────────────────────────────────────
 
 const MenuDiscoverySheet: React.FC<Props> = ({ params, onClose, onSubmitted }) => {
   const [state,          setState]          = useState<SheetState>('scanning');
@@ -106,7 +105,7 @@ const MenuDiscoverySheet: React.FC<Props> = ({ params, onClose, onSubmitted }) =
     }).start(() => onClose());
   };
 
-  // ── Discovery call ──────────────────────────────────────────────────────────────
+  // ── Discovery call ─────────────────────────────────────────────────────────
 
   const discoverMenu = async () => {
     try {
@@ -133,10 +132,10 @@ const MenuDiscoverySheet: React.FC<Props> = ({ params, onClose, onSubmitted }) =
     }
   };
 
-  // ── Submit ─────────────────────────────────────────────────────────────────────────────
+  // ── Submit ─────────────────────────────────────────────────────────────────
 
   const handleConfirm = async () => {
-    const chosen = (state === 'not_found' || manualVisible)
+    const chosen = manualVisible
       ? { type: 'menu' as MenuType, url: manualUrl }
       : links[selectedIdx];
     if (!chosen?.url) return;
@@ -158,7 +157,7 @@ const MenuDiscoverySheet: React.FC<Props> = ({ params, onClose, onSubmitted }) =
     }
 
     setState('submitted');
-    onSubmitted?.();
+    onSubmitted?.(params.restaurantId, params.name, params.address);
     setTimeout(dismissSheet, 1800);
   };
 
@@ -171,7 +170,7 @@ const MenuDiscoverySheet: React.FC<Props> = ({ params, onClose, onSubmitted }) =
     }
   };
 
-  // ── Derived ─────────────────────────────────────────────────────────────────────────────
+  // ── Derived ────────────────────────────────────────────────────────────────
 
   const translateY   = slideAnim.interpolate({ inputRange: [0, 1], outputRange: [640, 0] });
   // not_found has no radio list — always validate the manual URL field directly
@@ -181,10 +180,10 @@ const MenuDiscoverySheet: React.FC<Props> = ({ params, onClose, onSubmitted }) =
   const ctaLabel     = () => {
     if (state === 'submitted') return '✓ Submitted';
     const type = manualVisible ? 'menu' : (links[selectedIdx]?.type ?? 'menu');
-    return `Analyze ${menuTypeLabel(type).toLowerCase()} →`;
+    return `Analyze ${type} menu →`;
   };
 
-  // ── Sub-renders ───────────────────────────────────────────────────────────────────────────
+  // ── Sub-renders ────────────────────────────────────────────────────────────
 
   const RestaurantRow = () => (
     <View style={s.restRow}>
@@ -226,7 +225,7 @@ const MenuDiscoverySheet: React.FC<Props> = ({ params, onClose, onSubmitted }) =
               {sel && <View style={s.radioDot} />}
             </View>
             <View style={s.linkMeta}>
-              <Text style={s.linkType}>{menuTypeLabel(link.type)}</Text>
+              <Text style={s.linkType}>{cap(link.type)} menu</Text>
               <Text style={s.linkUrl} numberOfLines={1}>{truncateUrl(link.url)}</Text>
             </View>
             {i === 0 && (
@@ -283,7 +282,7 @@ const MenuDiscoverySheet: React.FC<Props> = ({ params, onClose, onSubmitted }) =
     </View>
   );
 
-  // ── Render ─────────────────────────────────────────────────────────────────────────────
+  // ── Render ─────────────────────────────────────────────────────────────────
 
   return (
     <Modal transparent visible animationType="none">
@@ -323,7 +322,7 @@ const MenuDiscoverySheet: React.FC<Props> = ({ params, onClose, onSubmitted }) =
   );
 };
 
-// ── Styles ─────────────────────────────────────────────────────────────────────────────
+// ── Styles ────────────────────────────────────────────────────────────────────
 
 const s = StyleSheet.create({
   modalRoot: {
@@ -336,6 +335,8 @@ const s = StyleSheet.create({
   },
   sheet: {
     backgroundColor: C.cream,
+    // borderTopLeftRadius: 24,
+    // borderTopRightRadius: 24,
     maxHeight: '84%',
     shadowColor: '#000',
     shadowOpacity: 0.15,
@@ -356,6 +357,8 @@ const s = StyleSheet.create({
     paddingTop: 12,
     paddingBottom: Platform.OS === 'ios' ? 44 : 28,
   },
+
+  // Restaurant row
   restRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -380,6 +383,8 @@ const s = StyleSheet.create({
     fontSize: 13,
     color: C.textMuted,
   },
+
+  // Scanning
   scanningWrap: {
     alignItems: 'center',
     paddingVertical: 40,
@@ -390,6 +395,8 @@ const s = StyleSheet.create({
     fontSize: 14,
     color: C.textMuted,
   },
+
+  // Found state
   sectionLabel: {
     fontFamily: 'Inter_700Bold',
     fontSize: 11,
@@ -447,6 +454,8 @@ const s = StyleSheet.create({
     fontSize: 11,
     color: C.white,
   },
+
+  // Manual toggle / URL input
   manualToggle: {
     paddingVertical: 8,
     marginBottom: 8,
@@ -474,6 +483,8 @@ const s = StyleSheet.create({
     color: C.red,
     marginBottom: 4,
   },
+
+  // Not found
   notFoundMsg: {
     fontFamily: 'Inter_400Regular',
     fontSize: 14,
@@ -481,6 +492,8 @@ const s = StyleSheet.create({
     lineHeight: 21,
     marginBottom: 14,
   },
+
+  // Submitted
   submittedWrap: {
     alignItems: 'center',
     paddingVertical: 32,
@@ -498,6 +511,8 @@ const s = StyleSheet.create({
     lineHeight: 21,
     maxWidth: 260,
   },
+
+  // CTA
   cta: {
     marginTop: 20,
     backgroundColor: C.green,

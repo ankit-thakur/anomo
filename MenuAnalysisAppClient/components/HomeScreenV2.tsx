@@ -11,7 +11,9 @@ import ResultsSection from './ResultsSection';
 import RestaurantTile from './RestaurantTile';
 import MenuDetailScreen, { DetailRestaurant } from './MenuDetailScreen';
 import HelpScreen from './HelpScreen';
+import QueuedRestaurantList from './QueuedRestaurantList';
 import { getUserPreferences, updateSavedRestaurants } from './UserPreferences';
+import { useAnalysisQueue } from '../hooks/useAnalysisQueue';
 import 'react-native-get-random-values';
 import axios from 'axios';
 import { router } from 'expo-router';
@@ -62,7 +64,7 @@ function decodeJwtClaim(token: string, claim: string): string | null {
   }
 }
 
-type Tab = 'recommended' | 'saved';
+type Tab = 'recommended' | 'saved' | 'queued';
 
 type Props = {
   placeId?: string;
@@ -85,12 +87,15 @@ function HomeScreenV2({ placeId }: Props) {
   const { signOut, user } = useContext(AuthContext);
   const userId    = user?.idToken ? decodeJwtClaim(user.idToken, 'sub')   : null;
   const userEmail = user?.idToken ? decodeJwtClaim(user.idToken, 'email') : null;
+  const { queue, enqueue, markComplete, dismiss, analyzingCount } = useAnalysisQueue();
 
   const fetchRestaurants = async () => {
     const endpoint = API.getRecommendations;
     try {
       const res = await axios.post(endpoint, {
         ...(userId ? { userId } : {}),
+        // Send current client-side prefs inline so scoring reflects any
+        // unsaved-to-server changes (avoids race with FilterDropdownComponent save).
         allergens:            selectedAllergens,
         dietaryRestrictions:  selectedDiets,
         limit: 10,
@@ -132,6 +137,7 @@ function HomeScreenV2({ placeId }: Props) {
     if (placeId) queryRestaurants({ place_id: placeId });
   }, [placeId]);
 
+  // Re-fetch whenever userId resolves OR preferences change so scores reflect current filters.
   useEffect(() => {
     fetchRestaurants();
   }, [userId, selectedAllergens, selectedDiets]);
@@ -142,6 +148,7 @@ function HomeScreenV2({ placeId }: Props) {
     const safe: any[] = [];
     const unsafe: any[] = [];
     results.forEach((item: any) => {
+      // allergens/diet_restrictions may be a map {key: confidence} or a legacy list
       const allergenKeys = Array.isArray(item.allergens)
         ? item.allergens
         : Object.keys(item.allergens ?? {});
@@ -161,17 +168,18 @@ function HomeScreenV2({ placeId }: Props) {
     const endpoint = API.queryRestaurants;
     try {
       const response = await axios.post(endpoint, { placeId: searchResult.place_id });
-      if (response.data?.restaurant) {
-        const { restaurant } = response.data;
+      if (response.data?.length > 0) {
         setSelectedRestaurant({
           restaurantId: searchResult.place_id,
           name: searchResult.name ?? '',
           address: searchResult.formatted_address ?? '',
-          heroImage: restaurant.heroImage ?? '',
-          images: restaurant.images ?? [],
+          heroImage: response.data[0].heroImage ?? '',
+          images: [],
         });
         return;
       }
+      // No existing analysis — open the discovery sheet, which handles menu URL
+      // detection and analysis submission internally.
       setDiscoveryParams({
         restaurantId: searchResult.place_id,
         name:         searchResult.name ?? '',
@@ -184,6 +192,22 @@ function HomeScreenV2({ placeId }: Props) {
     }
   };
 
+  const openRestaurantFromQueue = async (placeId: string, name: string, address: string) => {
+    try {
+      const res = await axios.post(API.queryRestaurants, { placeId });
+      setSelectedRestaurant({
+        restaurantId: placeId,
+        name,
+        address,
+        heroImage: res.data?.[0]?.heroImage ?? '',
+        images: [],
+      });
+    } catch (e) {
+      console.error('[HomeScreenV2] openRestaurantFromQueue error:', e);
+    }
+  };
+
+  // Legacy getMenu — kept for reference; no longer called by queryRestaurants.
   const getMenu = async (searchResult: any) => {
     const response = await axios.post(
       API.getMenu,
@@ -211,6 +235,7 @@ function HomeScreenV2({ placeId }: Props) {
         </View>
       )}
 
+      {/* Header: filter + search */}
       <View style={styles.header}>
         <FilterDropdownComponent
           userPreferences={{ allergens: selectedAllergens, dietaryRestrictions: selectedDiets }}
@@ -222,22 +247,28 @@ function HomeScreenV2({ placeId }: Props) {
         <SearchBar onSelect={(result) => queryRestaurants(result)} />
       </View>
 
+      {/* Tabs — hidden while showing analysis results */}
       {!showingResults && (
         <View style={styles.tabRow}>
-          {(['recommended', 'saved'] as Tab[]).map(tab => (
-            <TouchableOpacity
-              key={tab}
-              style={[styles.tab, activeTab === tab && styles.tabActive]}
-              onPress={() => setActiveTab(tab)}
-            >
-              <Text style={[styles.tabText, activeTab === tab && styles.tabTextActive]}>
-                {tab.charAt(0).toUpperCase() + tab.slice(1)}
-              </Text>
-            </TouchableOpacity>
-          ))}
+          {(['recommended', 'saved', 'queued'] as Tab[]).map(tab => {
+            let label = tab.charAt(0).toUpperCase() + tab.slice(1);
+            if (tab === 'queued' && analyzingCount > 0) label = `Queued (${analyzingCount})`;
+            return (
+              <TouchableOpacity
+                key={tab}
+                style={[styles.tab, activeTab === tab && styles.tabActive]}
+                onPress={() => setActiveTab(tab)}
+              >
+                <Text style={[styles.tabText, activeTab === tab && styles.tabTextActive]}>
+                  {label}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
         </View>
       )}
 
+      {/* Back button when showing analysis results */}
       {showingResults && (
         <TouchableOpacity
           style={styles.backButton}
@@ -247,7 +278,18 @@ function HomeScreenV2({ placeId }: Props) {
         </TouchableOpacity>
       )}
 
-      {!showingResults && (
+      {/* Queued analyses tab */}
+      {!showingResults && activeTab === 'queued' && (
+        <QueuedRestaurantList
+          queue={queue}
+          onMarkComplete={markComplete}
+          onDismiss={dismiss}
+          onOpenRestaurant={openRestaurantFromQueue}
+        />
+      )}
+
+      {/* Restaurant list */}
+      {!showingResults && activeTab !== 'queued' && (
         <>
           {displayRestaurants.length === 0 && activeTab === 'saved' ? (
             <View style={styles.emptyState}>
@@ -292,13 +334,19 @@ function HomeScreenV2({ placeId }: Props) {
         </>
       )}
 
+      {/* Menu discovery sheet (new) */}
       {discoveryParams && (
         <MenuDiscoverySheet
           params={discoveryParams}
           onClose={() => setDiscoveryParams(undefined)}
+          onSubmitted={(placeId, name, address) => {
+            enqueue(placeId, name, address);
+            setActiveTab('queued');
+          }}
         />
       )}
 
+      {/* Legacy menu input — rendered only when menuAnalysisParams is set directly */}
       {menuAnalysisParams && (
         <MenuInputComponent
           params={menuAnalysisParams}
@@ -306,6 +354,7 @@ function HomeScreenV2({ placeId }: Props) {
         />
       )}
 
+      {/* Analysis results */}
       {showingResults && (
         <ResultsSection
           safeResults={safeResults}
@@ -315,6 +364,7 @@ function HomeScreenV2({ placeId }: Props) {
         />
       )}
 
+      {/* Restaurant detail overlay */}
       {selectedRestaurant && (
         <MenuDetailScreen
           restaurant={selectedRestaurant}
@@ -331,6 +381,7 @@ function HomeScreenV2({ placeId }: Props) {
         />
       )}
 
+      {/* Help FAB — above all overlays including MenuDetailScreen */}
       {!showHelp && (
         <View style={styles.fabGroup}>
           <TouchableOpacity style={styles.fab} onPress={() => setShowHelp(true)}>
@@ -339,6 +390,7 @@ function HomeScreenV2({ placeId }: Props) {
         </View>
       )}
 
+      {/* Help overlay — rendered last so it sits above MenuDetailScreen */}
       {showHelp && (
         <HelpScreen
           onClose={() => setShowHelp(false)}
