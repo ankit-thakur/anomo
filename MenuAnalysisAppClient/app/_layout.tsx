@@ -11,6 +11,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import * as Notifications from 'expo-notifications';
 import { AuthProvider, AuthContext } from '../context/AuthContext';
 import { useNotifications } from '../hooks/useNotifications';
+import { markQueueItemComplete } from '../hooks/useAnalysisQueue';
 
 const { useContext, useEffect } = React;
 
@@ -35,7 +36,10 @@ function AuthGate({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const sub = Notifications.addNotificationResponseReceivedListener((response) => {
       const placeId = response.notification.request.content.data?.placeId as string | undefined;
-      if (placeId) router.push(`/home?placeId=${placeId}`);
+      if (placeId) {
+        markQueueItemComplete(placeId);
+        router.push(`/home?placeId=${placeId}`);
+      }
     });
     return () => sub.remove();
   }, [router]);

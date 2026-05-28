@@ -11,7 +11,9 @@ import ResultsSection from './ResultsSection';
 import RestaurantTile from './RestaurantTile';
 import MenuDetailScreen, { DetailRestaurant } from './MenuDetailScreen';
 import HelpScreen from './HelpScreen';
+import QueuedRestaurantList from './QueuedRestaurantList';
 import { getUserPreferences, updateSavedRestaurants } from './UserPreferences';
+import { useAnalysisQueue } from '../hooks/useAnalysisQueue';
 import 'react-native-get-random-values';
 import axios from 'axios';
 import { router } from 'expo-router';
@@ -62,7 +64,7 @@ function decodeJwtClaim(token: string, claim: string): string | null {
   }
 }
 
-type Tab = 'recommended' | 'saved';
+type Tab = 'recommended' | 'saved' | 'queued';
 
 type Props = {
   placeId?: string;
@@ -85,6 +87,7 @@ function HomeScreenV2({ placeId }: Props) {
   const { signOut, user } = useContext(AuthContext);
   const userId    = user?.idToken ? decodeJwtClaim(user.idToken, 'sub')   : null;
   const userEmail = user?.idToken ? decodeJwtClaim(user.idToken, 'email') : null;
+  const { queue, enqueue, markComplete, dismiss, analyzingCount } = useAnalysisQueue();
 
   const fetchRestaurants = async () => {
     const endpoint = API.getRecommendations;
@@ -189,6 +192,21 @@ function HomeScreenV2({ placeId }: Props) {
     }
   };
 
+  const openRestaurantFromQueue = async (placeId: string, name: string, address: string) => {
+    try {
+      const res = await axios.post(API.queryRestaurants, { placeId });
+      setSelectedRestaurant({
+        restaurantId: placeId,
+        name,
+        address,
+        heroImage: res.data?.[0]?.heroImage ?? '',
+        images: [],
+      });
+    } catch (e) {
+      console.error('[HomeScreenV2] openRestaurantFromQueue error:', e);
+    }
+  };
+
   // Legacy getMenu — kept for reference; no longer called by queryRestaurants.
   const getMenu = async (searchResult: any) => {
     const response = await axios.post(
@@ -232,17 +250,21 @@ function HomeScreenV2({ placeId }: Props) {
       {/* Tabs — hidden while showing analysis results */}
       {!showingResults && (
         <View style={styles.tabRow}>
-          {(['recommended', 'saved'] as Tab[]).map(tab => (
-            <TouchableOpacity
-              key={tab}
-              style={[styles.tab, activeTab === tab && styles.tabActive]}
-              onPress={() => setActiveTab(tab)}
-            >
-              <Text style={[styles.tabText, activeTab === tab && styles.tabTextActive]}>
-                {tab.charAt(0).toUpperCase() + tab.slice(1)}
-              </Text>
-            </TouchableOpacity>
-          ))}
+          {(['recommended', 'saved', 'queued'] as Tab[]).map(tab => {
+            let label = tab.charAt(0).toUpperCase() + tab.slice(1);
+            if (tab === 'queued' && analyzingCount > 0) label = `Queued (${analyzingCount})`;
+            return (
+              <TouchableOpacity
+                key={tab}
+                style={[styles.tab, activeTab === tab && styles.tabActive]}
+                onPress={() => setActiveTab(tab)}
+              >
+                <Text style={[styles.tabText, activeTab === tab && styles.tabTextActive]}>
+                  {label}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
         </View>
       )}
 
@@ -256,8 +278,18 @@ function HomeScreenV2({ placeId }: Props) {
         </TouchableOpacity>
       )}
 
+      {/* Queued analyses tab */}
+      {!showingResults && activeTab === 'queued' && (
+        <QueuedRestaurantList
+          queue={queue}
+          onMarkComplete={markComplete}
+          onDismiss={dismiss}
+          onOpenRestaurant={openRestaurantFromQueue}
+        />
+      )}
+
       {/* Restaurant list */}
-      {!showingResults && (
+      {!showingResults && activeTab !== 'queued' && (
         <>
           {displayRestaurants.length === 0 && activeTab === 'saved' ? (
             <View style={styles.emptyState}>
@@ -307,6 +339,10 @@ function HomeScreenV2({ placeId }: Props) {
         <MenuDiscoverySheet
           params={discoveryParams}
           onClose={() => setDiscoveryParams(undefined)}
+          onSubmitted={(placeId, name, address) => {
+            enqueue(placeId, name, address);
+            setActiveTab('queued');
+          }}
         />
       )}
 

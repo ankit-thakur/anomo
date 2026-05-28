@@ -29,7 +29,7 @@ export interface DiscoveryParams {
 interface Props {
   params:       DiscoveryParams;
   onClose:      () => void;
-  onSubmitted?: () => void;
+  onSubmitted?: (placeId: string, name: string, address: string) => void;
 }
 
 // ── Constants ─────────────────────────────────────────────────────────────────
@@ -157,7 +157,7 @@ const MenuDiscoverySheet: React.FC<Props> = ({ params, onClose, onSubmitted }) =
     }
 
     setState('submitted');
-    onSubmitted?.();
+    onSubmitted?.(params.restaurantId, params.name, params.address);
     setTimeout(dismissSheet, 1800);
   };
 
