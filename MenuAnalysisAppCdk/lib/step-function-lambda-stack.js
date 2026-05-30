@@ -223,6 +223,19 @@ class StepFunctionWithLambdasStack extends cdk.Stack {
     getMenuLambda.addToRolePolicy(bedrockPolicy);
 
     // -----------------------------------------------------------------------
+    // 5. Split Batches Lambda
+    //    Partitions the dish list into parallel groups for the Map state
+    // -----------------------------------------------------------------------
+    const splitBatchesLambda = new lambda.Function(this, 'SplitBatchesLambda', {
+      runtime: lambda.Runtime.PYTHON_3_12,
+      handler: 'agents.split_batches_lambda.lambda_handler',
+      code: agentCode,
+      timeout: Duration.seconds(30),
+      memorySize: 128,
+      environment: agentEnv,
+    });
+
+    // -----------------------------------------------------------------------
     // Step Functions role
     // -----------------------------------------------------------------------
     const lambdaInvokeRole = new iam.Role(this, 'LambdaInvokeRole', {
@@ -232,6 +245,7 @@ class StepFunctionWithLambdasStack extends cdk.Stack {
       actions: ['lambda:InvokeFunction'],
       resources: [
         scraperLambda.functionArn,
+        splitBatchesLambda.functionArn,
         allergenLambda.functionArn,
         verificationLambda.functionArn,
         finalizeLambda.functionArn,
@@ -240,7 +254,12 @@ class StepFunctionWithLambdasStack extends cdk.Stack {
     }));
 
     // -----------------------------------------------------------------------
-    // Step Functions definition: Scraper → Allergen → Verification → Finalize
+    // Step Functions definition:
+    //   Scraper → SplitBatches → Map(Allergen → Verification per batch) → Finalize
+    //
+    // SplitBatches dynamically creates 1–5 groups based on dish count.
+    // The Map state runs each group's Allergen+Verification pipeline in parallel
+    // (maxConcurrency: 5) and collects all outputs into an array for Finalize.
     // -----------------------------------------------------------------------
     const scraperTask = new tasks.LambdaInvoke(this, 'ScraperTask', {
       lambdaFunction: scraperLambda,
@@ -248,17 +267,31 @@ class StepFunctionWithLambdasStack extends cdk.Stack {
       outputPath: '$.Payload',
     });
 
-    const allergenTask = new tasks.LambdaInvoke(this, 'AllergenTask', {
+    const splitBatchesTask = new tasks.LambdaInvoke(this, 'SplitBatchesTask', {
+      lambdaFunction: splitBatchesLambda,
+      inputPath: '$',
+      outputPath: '$.Payload',
+    });
+
+    // Separate task instances are required for the Map iterator (CDK task
+    // objects can appear only once in a state machine definition).
+    const batchAllergenTask = new tasks.LambdaInvoke(this, 'BatchAllergenTask', {
       lambdaFunction: allergenLambda,
       inputPath: '$',
       outputPath: '$.Payload',
     });
 
-    const verificationTask = new tasks.LambdaInvoke(this, 'VerificationTask', {
+    const batchVerificationTask = new tasks.LambdaInvoke(this, 'BatchVerificationTask', {
       lambdaFunction: verificationLambda,
       inputPath: '$',
       outputPath: '$.Payload',
     });
+
+    const parallelBatchMap = new stepfunctions.Map(this, 'ParallelBatchMap', {
+      maxConcurrency: 5,
+      itemsPath: stepfunctions.JsonPath.stringAt('$.dish_groups'),
+    });
+    parallelBatchMap.itemProcessor(batchAllergenTask.next(batchVerificationTask));
 
     const finalizeTask = new tasks.LambdaInvoke(this, 'FinalizeTask', {
       lambdaFunction: finalizeLambda,
@@ -267,8 +300,8 @@ class StepFunctionWithLambdasStack extends cdk.Stack {
     });
 
     const definition = scraperTask
-      .next(allergenTask)
-      .next(verificationTask)
+      .next(splitBatchesTask)
+      .next(parallelBatchMap)
       .next(finalizeTask);
 
     const stateMachine = new stepfunctions.StateMachine(this, 'MenuAnalysisStepFunction', {

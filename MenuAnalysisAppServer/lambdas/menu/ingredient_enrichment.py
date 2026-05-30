@@ -1,29 +1,36 @@
 import json
 import boto3
 import os
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from invoke_model import invoke_model_from_analyze_menu
 
 CLAUDE_SONNET_4 = os.environ.get("CLAUDE_SONNET_4", "us.anthropic.claude-sonnet-4-5-20251001-v1:0")
 
-BATCH_SIZE = 15
+BATCH_SIZE = 25
+MAX_CONCURRENT_BATCHES = 5
 
 
 def infer_ingredients(dishes):
-    # Batch up to 10 dishes per request
     batches = [dishes[i:i+BATCH_SIZE] for i in range(0, len(dishes), BATCH_SIZE)]
-    enriched = []
     prompt = build_prompt()
 
-    for batch in batches:
-        
+    def _call(idx_batch):
+        idx, batch = idx_batch
         response = invoke_model_from_analyze_menu(prompt, json.dumps(batch, indent=2), True, CLAUDE_SONNET_4, 10000)
+        print(f"*** Model response (batch {idx}):", response)
+        return idx, json.loads(response[0])
 
-        print("*** Model response:", response)
-        
-        response_body = json.loads(response[0])
-        enriched.extend(response_body)
+    ordered = [None] * len(batches)
+    with ThreadPoolExecutor(max_workers=MAX_CONCURRENT_BATCHES) as executor:
+        future_to_idx = {
+            executor.submit(_call, (idx, batch)): idx
+            for idx, batch in enumerate(batches)
+        }
+        for future in as_completed(future_to_idx):
+            idx, result = future.result()
+            ordered[idx] = result
 
-    return enriched
+    return [item for batch_result in ordered for item in batch_result]
 
 
 def build_prompt():

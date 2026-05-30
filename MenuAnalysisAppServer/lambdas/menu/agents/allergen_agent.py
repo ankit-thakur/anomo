@@ -16,6 +16,7 @@ Output (to Verification Agent):   {dishes: [{...name/price/desc, ingredients,
 import json
 import sys
 import os
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 _here = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, _here)
@@ -32,8 +33,9 @@ from invoke_model import invoke_model_from_analyze_menu
 CLAUDE_SONNET_4 = os.environ.get("CLAUDE_SONNET_4", "us.anthropic.claude-sonnet-4-20250514-v1:0")
 
 # Dishes per LLM classification call — balances prompt size vs. number of API round trips.
-# 15 dishes × ~200 tokens each ≈ 3k input tokens, well within Claude's context.
-CLASSIFY_BATCH_SIZE = 15
+# 25 dishes × ~200 tokens each ≈ 5k input tokens, well within Claude's context.
+CLASSIFY_BATCH_SIZE = 25
+MAX_CONCURRENT_BATCHES = 5
 
 SYSTEM_PROMPT = """You are an allergen detection agent for a restaurant menu analysis system.
 
@@ -324,18 +326,22 @@ def run_allergen_detection(dishes: list[dict]) -> list[dict]:
     print(f"[AllergenAgent] KB lookup: {len(all_terms)} unique terms across {len(enriched_dishes)} dishes...")
     kb_cache = search_allergen_kb_batch(list(all_terms), top_k=3)
 
-    # Step 3: Batch allergen classification
-    total_batches = (len(enriched_dishes) + CLASSIFY_BATCH_SIZE - 1) // CLASSIFY_BATCH_SIZE
-    print(f"[AllergenAgent] Classifying in {total_batches} batch(es) of up to {CLASSIFY_BATCH_SIZE} dishes...")
+    # Step 3: Batch allergen classification (concurrent)
+    batch_list = [enriched_dishes[i:i + CLASSIFY_BATCH_SIZE] for i in range(0, len(enriched_dishes), CLASSIFY_BATCH_SIZE)]
+    print(f"[AllergenAgent] Classifying in {len(batch_list)} batch(es) of up to {CLASSIFY_BATCH_SIZE} dishes (concurrent)...")
+
+    ordered_classifications = [None] * len(batch_list)
+    with ThreadPoolExecutor(max_workers=MAX_CONCURRENT_BATCHES) as executor:
+        future_to_idx = {
+            executor.submit(_classify_dishes_batch, batch, kb_cache): idx
+            for idx, batch in enumerate(batch_list)
+        }
+        for future in as_completed(future_to_idx):
+            idx = future_to_idx[future]
+            ordered_classifications[idx] = future.result()
 
     results = []
-    for i in range(0, len(enriched_dishes), CLASSIFY_BATCH_SIZE):
-        batch = enriched_dishes[i:i + CLASSIFY_BATCH_SIZE]
-        batch_num = i // CLASSIFY_BATCH_SIZE + 1
-        print(f"[AllergenAgent] Batch {batch_num}/{total_batches} — {len(batch)} dish(es)...")
-
-        classifications = _classify_dishes_batch(batch, kb_cache)
-
+    for batch, classifications in zip(batch_list, ordered_classifications):
         for dish, cls in zip(batch, classifications):
             results.append({
                 **dish,

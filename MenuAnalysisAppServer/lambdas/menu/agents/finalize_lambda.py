@@ -43,25 +43,24 @@ EMAIL_LIST_TABLE = os.environ['EMAIL_LIST_TABLE']
 
 
 def _update_menu_items_table(restaurant_id, dishes):
+    # batch_writer buffers puts and flushes in BatchWriteItem calls of up to 25 items,
+    # replacing the previous one-put-per-dish approach.
     table = dynamodb.Table(MENU_ITEMS_TABLE)
-    for dish in dishes:
-        # allergens and diet_restrictions are now maps: {key: confidence_score}
-        # Only confirmed items (confidence >= 0.5) are present.
-        # allergen keys  (dairy, wheat, …): confidence allergen IS present
-        # diet keys      (vegan, gluten_free, …): confidence dish VIOLATES that diet
-        item = _to_decimal({
-            "restaurantId":      restaurant_id,
-            "name":              dish.get("name", ""),
-            "price":             str(dish.get("price", "")),
-            "description":       dish.get("description", ""),
-            "ingredients":       dish.get("ingredients", []),
-            "allergens":         dish.get("allergens", {}),
-            "diet_restrictions": dish.get("diet_restrictions", {}),
-            "allergen_reasoning": dish.get("allergen_reasoning", ""),
-            "flags":             dish.get("flags", []),
-            "allergen_notes":    dish.get("allergen_notes", ""),
-        })
-        table.put_item(Item=item)
+    with table.batch_writer() as batch:
+        for dish in dishes:
+            item = _to_decimal({
+                "restaurantId":       restaurant_id,
+                "name":               dish.get("name", ""),
+                "price":              str(dish.get("price", "")),
+                "description":        dish.get("description", ""),
+                "ingredients":        dish.get("ingredients", []),
+                "allergens":          dish.get("allergens", {}),
+                "diet_restrictions":  dish.get("diet_restrictions", {}),
+                "allergen_reasoning": dish.get("allergen_reasoning", ""),
+                "flags":              dish.get("flags", []),
+                "allergen_notes":     dish.get("allergen_notes", ""),
+            })
+            batch.put_item(Item=item)
 
 
 def _add_to_email_list(email, add_to_list):
@@ -70,7 +69,17 @@ def _add_to_email_list(email, add_to_list):
         table.put_item(Item={"email": email})
 
 
+def _normalize_event(event):
+    """Flatten Step Functions Map state output (list of batch results) into a single dict."""
+    if not isinstance(event, list):
+        return event
+    dishes = [d for batch in event for d in batch.get("dishes", [])]
+    first = event[0] if event else {}
+    return {**first, "dishes": dishes}
+
+
 def lambda_handler(event, context):
+    event = _normalize_event(event)
     print("[FinalizeLambda] Event keys:", list(event.keys()))
 
     dishes      = event.get("dishes", [])
