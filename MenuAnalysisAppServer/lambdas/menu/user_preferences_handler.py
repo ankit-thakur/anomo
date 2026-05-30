@@ -1,7 +1,6 @@
 import json
 import os
 import boto3
-import decimal
 from typing import Dict, Any
 
 # CORS headers for all responses
@@ -13,18 +12,11 @@ CORS_HEADERS = {
     "Access-Control-Allow-Methods": "OPTIONS,GET,PUT,DELETE"
 }
 
-class _DecimalEncoder(json.JSONEncoder):
-    # boto3 returns DynamoDB Number types as Decimal; json.dumps can't handle them.
-    def default(self, obj):
-        if isinstance(obj, decimal.Decimal):
-            return int(obj) if obj % 1 == 0 else float(obj)
-        return super().default(obj)
-
 def make_response(status_code: int, body: Any) -> Dict[str, Any]:
     return {
         "statusCode": status_code,
         "headers": CORS_HEADERS,
-        "body": json.dumps(body, cls=_DecimalEncoder)
+        "body": json.dumps(body)
     }
 
 dynamodb = boto3.resource('dynamodb')
@@ -56,6 +48,8 @@ def handler(event, context):
                 return update_dietary_preferences(user_id, body)
             elif pref_type == 'restaurants':
                 return update_saved_restaurants(user_id, body)
+            elif '/push-token' in path:
+                return update_push_token(user_id, body)
             else:
                 return make_response(400, {'error': 'Invalid preference type'})
         elif http_method == 'DELETE':
@@ -94,9 +88,6 @@ def update_dietary_preferences(user_id: str, preferences: Dict[str, Any]) -> Dic
             ':a': preferences['allergens'],
             ':d': preferences['dietaryRestrictions']
         }
-        if 'onboardingVersion' in preferences:
-            update_expr += ', onboardingVersion = :ov'
-            expr_values[':ov'] = int(preferences['onboardingVersion'])
         table.update_item(
             Key={'userId': user_id},
             UpdateExpression=update_expr,
@@ -106,8 +97,6 @@ def update_dietary_preferences(user_id: str, preferences: Dict[str, Any]) -> Dic
             'allergens': preferences['allergens'],
             'dietaryRestrictions': preferences['dietaryRestrictions']
         })
-        if 'onboardingVersion' in preferences:
-            current_prefs['onboardingVersion'] = int(preferences['onboardingVersion'])
         return make_response(200, current_prefs)
     except Exception as e:
         print(f'Error updating dietary preferences: {str(e)}')
@@ -136,6 +125,21 @@ def update_saved_restaurants(user_id: str, preferences: Dict[str, Any]) -> Dict[
         return make_response(200, current_prefs)
     except Exception as e:
         print(f'Error updating saved restaurants: {str(e)}')
+        return make_response(500, {'error': 'Internal server error'})
+
+def update_push_token(user_id: str, body: Dict[str, Any]) -> Dict[str, Any]:
+    try:
+        token = body.get('expoPushToken')
+        if not token:
+            return make_response(400, {'error': 'Missing expoPushToken'})
+        table.update_item(
+            Key={'userId': user_id},
+            UpdateExpression='SET expoPushToken = :t',
+            ExpressionAttributeValues={':t': token}
+        )
+        return make_response(200, {'message': 'Push token saved'})
+    except Exception as e:
+        print(f'Error updating push token: {str(e)}')
         return make_response(500, {'error': 'Internal server error'})
 
 def delete_dietary_preferences(user_id: str) -> Dict[str, Any]:

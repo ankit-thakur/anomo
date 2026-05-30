@@ -1,41 +1,25 @@
 # Dependencies
 node_modules/
 
-# CDK build output
+# Expo / React Native
+.expo/
+dist/
+web-build/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# CDK
 MenuAnalysisAppCdk/cdk.out/
 
 # Python
 __pycache__/
 *.pyc
 *.pyo
-*.pyd
-.Python
+.venv/
+venv/
 
-# Python virtual environments
-MenuAnalysisAppServer/lambdas/myenv/
-
-# Lambda layers (compiled dependencies, rebuilt via requirements.txt)
-MenuAnalysisAppServer/lambdas/boto3layer3/
-MenuAnalysisAppServer/lambdas/boto3layer3.zip
-MenuAnalysisAppServer/lambdas/layers/bs4_layer/
-MenuAnalysisAppServer/lambdas/layers/bs4_layer.zip
-MenuAnalysisAppServer/lambdas/layers/dotenv_layer/
-MenuAnalysisAppServer/lambdas/layers/dotenv_layer.zip
-MenuAnalysisAppServer/lambdas/layers/open_search_layer/
-MenuAnalysisAppServer/lambdas/layers/open_search_layer.zip
-MenuAnalysisAppServer/lambdas/layers/requests_layer/
-MenuAnalysisAppServer/lambdas/layers/pdfReader-layer/
-
-# Secrets
-MenuAnalysisAppServer/lambdas/.env
-MenuAnalysisAppCdk/secrets.json
-MenuAnalysisAppClient/.env
-
-# IDE
-.vscode/
-
-# Claude Code internal
-.claude/
-
-# macOS
+# OS
 .DS_Store

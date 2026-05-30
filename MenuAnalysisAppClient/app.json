@@ -39,6 +39,14 @@
           "cameraPermission": "Allow ANOMO to access your camera"
         }
       ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/images/anomo-logo-2.png",
+          "color": "#4A7C4E",
+          "iosDisplayInForeground": true
+        }
+      ],
       "expo-router",
       "expo-font",
       "expo-web-browser"

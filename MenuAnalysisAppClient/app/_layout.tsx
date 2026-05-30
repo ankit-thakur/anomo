@@ -8,13 +8,26 @@ import { Slot, useSegments, useRouter } from 'expo-router';
 import { useFonts, Inter_400Regular, Inter_500Medium, Inter_700Bold } from '@expo-google-fonts/inter';
 import { Fraunces_400Regular, Fraunces_700Bold } from '@expo-google-fonts/fraunces';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import * as Notifications from 'expo-notifications';
 import { AuthProvider, AuthContext } from '../context/AuthContext';
 import { ONBOARDING_VERSION } from '../components/OnboardingScreen';
 import { getUserPreferences } from '../components/UserPreferences';
+import { useNotifications } from '../hooks/useNotifications';
+import { markQueueItemComplete } from '../hooks/useAnalysisQueue';
 
 const { useContext, useEffect, useRef, useState } = React;
 
 const AUTH_ROUTES = ['/signin', '/signup'];
+
+function decodeJwtSub(token: string): string | null {
+  try {
+    const payload = token.split('.')[1];
+    const decoded = JSON.parse(atob(payload.replace(/-/g, '+').replace(/_/g, '/')));
+    return decoded.sub ?? null;
+  } catch {
+    return null;
+  }
+}
 
 function AuthGate({ children }: { children: React.ReactNode }) {
   const { user, isLoading } = useContext(AuthContext);
@@ -22,6 +35,20 @@ function AuthGate({ children }: { children: React.ReactNode }) {
   const segments = useSegments();
   const hasCheckedOnboarding = useRef(false);
   const [isCheckingOnboarding, setIsCheckingOnboarding] = useState(false);
+
+  const userId = user?.idToken ? decodeJwtSub(user.idToken) : null;
+  useNotifications(userId);
+
+  useEffect(() => {
+    const sub = Notifications.addNotificationResponseReceivedListener((response) => {
+      const placeId = response.notification.request.content.data?.placeId as string | undefined;
+      if (placeId) {
+        markQueueItemComplete(placeId);
+        router.push(`/home?placeId=${placeId}`);
+      }
+    });
+    return () => sub.remove();
+  }, [router]);
 
   useEffect(() => {
     if (isLoading) return;
