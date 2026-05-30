@@ -23,6 +23,7 @@ def menu_analyzer_lambda_handler(event, context):
 
     email = body_json['email']
     add_email_to_list = body_json['addToList']
+    user_id = body_json.get('userId', '')
 
     state_machine_arn = os.environ['STEP_FUNCTION_ARN']
 
@@ -50,15 +51,16 @@ def menu_analyzer_lambda_handler(event, context):
         response = stepfunctions_client.start_execution(
             stateMachineArn=state_machine_arn,
             input=json.dumps({
-                "menu_url": menu_url, 
-                "place_id": place_id, 
+                "menu_url": menu_url,
+                "place_id": place_id,
                 "name": body_json['name'],
                 "address": body_json['address'],
-                "email": email if add_email_to_list else ""
+                "email": email if add_email_to_list else "",
+                "userId": user_id,
             })
         )
         print("***response: ", response)
-        
+
     except (ClientError, Exception) as e:
         print("*** Exception 400: ", e)
         return {
@@ -72,7 +74,6 @@ def menu_analyzer_lambda_handler(event, context):
             'body': "ERROR: Error invoking step function: " + str(e)
         }
 
-
     return {
         'statusCode': 200,
         'headers': {
@@ -83,5 +84,3 @@ def menu_analyzer_lambda_handler(event, context):
         },
         'body': "PASS"
     }
-    
-    

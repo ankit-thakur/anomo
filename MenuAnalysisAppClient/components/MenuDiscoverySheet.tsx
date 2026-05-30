@@ -7,7 +7,7 @@ import {
 import axios from 'axios';
 import { API } from '../config/apiConfig';
 
-// ── Types ─────────────────────────────────────────────────────────────────────────────
+// ── Types ────────────────────────────────────────────────────────────────────
 
 type SheetState = 'scanning' | 'found' | 'not_found' | 'submitted';
 type MenuType   = 'dinner' | 'brunch' | 'lunch' | 'drinks' | 'all-day' | 'menu';
@@ -23,15 +23,16 @@ export interface DiscoveryParams {
   name:         string;
   address:      string;
   website?:     string;
+  userId?:      string;
 }
 
 interface Props {
   params:       DiscoveryParams;
   onClose:      () => void;
-  onSubmitted?: () => void;
+  onSubmitted?: (placeId: string, name: string, address: string) => void;
 }
 
-// ── Constants ─────────────────────────────────────────────────────────────────────────
+// ── Constants ─────────────────────────────────────────────────────────────────
 
 const C = {
   cream:     '#F2EDE2',
@@ -49,7 +50,7 @@ const C = {
 const GET_MENU_URL = API.getMenu;
 const ANALYZE_URL  = API.analyzeMenu;
 
-// ── Helpers ───────────────────────────────────────────────────────────────────────────
+// ── Helpers ───────────────────────────────────────────────────────────────────
 
 function inferMenuType(url: string): MenuType {
   const u = url.toLowerCase();
@@ -71,10 +72,9 @@ function truncateUrl(url: string, max = 42): string {
   }
 }
 
-const cap         = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
-const menuTypeLabel = (type: string) => type === 'menu' ? 'Menu' : `${cap(type)} menu`;
+const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
-// ── Component ───────────────────────────────────────────────────────────────────────────
+// ── Component ─────────────────────────────────────────────────────────────────
 
 const MenuDiscoverySheet: React.FC<Props> = ({ params, onClose, onSubmitted }) => {
   const [state,          setState]          = useState<SheetState>('scanning');
@@ -105,7 +105,7 @@ const MenuDiscoverySheet: React.FC<Props> = ({ params, onClose, onSubmitted }) =
     }).start(() => onClose());
   };
 
-  // ── Discovery call ──────────────────────────────────────────────────────────────
+  // ── Discovery call ─────────────────────────────────────────────────────────
 
   const discoverMenu = async () => {
     try {
@@ -132,10 +132,10 @@ const MenuDiscoverySheet: React.FC<Props> = ({ params, onClose, onSubmitted }) =
     }
   };
 
-  // ── Submit ─────────────────────────────────────────────────────────────────────────────
+  // ── Submit ─────────────────────────────────────────────────────────────────
 
   const handleConfirm = async () => {
-    const chosen = (state === 'not_found' || manualVisible)
+    const chosen = manualVisible
       ? { type: 'menu' as MenuType, url: manualUrl }
       : links[selectedIdx];
     if (!chosen?.url) return;
@@ -144,19 +144,20 @@ const MenuDiscoverySheet: React.FC<Props> = ({ params, onClose, onSubmitted }) =
 
     try {
       await axios.post(ANALYZE_URL, {
-        place_id: params.restaurantId,
-        name:     params.name,
-        address:  params.address,
-        email: '',
+        place_id:  params.restaurantId,
+        name:      params.name,
+        address:   params.address,
+        email:     '',
         addToList: false,
-        menu_url: chosen.url,
+        menu_url:  chosen.url,
+        userId:    params.userId ?? '',
       });
     } catch (e) {
       console.error('[MenuDiscoverySheet] submit error:', e);
     }
 
     setState('submitted');
-    onSubmitted?.();
+    onSubmitted?.(params.restaurantId, params.name, params.address);
     setTimeout(dismissSheet, 1800);
   };
 
@@ -169,7 +170,7 @@ const MenuDiscoverySheet: React.FC<Props> = ({ params, onClose, onSubmitted }) =
     }
   };
 
-  // ── Derived ─────────────────────────────────────────────────────────────────────────────
+  // ── Derived ────────────────────────────────────────────────────────────────
 
   const translateY   = slideAnim.interpolate({ inputRange: [0, 1], outputRange: [640, 0] });
   // not_found has no radio list — always validate the manual URL field directly
@@ -179,10 +180,10 @@ const MenuDiscoverySheet: React.FC<Props> = ({ params, onClose, onSubmitted }) =
   const ctaLabel     = () => {
     if (state === 'submitted') return '✓ Submitted';
     const type = manualVisible ? 'menu' : (links[selectedIdx]?.type ?? 'menu');
-    return `Analyze ${menuTypeLabel(type).toLowerCase()} →`;
+    return `Analyze ${type} menu →`;
   };
 
-  // ── Sub-renders ───────────────────────────────────────────────────────────────────────────
+  // ── Sub-renders ────────────────────────────────────────────────────────────
 
   const RestaurantRow = () => (
     <View style={s.restRow}>
@@ -224,7 +225,7 @@ const MenuDiscoverySheet: React.FC<Props> = ({ params, onClose, onSubmitted }) =
               {sel && <View style={s.radioDot} />}
             </View>
             <View style={s.linkMeta}>
-              <Text style={s.linkType}>{menuTypeLabel(link.type)}</Text>
+              <Text style={s.linkType}>{cap(link.type)} menu</Text>
               <Text style={s.linkUrl} numberOfLines={1}>{truncateUrl(link.url)}</Text>
             </View>
             {i === 0 && (
@@ -281,7 +282,7 @@ const MenuDiscoverySheet: React.FC<Props> = ({ params, onClose, onSubmitted }) =
     </View>
   );
 
-  // ── Render ─────────────────────────────────────────────────────────────────────────────
+  // ── Render ─────────────────────────────────────────────────────────────────
 
   return (
     <Modal transparent visible animationType="none">
@@ -321,7 +322,7 @@ const MenuDiscoverySheet: React.FC<Props> = ({ params, onClose, onSubmitted }) =
   );
 };
 
-// ── Styles ─────────────────────────────────────────────────────────────────────────────
+// ── Styles ────────────────────────────────────────────────────────────────────
 
 const s = StyleSheet.create({
   modalRoot: {
