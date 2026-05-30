@@ -37,6 +37,7 @@ import json
 import re
 import sys
 import os
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 _here = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, _here)
@@ -46,7 +47,8 @@ from invoke_model import invoke_model_from_analyze_menu
 
 CLAUDE_SONNET_4 = os.environ.get("CLAUDE_SONNET_4", "us.anthropic.claude-sonnet-4-20250514-v1:0")
 
-VERIFY_BATCH_SIZE  = 15
+VERIFY_BATCH_SIZE      = 25
+MAX_CONCURRENT_BATCHES = 5
 CONFIRM_THRESHOLD  = 0.5   # confidences >= this go into the confirmed allergens/diet_restrictions lists
 
 # Used to distinguish allergen keys from diet restriction keys in the unified confidences map
@@ -297,21 +299,27 @@ def run_verification(dishes: list[dict]) -> list[dict]:
             _get_may_contain_flags(text)
         )
 
-    # Step 2: LLM batch verification
-    total_batches = (len(dishes) + VERIFY_BATCH_SIZE - 1) // VERIFY_BATCH_SIZE
-    print(f"[VerificationAgent] Verifying {len(dishes)} dish(es) in {total_batches} batch(es)...")
+    # Step 2: LLM batch verification (concurrent)
+    batch_list = [
+        (dishes[i:i + VERIFY_BATCH_SIZE], all_prepass_flags[i:i + VERIFY_BATCH_SIZE])
+        for i in range(0, len(dishes), VERIFY_BATCH_SIZE)
+    ]
+    print(f"[VerificationAgent] Verifying {len(dishes)} dish(es) in {len(batch_list)} batch(es) (concurrent)...")
+
+    ordered_verifications = [None] * len(batch_list)
+    with ThreadPoolExecutor(max_workers=MAX_CONCURRENT_BATCHES) as executor:
+        future_to_idx = {
+            executor.submit(_verify_dishes_batch, batch, flags): idx
+            for idx, (batch, flags) in enumerate(batch_list)
+        }
+        for future in as_completed(future_to_idx):
+            idx = future_to_idx[future]
+            ordered_verifications[idx] = future.result()
 
     results = []
-    for i in range(0, len(dishes), VERIFY_BATCH_SIZE):
-        batch       = dishes[i:i + VERIFY_BATCH_SIZE]
-        batch_flags = all_prepass_flags[i:i + VERIFY_BATCH_SIZE]
-        batch_num   = i // VERIFY_BATCH_SIZE + 1
-        print(f"[VerificationAgent] Batch {batch_num}/{total_batches} — {len(batch)} dish(es)...")
-
-        verifications = _verify_dishes_batch(batch, batch_flags)
-
+    for (batch, batch_flags), verifications in zip(batch_list, ordered_verifications):
         for dish, v in zip(batch, verifications):
-            confidences  = v.get("confidences", {})
+            confidences = v.get("confidences", {})
             allergen_map, diet_map = _to_confirmed_maps(confidences)
 
             results.append({

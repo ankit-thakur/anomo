@@ -3,6 +3,7 @@ import requests
 import json
 import sys
 import os
+from concurrent.futures import ThreadPoolExecutor
 sys.path.insert(0, '/opt/python/lib/python3.12/site-packages')
 import importlib.metadata
 import boto3
@@ -58,18 +59,22 @@ def get_menu(url):
         'Access-Control-Allow-Methods': 'GET, POST, OPTIONS'
     }
 
-    found = []
-    checked = 0
-    for link, score in menu_links:
-        if checked >= 3:
-            break
-
+    def _validate_candidate(link_score):
+        link, score = link_score
         content = is_pdf(link) if link.endswith('.pdf') else is_html(link)
         response = is_menu(content)
-        checked += 1
+        is_valid = bool(response and response.get('is_menu'))
+        return link, score, is_valid
 
-        if response and response.get('is_menu'):
-            found.append({'url': link, 'confidence': round(float(score), 3) if score else 1})
+    candidates = menu_links[:3]
+    with ThreadPoolExecutor(max_workers=len(candidates) or 1) as executor:
+        validation_results = list(executor.map(_validate_candidate, candidates))
+
+    found = [
+        {'url': link, 'confidence': round(float(score), 3) if score else 1}
+        for link, score, is_valid in validation_results
+        if is_valid
+    ]
 
     if found:
         print(f"Found {len(found)} menu link(s):", [f['url'] for f in found])
