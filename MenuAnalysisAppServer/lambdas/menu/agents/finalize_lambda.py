@@ -5,7 +5,8 @@ Receives verified dishes from the Verification Agent and:
   1. Writes restaurant metadata to RestaurantTable
   2. Writes all menu items (with allergens, confidence_score, flags, allergen_notes) to MenuItemsTable
   3. Optionally adds the user to the email list
-  4. Sends the notification email and push notification
+  4. Sends the notification email
+  5. Sends an Expo push notification to the submitting user (if token stored)
 """
 
 import json
@@ -38,19 +39,15 @@ def _to_decimal(obj):
         return [_to_decimal(v) for v in obj]
     return obj
 
-RESTAURANT_TABLE       = os.environ['RESTAURANT_TABLE']
-MENU_ITEMS_TABLE       = os.environ['MENU_ITEMS_TABLE']
-EMAIL_LIST_TABLE       = os.environ['EMAIL_LIST_TABLE']
+RESTAURANT_TABLE     = os.environ['RESTAURANT_TABLE']
+MENU_ITEMS_TABLE     = os.environ['MENU_ITEMS_TABLE']
+EMAIL_LIST_TABLE     = os.environ['EMAIL_LIST_TABLE']
 USER_PREFERENCES_TABLE = os.environ.get('USER_PREFERENCES_TABLE', '')
 
 
 def _update_menu_items_table(restaurant_id, dishes):
     table = dynamodb.Table(MENU_ITEMS_TABLE)
     for dish in dishes:
-        # allergens and diet_restrictions are now maps: {key: confidence_score}
-        # Only confirmed items (confidence >= 0.5) are present.
-        # allergen keys  (dairy, wheat, …): confidence allergen IS present
-        # diet keys      (vegan, gluten_free, …): confidence dish VIOLATES that diet
         item = _to_decimal({
             "restaurantId":      restaurant_id,
             "name":              dish.get("name", ""),
@@ -66,38 +63,37 @@ def _update_menu_items_table(restaurant_id, dishes):
         table.put_item(Item=item)
 
 
-def _send_push_notification(user_id: str, place_id: str, restaurant_name: str):
-    if not USER_PREFERENCES_TABLE or not user_id:
-        return
-    prefs_table = dynamodb.Table(USER_PREFERENCES_TABLE)
-    try:
-        response = prefs_table.get_item(Key={"userId": user_id})
-        token = response.get("Item", {}).get("expoPushToken")
-        if not token:
-            print(f"[FinalizeLambda] No push token for user {user_id} — skipping push.")
-            return
-        payload = json.dumps({
-            "to": token,
-            "title": "Analysis ready!",
-            "body": f"Your {restaurant_name} menu analysis is complete.",
-            "data": {"placeId": place_id},
-            "sound": "default",
-        }).encode("utf-8")
-        req = urllib.request.Request(
-            "https://exp.host/--/api/v2/push/send",
-            data=payload,
-            headers={"Content-Type": "application/json", "Accept": "application/json"},
-        )
-        with urllib.request.urlopen(req, timeout=5) as resp:
-            print(f"[FinalizeLambda] Push sent: {resp.read().decode()}")
-    except Exception as e:
-        print(f"[FinalizeLambda] Push notification failed (non-fatal): {e}")
-
-
 def _add_to_email_list(email, add_to_list):
     if add_to_list and email:
         table = dynamodb.Table(EMAIL_LIST_TABLE)
         table.put_item(Item={"email": email})
+
+
+def _send_push_notification(user_id, place_id, restaurant_name):
+    if not USER_PREFERENCES_TABLE or not user_id:
+        return
+    prefs_table = dynamodb.Table(USER_PREFERENCES_TABLE)
+    response = prefs_table.get_item(Key={"userId": user_id})
+    token = response.get("Item", {}).get("expoPushToken")
+    if not token:
+        return
+    payload = json.dumps({
+        "to": token,
+        "title": "Analysis ready!",
+        "body": f"Your {restaurant_name} menu analysis is complete.",
+        "data": {"placeId": place_id},
+        "sound": "default",
+    }).encode("utf-8")
+    req = urllib.request.Request(
+        "https://exp.host/--/api/v2/push/send",
+        data=payload,
+        headers={"Content-Type": "application/json", "Accept": "application/json"},
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=5) as resp:
+            print(f"[FinalizeLambda] Push sent: {resp.read().decode()}")
+    except Exception as e:
+        print(f"[FinalizeLambda] Push notification failed (non-fatal): {e}")
 
 
 def lambda_handler(event, context):

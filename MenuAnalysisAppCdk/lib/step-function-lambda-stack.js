@@ -7,7 +7,7 @@ const dynamodb = require('aws-cdk-lib/aws-dynamodb');
 const path = require('path');
 const Construct = require('constructs');
 const { Stack, Duration } = require('aws-cdk-lib');
-const secrets = require('./secrets.json');
+const secrets = require('../secrets.json');
 
 
 // Bedrock model ARNs to grant InvokeModel access.
@@ -180,7 +180,7 @@ class StepFunctionWithLambdasStack extends cdk.Stack {
 
     // -----------------------------------------------------------------------
     // 4. Finalize Lambda
-    //    Writes results to DynamoDB, sends notification email and push
+    //    Writes results to DynamoDB, sends notification email + push
     // -----------------------------------------------------------------------
     const finalizeLambda = new lambda.Function(this, 'FinalizeMenuLambda', {
       runtime: lambda.Runtime.PYTHON_3_12,
@@ -276,10 +276,15 @@ class StepFunctionWithLambdasStack extends cdk.Stack {
       .next(verificationTask)
       .next(finalizeTask);
 
-    new stepfunctions.StateMachine(this, 'MenuAnalysisStepFunction', {
+    const stateMachine = new stepfunctions.StateMachine(this, 'MenuAnalysisStepFunction', {
       definition,
       timeout: cdk.Duration.minutes(60),
       role: lambdaInvokeRole,
+    });
+
+    new cdk.CfnOutput(this, 'MenuAnalysisStateMachineArnOutput', {
+      value: stateMachine.stateMachineArn,
+      exportName: 'MenuAnalysisStateMachineArnExport',
     });
   }
 }
