@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Menu Detail — Allergy App Mockup</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --cream:        #F2EDE2;
+  --cream-dark:   #E6DFD0;
+  --cream-deeper: #D8CFC0;
+  --green:        #4A7C4E;
+  --green-dark:   #3A6340;
+  --green-light:  #EAF2EB;
+  --green-mid:    #C4DEC6;
+  --orange:       #E07B39;
+  --orange-light: #FDF0E8;
+  --orange-mid:   #F5C9A8;
+  --red:          #C94A3A;
+  --red-light:    #FDECEA;
+  --red-mid:      #F0B4AE;
+  --yellow:       #C8960C;
+  --yellow-light: #FDF4DC;
+  --yellow-mid:   #EDD594;
+  --text:         #1C1C1A;
+  --text-muted:   #7A7570;
+  --text-light:   #ADA89F;
+  --white:        #FFFFFF;
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body:    'DM Sans', system-ui, sans-serif;
+}
+
+body {
+  background: #28281E;
+  font-family: var(--font-body);
+  padding: 40px 20px 60px;
+  min-height: 100vh;
+}
+
+h1.page-title {
+  font-family: var(--font-display);
+  font-size: 24px;
+  color: var(--cream);
+  text-align: center;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+.page-subtitle {
+  text-align: center;
+  color: #6A6860;
+  font-size: 13px;
+  margin-bottom: 40px;
+}
+
+/* ── Phone shell ── */
+.phone-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+.screen-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #5A5850;
+}
+
+.phone {
+  width: 340px;
+  background: var(--cream);
+  border-radius: 44px;
+  overflow: hidden;
+  box-shadow:
+    0 32px 80px rgba(0,0,0,0.6),
+    0 0 0 1px rgba(255,255,255,0.07),
+    inset 0 0 0 1px rgba(0,0,0,0.12);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Status bar */
+.status-bar {
+  background: transparent;
+  padding: 14px 24px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--white);
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  z-index: 10;
+}
+.status-icons { display: flex; gap: 5px; align-items: center; }
+.status-icons svg { width: 13px; height: 13px; }
+
+/* ── Hero ── */
+.hero {
+  width: 100%;
+  height: 220px;
+  position: relative;
+  background: linear-gradient(160deg, #7FAE84 0%, #4A7C4E 55%, #2E5232 100%);
+  flex-shrink: 0;
+}
+.hero-texture {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(ellipse at 30% 40%, rgba(255,255,255,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 70%, rgba(0,0,0,0.15) 0%, transparent 50%);
+}
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.08) 0%,
+    rgba(0,0,0,0.0) 40%,
+    rgba(0,0,0,0.55) 100%
+  );
+}
+
+/* Back button */
+.back-btn {
+  position: absolute;
+  top: 52px;
+  left: 16px;
+  width: 36px; height: 36px;
+  background: rgba(255,255,255,0.18);
+  backdrop-filter: blur(8px);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 5;
+}
+.back-btn svg { width: 18px; height: 18px; color: white; }
+
+/* Hero bottom content */
+.hero-bottom {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  padding: 16px 16px 20px;
+  z-index: 5;
+}
+.hero-name {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 700;
+  color: white;
+  line-height: 1.1;
+  margin-bottom: 3px;
+  text-shadow: 0 1px 6px rgba(0,0,0,0.25);
+}
+.hero-address {
+  font-size: 11px;
+  color: rgba(255,255,255,0.72);
+  margin-bottom: 10px;
+}
+
+/* Score strip inside hero */
+.score-strip {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.score-main-badge {
+  background: white;
+  border-radius: 22px;
+  padding: 6px 13px 6px 9px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--green);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+.score-dot {
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  background: var(--green);
+  flex-shrink: 0;
+}
+.score-mini-stat {
+  background: rgba(255,255,255,0.18);
+  backdrop-filter: blur(6px);
+  border-radius: 16px;
+  padding: 5px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: white;
+  white-space: nowrap;
+}
+.score-mini-stat.caution { color: #FFD98E; }
+.score-mini-stat.unsafe  { color: #FFB0A8; }
+
+/* ── Score summary bar ── */
+.summary-bar {
+  background: white;
+  margin: -1px 0 0;
+  padding: 14px 16px 12px;
+  display: flex;
+  gap: 8px;
+  border-bottom: 1px solid var(--cream-dark);
+}
+.summary-stat {
+  flex: 1;
+  text-align: center;
+  background: var(--cream);
+  border-radius: 12px;
+  padding: 8px 6px;
+}
+.summary-stat-val {
+  font-size: 20px;
+  font-weight: 700;
+  font-family: var(--font-display);
+  line-height: 1;
+  margin-bottom: 2px;
+}
+.summary-stat-val.green  { color: var(--green); }
+.summary-stat-val.yellow { color: var(--yellow); }
+.summary-stat-val.red    { color: var(--red); }
+.summary-stat-val.gray   { color: var(--text-muted); }
+.summary-stat-label {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* ── Progress bar ── */
+.progress-wrap {
+  background: white;
+  padding: 0 16px 14px;
+}
+.progress-bar {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--cream-dark);
+  overflow: hidden;
+  display: flex;
+  gap: 2px;
+}
+.progress-seg {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.4s ease;
+}
+.progress-seg.safe    { background: var(--green); }
+.progress-seg.caution { background: var(--yellow); }
+.progress-seg.unsafe  { background: var(--red); }
+.progress-label-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 5px;
+}
+.confidence-note {
+  font-size: 10px;
+  color: var(--text-light);
+}
+
+/* ── Filter tabs ── */
+.filter-tabs {
+  background: white;
+  padding: 0 16px;
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--cream-dark);
+  position: sticky;
+  top: 0;
+  z-index: 8;
+}
+.ftab {
+  flex: 1;
+  text-align: center;
+  padding: 10px 0 9px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-light);
+  border-bottom: 2.5px solid transparent;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.15s;
+  white-space: nowrap;
+}
+.ftab.active-safe    { color: var(--green);  border-bottom-color: var(--green); }
+.ftab.active-caution { color: var(--yellow); border-bottom-color: var(--yellow); }
+.ftab.active-unsafe  { color: var(--red);    border-bottom-color: var(--red); }
+.ftab.active-all     { color: var(--text);   border-bottom-color: var(--text); }
+
+.ftab-count {
+  display: inline-block;
+  margin-left: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 8px;
+  vertical-align: middle;
+}
+.ftab.active-safe    .ftab-count { background: var(--green-light);  color: var(--green); }
+.ftab.active-caution .ftab-count { background: var(--yellow-light); color: var(--yellow); }
+.ftab.active-unsafe  .ftab-count { background: var(--red-light);    color: var(--red); }
+.ftab.active-all     .ftab-count { background: var(--cream-dark);   color: var(--text-muted); }
+
+/* ── Section header ── */
+.section-header {
+  padding: 14px 16px 6px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  background: var(--cream);
+}
+
+/* ── Dish card ── */
+.dish-card {
+  margin: 0 12px 10px;
+  background: var(--white);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  border: 1px solid rgba(0,0,0,0.04);
+  transition: transform 0.15s;
+}
+.dish-card:active { transform: scale(0.99); }
+
+/* Classification accent bar on left edge */
+.dish-card-inner {
+  display: flex;
+  border-left: 4px solid transparent;
+  padding: 13px 14px 13px 12px;
+}
+.dish-card-inner.safe    { border-left-color: var(--green); }
+.dish-card-inner.caution { border-left-color: var(--yellow); }
+.dish-card-inner.unsafe  { border-left-color: var(--red); }
+
+.dish-main { flex: 1; min-width: 0; }
+.dish-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  flex-shrink: 0;
+  margin-left: 10px;
+}
+
+/* Dish name + price row */
+.dish-name-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 5px;
+}
+.dish-name {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.25;
+}
+.dish-price {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  white-space: nowrap;
+  padding-top: 1px;
+}
+
+/* Classification pill */
+.classification-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border-radius: 20px;
+  padding: 3px 10px 3px 7px;
+  font-size: 11px;
+  font-weight: 700;
+  margin-bottom: 7px;
+}
+.classification-pill .pill-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.classification-pill.safe    { background: var(--green-light);  color: var(--green); }
+.classification-pill.safe    .pill-dot { background: var(--green); }
+.classification-pill.caution { background: var(--yellow-light); color: var(--yellow); }
+.classification-pill.caution .pill-dot { background: var(--yellow); }
+.classification-pill.unsafe  { background: var(--red-light);   color: var(--red); }
+.classification-pill.unsafe  .pill-dot { background: var(--red); }
+
+/* Ingredients */
+.ingredients-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-light);
+  margin-bottom: 4px;
+}
+.ingredients-list {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+.ingredient-token {
+  display: inline;
+}
+.ingredient-token.flagged-unsafe {
+  color: var(--red);
+  font-weight: 600;
+  background: var(--red-light);
+  padding: 1px 5px;
+  border-radius: 4px;
+  margin: 0 1px;
+}
+.ingredient-token.flagged-caution {
+  color: var(--yellow);
+  font-weight: 600;
+  background: var(--yellow-light);
+  padding: 1px 5px;
+  border-radius: 4px;
+  margin: 0 1px;
+}
+
+/* Allergen badges row */
+.allergen-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 8px;
+}
+.allergen-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border-radius: 8px;
+  padding: 3px 8px;
+  font-size: 10px;
+  font-weight: 600;
+}
+.allergen-badge.detected {
+  background: var(--red-light);
+  color: var(--red);
+  border: 1px solid var(--red-mid);
+}
+.allergen-badge.may-contain {
+  background: var(--yellow-light);
+  color: var(--yellow);
+  border: 1px solid var(--yellow-mid);
+}
+.allergen-badge.diet-tag {
+  background: var(--green-light);
+  color: var(--green);
+  border: 1px solid var(--green-mid);
+}
+.badge-icon { font-size: 11px; line-height: 1; }
+
+/* Confidence indicator */
+.confidence-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 7px;
+}
+.confidence-label {
+  font-size: 10px;
+  color: var(--text-light);
+}
+.confidence-pips {
+  display: flex;
+  gap: 2px;
+}
+.pip {
+  width: 14px; height: 4px;
+  border-radius: 2px;
+  background: var(--cream-dark);
+}
+.pip.filled-high   { background: var(--green); }
+.pip.filled-med    { background: var(--yellow); }
+.pip.filled-low    { background: var(--red); }
+
+/* May contain note */
+.may-contain-note {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 6px;
+  font-size: 10px;
+  color: var(--yellow);
+  font-weight: 500;
+}
+
+/* Divider between groups */
+.group-spacer { height: 4px; background: var(--cream-dark); margin: 4px 0; }
+
+/* ── Bottom padding ── */
+.bottom-pad { height: 20px; background: var(--cream); }
+
+/* ── Page layout ── */
+.two-col {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  justify-content: center;
+  align-items: flex-start;
+  max-width: 800px;
+  margin: 0 auto;
+}
+.col { display: flex; flex-direction: column; gap: 16px; align-items: center; }
+.col-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #5A5850;
+  text-align: center;
+}
+
+/* Scroll container */
+.phone-scroll {
+  overflow-y: auto;
+  max-height: 780px;
+  flex: 1;
+  background: var(--cream);
+  /* hide scrollbar */
+  scrollbar-width: none;
+}
+.phone-scroll::-webkit-scrollbar { display: none; }
+
+</style>
+</head>
+<body>
+
+<h1 class="page-title">Menu Detail Screen</h1>
+<p class="page-subtitle">Restaurant card → dish view · matches design system</p>
+
+<div class="two-col">
+
+  <!-- ════════════════════════════════════════
+       SCREEN A: Showing "All" tab — mixed results
+  ════════════════════════════════════════ -->
+  <div class="col">
+    <div class="col-label">All dishes — mixed view</div>
+    <div class="phone">
+
+      <!-- Hero -->
+      <div class="hero">
+        <div class="hero-texture"></div>
+        <div class="hero-overlay"></div>
+
+        <!-- Status bar -->
+        <div class="status-bar">
+          <span>9:41</span>
+          <div class="status-icons">
+            <svg viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="5" width="3" height="8" rx="0.5"/><rect x="5.5" y="3" width="3" height="10" rx="0.5"/><rect x="10" y="1" width="3" height="12" rx="0.5"/></svg>
+            <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 2a6 6 0 100 12A6 6 0 008 2zm0 1.5a4.5 4.5 0 110 9 4.5 4.5 0 010-9z"/></svg>
+            <svg viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="5" width="11" height="7" rx="1.5" stroke="currentColor" stroke-width="1" fill="none"/><rect x="2.5" y="6.5" width="7" height="4" rx="0.5"/><path d="M13 7.5v2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+        </div>
+
+        <div class="back-btn">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 5l-6 5 6 5"/></svg>
+        </div>
+
+        <div class="hero-bottom">
+          <div class="hero-name">The Maharaja</div>
+          <div class="hero-address">280 Newbury St, Boston, MA · Indian</div>
+          <div class="score-strip">
+            <div class="score-main-badge">
+              <div class="score-dot"></div>
+              78% safe
+            </div>
+            <div class="score-mini-stat">18 safe</div>
+            <div class="score-mini-stat caution">5 caution</div>
+            <div class="score-mini-stat unsafe">4 unsafe</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Summary bar -->
+      <div class="summary-bar">
+        <div class="summary-stat">
+          <div class="summary-stat-val green">18</div>
+          <div class="summary-stat-label">Safe</div>
+        </div>
+        <div class="summary-stat">
+          <div class="summary-stat-val yellow">5</div>
+          <div class="summary-stat-label">Caution</div>
+        </div>
+        <div class="summary-stat">
+          <div class="summary-stat-val red">4</div>
+          <div class="summary-stat-label">Unsafe</div>
+        </div>
+        <div class="summary-stat">
+          <div class="summary-stat-val gray">27</div>
+          <div class="summary-stat-label">Total</div>
+        </div>
+      </div>
+
+      <!-- Progress bar -->
+      <div class="progress-wrap" style="background:white;">
+        <div class="progress-bar">
+          <div class="progress-seg safe"    style="width:66%"></div>
+          <div class="progress-seg caution" style="width:19%"></div>
+          <div class="progress-seg unsafe"  style="width:15%"></div>
+        </div>
+        <div class="progress-label-row">
+          <div class="confidence-note">Based on: Milk, Tree Nuts · your active allergens</div>
+        </div>
+      </div>
+
+      <!-- Filter tabs -->
+      <div class="filter-tabs">
+        <div class="ftab active-all">All <span class="ftab-count">27</span></div>
+        <div class="ftab active-safe"    style="color:var(--green);border-bottom-color:transparent;opacity:0.55">Safe <span class="ftab-count" style="background:var(--green-light);color:var(--green)">18</span></div>
+        <div class="ftab active-caution" style="color:var(--yellow);border-bottom-color:transparent;opacity:0.55">Caution <span class="ftab-count" style="background:var(--yellow-light);color:var(--yellow)">5</span></div>
+        <div class="ftab active-unsafe"  style="color:var(--red);border-bottom-color:transparent;opacity:0.55">Unsafe <span class="ftab-count" style="background:var(--red-light);color:var(--red)">4</span></div>
+      </div>
+
+      <!-- Scrollable dish list -->
+      <div class="phone-scroll">
+
+        <!-- SAFE section -->
+        <div class="section-header">✓ Safe for you</div>
+
+        <!-- Dish: Dal Tadka — Safe -->
+        <div class="dish-card">
+          <div class="dish-card-inner safe">
+            <div class="dish-main">
+              <div class="dish-name-row">
+                <div class="dish-name">Dal Tadka</div>
+                <div class="dish-price">$14</div>
+              </div>
+              <div class="classification-pill safe">
+                <div class="pill-dot"></div>Safe
+              </div>
+              <div class="ingredients-label">Ingredients</div>
+              <div class="ingredients-list">
+                lentils, onion, tomato, garlic, ginger, cumin, mustard seeds, turmeric, ghee, coriander
+              </div>
+              <div class="allergen-badges">
+                <div class="allergen-badge diet-tag"><span class="badge-icon">🌿</span>Vegan-adj</div>
+                <div class="allergen-badge diet-tag"><span class="badge-icon">🌾</span>Gluten-free</div>
+              </div>
+              <div class="confidence-row">
+                <div class="confidence-label">Detection confidence</div>
+                <div class="confidence-pips">
+                  <div class="pip filled-high"></div>
+                  <div class="pip filled-high"></div>
+                  <div class="pip filled-high"></div>
+                  <div class="pip filled-high"></div>
+                  <div class="pip"></div>
+                </div>
+                <div class="confidence-label">96%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dish: Chicken Tikka — Safe -->
+        <div class="dish-card">
+          <div class="dish-card-inner safe">
+            <div class="dish-main">
+              <div class="dish-name-row">
+                <div class="dish-name">Chicken Tikka</div>
+                <div class="dish-price">$18</div>
+              </div>
+              <div class="classification-pill safe">
+                <div class="pill-dot"></div>Safe
+              </div>
+              <div class="ingredients-label">Ingredients</div>
+              <div class="ingredients-list">
+                chicken, yogurt, lemon juice, ginger-garlic paste, red chili, garam masala, cumin, coriander, oil
+              </div>
+              <div class="allergen-badges">
+                <div class="allergen-badge diet-tag"><span class="badge-icon">🌾</span>Gluten-free</div>
+              </div>
+              <div class="confidence-row">
+                <div class="confidence-label">Detection confidence</div>
+                <div class="confidence-pips">
+                  <div class="pip filled-high"></div>
+                  <div class="pip filled-high"></div>
+                  <div class="pip filled-high"></div>
+                  <div class="pip filled-high"></div>
+                  <div class="pip filled-high"></div>
+                </div>
+                <div class="confidence-label">99%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CAUTION section -->
+        <div class="group-spacer"></div>
+        <div class="section-header">⚠ Caution — verify before ordering</div>
+
+        <!-- Dish: Saag Paneer — Caution (dairy, confidence below threshold) -->
+        <div class="dish-card">
+          <div class="dish-card-inner caution">
+            <div class="dish-main">
+              <div class="dish-name-row">
+                <div class="dish-name">Saag Paneer</div>
+                <div class="dish-price">$16</div>
+              </div>
+              <div class="classification-pill caution">
+                <div class="pill-dot"></div>Caution
+              </div>
+              <div class="ingredients-label">Ingredients</div>
+              <div class="ingredients-list">
+                spinach, <span class="ingredient-token flagged-caution">paneer (milk)</span>, onion, garlic, ginger, cream, ghee, spices
+              </div>
+              <div class="allergen-badges">
+                <div class="allergen-badge may-contain"><span class="badge-icon">⚠</span>Milk · 74% conf.</div>
+              </div>
+              <div class="confidence-row">
+                <div class="confidence-label">Detection confidence</div>
+                <div class="confidence-pips">
+                  <div class="pip filled-med"></div>
+                  <div class="pip filled-med"></div>
+                  <div class="pip filled-med"></div>
+                  <div class="pip"></div>
+                  <div class="pip"></div>
+                </div>
+                <div class="confidence-label">74%</div>
+              </div>
+              <div class="may-contain-note">
+                ⚠ Below confidence threshold — confirm with restaurant
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dish: Mango Lassi — Caution (may contain nuts) -->
+        <div class="dish-card">
+          <div class="dish-card-inner caution">
+            <div class="dish-main">
+              <div class="dish-name-row">
+                <div class="dish-name">Mango Lassi</div>
+                <div class="dish-price">$7</div>
+              </div>
+              <div class="classification-pill caution">
+                <div class="pill-dot"></div>Caution
+              </div>
+              <div class="ingredients-label">Ingredients</div>
+              <div class="ingredients-list">
+                mango, <span class="ingredient-token flagged-caution">yogurt (milk)</span>, sugar, cardamom, rose water
+              </div>
+              <div class="allergen-badges">
+                <div class="allergen-badge detected"><span class="badge-icon">🥛</span>Milk</div>
+                <div class="allergen-badge may-contain"><span class="badge-icon">⚠</span>May contain nuts</div>
+              </div>
+              <div class="confidence-row">
+                <div class="confidence-label">Detection confidence</div>
+                <div class="confidence-pips">
+                  <div class="pip filled-high"></div>
+                  <div class="pip filled-high"></div>
+                  <div class="pip filled-high"></div>
+                  <div class="pip filled-high"></div>
+                  <div class="pip"></div>
+                </div>
+                <div class="confidence-label">92%</div>
+              </div>
+              <div class="may-contain-note">
+                ⚠ May contain tree nuts — cross-contamination risk
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- UNSAFE section -->
+        <div class="group-spacer"></div>
+        <div class="section-header" style="color:var(--red);opacity:0.8">✕ Not safe for you</div>
+
+        <!-- Dish: Butter Chicken — Unsafe -->
+        <div class="dish-card">
+          <div class="dish-card-inner unsafe">
+            <div class="dish-main">
+              <div class="dish-name-row">
+                <div class="dish-name">Butter Chicken</div>
+                <div class="dish-price">$22</div>
+              </div>
+              <div class="classification-pill unsafe">
+                <div class="pill-dot"></div>Unsafe
+              </div>
+              <div class="ingredients-label">Ingredients</div>
+              <div class="ingredients-list">
+                chicken, <span class="ingredient-token flagged-unsafe">butter (milk)</span>, <span class="ingredient-token flagged-unsafe">cream (milk)</span>, tomato, onion, garlic, ginger, garam masala, fenugreek
+              </div>
+              <div class="allergen-badges">
+                <div class="allergen-badge detected"><span class="badge-icon">🥛</span>Milk · 97%</div>
+              </div>
+              <div class="confidence-row">
+                <div class="confidence-label">Detection confidence</div>
+                <div class="confidence-pips">
+                  <div class="pip filled-high"></div>
+                  <div class="pip filled-high"></div>
+                  <div class="pip filled-high"></div>
+                  <div class="pip filled-high"></div>
+                  <div class="pip filled-high"></div>
+                </div>
+                <div class="confidence-label">97%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dish: Kaju Katli — Unsafe (tree nuts) -->
+        <div class="dish-card">
+          <div class="dish-card-inner unsafe">
+            <div class="dish-main">
+              <div class="dish-name-row">
+                <div class="dish-name">Kaju Katli</div>
+                <div class="dish-price">$9</div>
+              </div>
+              <div class="classification-pill unsafe">
+                <div class="pill-dot"></div>Unsafe
+              </div>
+              <div class="ingredients-label">Ingredients</div>
+              <div class="ingredients-list">
+                <span class="ingredient-token flagged-unsafe">cashews (tree nut)</span>, sugar, ghee, cardamom, silver leaf
+              </div>
+              <div class="allergen-badges">
+                <div class="allergen-badge detected"><span class="badge-icon">🥜</span>Tree nuts · 99%</div>
+              </div>
+              <div class="confidence-row">
+                <div class="confidence-label">Detection confidence</div>
+                <div class="confidence-pips">
+                  <div class="pip filled-high"></div>
+                  <div class="pip filled-high"></div>
+                  <div class="pip filled-high"></div>
+                  <div class="pip filled-high"></div>
+                  <div class="pip filled-high"></div>
+                </div>
+                <div class="confidence-label">99%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bottom-pad"></div>
+      </div><!-- /phone-scroll -->
+    </div><!-- /phone -->
+  </div>
+
+  <!-- ════════════════════════════════════════
+       SCREEN B: Filtered to "Safe" tab only
+  ════════════════════════════════════════ -->
+  <div class="col">
+    <div class="col-label">Filtered to "Safe" tab</div>
+    <div class="phone">
+
+      <!-- Hero (same restaurant, same header) -->
+      <div class="hero">
+        <div class="hero-texture"></div>
+        <div class="hero-overlay"></div>
+        <div class="status-bar">
+          <span>9:41</span>
+          <div class="status-icons">
+            <svg viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="5" width="3" height="8" rx="0.5"/><rect x="5.5" y="3" width="3" height="10" rx="0.5"/><rect x="10" y="1" width="3" height="12" rx="0.5"/></svg>
+            <svg viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="5" width="11" height="7" rx="1.5" stroke="currentColor" stroke-width="1" fill="none"/><rect x="2.5" y="6.5" width="7" height="4" rx="0.5"/><path d="M13 7.5v2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+        </div>
+        <div class="back-btn">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 5l-6 5 6 5"/></svg>
+        </div>
+        <div class="hero-bottom">
+          <div class="hero-name">The Maharaja</div>
+          <div class="hero-address">280 Newbury St, Boston, MA · Indian</div>
+          <div class="score-strip">
+            <div class="score-main-badge">
+              <div class="score-dot"></div>
+              78% safe
+            </div>
+            <div class="score-mini-stat">18 safe</div>
+            <div class="score-mini-stat caution">5 caution</div>
+            <div class="score-mini-stat unsafe">4 unsafe</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Summary -->
+      <div class="summary-bar">
+        <div class="summary-stat">
+          <div class="summary-stat-val green">18</div>
+          <div class="summary-stat-label">Safe</div>
+        </div>
+        <div class="summary-stat">
+          <div class="summary-stat-val yellow">5</div>
+          <div class="summary-stat-label">Caution</div>
+        </div>
+        <div class="summary-stat">
+          <div class="summary-stat-val red">4</div>
+          <div class="summary-stat-label">Unsafe</div>
+        </div>
+        <div class="summary-stat">
+          <div class="summary-stat-val gray">27</div>
+          <div class="summary-stat-label">Total</div>
+        </div>
+      </div>
+      <div class="progress-wrap" style="background:white;">
+        <div class="progress-bar">
+          <div class="progress-seg safe"    style="width:66%"></div>
+          <div class="progress-seg caution" style="width:19%"></div>
+          <div class="progress-seg unsafe"  style="width:15%"></div>
+        </div>
+        <div class="progress-label-row">
+          <div class="confidence-note">Based on: Milk, Tree Nuts · your active allergens</div>
+        </div>
+      </div>
+
+      <!-- Filter tabs — Safe active -->
+      <div class="filter-tabs">
+        <div class="ftab active-all" style="color:var(--text-light);border-bottom-color:transparent">All <span class="ftab-count" style="background:var(--cream-dark);color:var(--text-light)">27</span></div>
+        <div class="ftab active-safe">Safe <span class="ftab-count">18</span></div>
+        <div class="ftab active-caution" style="color:var(--yellow);border-bottom-color:transparent;opacity:0.55">Caution <span class="ftab-count" style="background:var(--yellow-light);color:var(--yellow)">5</span></div>
+        <div class="ftab active-unsafe"  style="color:var(--red);border-bottom-color:transparent;opacity:0.55">Unsafe <span class="ftab-count" style="background:var(--red-light);color:var(--red)">4</span></div>
+      </div>
+
+      <div class="phone-scroll">
+        <div class="section-header">18 dishes safe for you</div>
+
+        <!-- Safe dish 1 -->
+        <div class="dish-card">
+          <div class="dish-card-inner safe">
+            <div class="dish-main">
+              <div class="dish-name-row">
+                <div class="dish-name">Dal Tadka</div>
+                <div class="dish-price">$14</div>
+              </div>
+              <div class="classification-pill safe"><div class="pill-dot"></div>Safe</div>
+              <div class="ingredients-label">Ingredients</div>
+              <div class="ingredients-list">lentils, onion, tomato, garlic, ginger, cumin, mustard seeds, turmeric, ghee, coriander</div>
+              <div class="allergen-badges">
+                <div class="allergen-badge diet-tag"><span class="badge-icon">🌿</span>Vegan-adj</div>
+                <div class="allergen-badge diet-tag"><span class="badge-icon">🌾</span>Gluten-free</div>
+              </div>
+              <div class="confidence-row">
+                <div class="confidence-label">Confidence</div>
+                <div class="confidence-pips">
+                  <div class="pip filled-high"></div><div class="pip filled-high"></div><div class="pip filled-high"></div><div class="pip filled-high"></div><div class="pip"></div>
+                </div>
+                <div class="confidence-label">96%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Safe dish 2 -->
+        <div class="dish-card">
+          <div class="dish-card-inner safe">
+            <div class="dish-main">
+              <div class="dish-name-row">
+                <div class="dish-name">Chicken Tikka</div>
+                <div class="dish-price">$18</div>
+              </div>
+              <div class="classification-pill safe"><div class="pill-dot"></div>Safe</div>
+              <div class="ingredients-label">Ingredients</div>
+              <div class="ingredients-list">chicken, yogurt, lemon juice, ginger-garlic paste, red chili, garam masala, cumin, coriander, oil</div>
+              <div class="allergen-badges">
+                <div class="allergen-badge diet-tag"><span class="badge-icon">🌾</span>Gluten-free</div>
+              </div>
+              <div class="confidence-row">
+                <div class="confidence-label">Confidence</div>
+                <div class="confidence-pips">
+                  <div class="pip filled-high"></div><div class="pip filled-high"></div><div class="pip filled-high"></div><div class="pip filled-high"></div><div class="pip filled-high"></div>
+                </div>
+                <div class="confidence-label">99%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Safe dish 3 -->
+        <div class="dish-card">
+          <div class="dish-card-inner safe">
+            <div class="dish-main">
+              <div class="dish-name-row">
+                <div class="dish-name">Aloo Gobi</div>
+                <div class="dish-price">$15</div>
+              </div>
+              <div class="classification-pill safe"><div class="pill-dot"></div>Safe</div>
+              <div class="ingredients-label">Ingredients</div>
+              <div class="ingredients-list">potato, cauliflower, onion, tomato, turmeric, coriander, cumin, oil, green chilies</div>
+              <div class="allergen-badges">
+                <div class="allergen-badge diet-tag"><span class="badge-icon">🌿</span>Vegan</div>
+                <div class="allergen-badge diet-tag"><span class="badge-icon">🌾</span>Gluten-free</div>
+              </div>
+              <div class="confidence-row">
+                <div class="confidence-label">Confidence</div>
+                <div class="confidence-pips">
+                  <div class="pip filled-high"></div><div class="pip filled-high"></div><div class="pip filled-high"></div><div class="pip filled-high"></div><div class="pip filled-high"></div>
+                </div>
+                <div class="confidence-label">98%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Safe dish 4 -->
+        <div class="dish-card">
+          <div class="dish-card-inner safe">
+            <div class="dish-main">
+              <div class="dish-name-row">
+                <div class="dish-name">Tandoori Roti</div>
+                <div class="dish-price">$4</div>
+              </div>
+              <div class="classification-pill safe"><div class="pill-dot"></div>Safe</div>
+              <div class="ingredients-label">Ingredients</div>
+              <div class="ingredients-list">whole wheat flour, water, salt, oil</div>
+              <div class="allergen-badges">
+                <div class="allergen-badge diet-tag"><span class="badge-icon">🌿</span>Vegan</div>
+              </div>
+              <div class="confidence-row">
+                <div class="confidence-label">Confidence</div>
+                <div class="confidence-pips">
+                  <div class="pip filled-high"></div><div class="pip filled-high"></div><div class="pip filled-high"></div><div class="pip filled-high"></div><div class="pip"></div>
+                </div>
+                <div class="confidence-label">94%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Safe dish 5 -->
+        <div class="dish-card">
+          <div class="dish-card-inner safe">
+            <div class="dish-main">
+              <div class="dish-name-row">
+                <div class="dish-name">Lamb Rogan Josh</div>
+                <div class="dish-price">$24</div>
+              </div>
+              <div class="classification-pill safe"><div class="pill-dot"></div>Safe</div>
+              <div class="ingredients-label">Ingredients</div>
+              <div class="ingredients-list">lamb, onion, tomato, bay leaves, cardamom, cloves, cinnamon, fennel, ginger, kashmiri chili, oil</div>
+              <div class="allergen-badges">
+                <div class="allergen-badge diet-tag"><span class="badge-icon">🌾</span>Gluten-free</div>
+              </div>
+              <div class="confidence-row">
+                <div class="confidence-label">Confidence</div>
+                <div class="confidence-pips">
+                  <div class="pip filled-high"></div><div class="pip filled-high"></div><div class="pip filled-high"></div><div class="pip filled-high"></div><div class="pip filled-high"></div>
+                </div>
+                <div class="confidence-label">97%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Subtle note at bottom -->
+        <div style="padding:12px 16px 8px;text-align:center;">
+          <div style="font-size:11px;color:var(--text-light);">Showing 5 of 18 safe dishes · scroll to see more</div>
+        </div>
+
+        <div class="bottom-pad"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
